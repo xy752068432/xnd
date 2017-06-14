@@ -32,7 +32,7 @@
             passwd: this.pwd
           }
 
-          request.post(['v1', 'login'], data, function (data) {
+          request.post(this.$route, data, function (data) {
             // 登录成功
             if (data.id) {
               console.log(data)

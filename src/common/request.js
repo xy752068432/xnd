@@ -3,8 +3,6 @@
  */
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:8080/'
-
 String.prototype.format = function (args) {
   var result = this
   if (arguments.length > 0) {
