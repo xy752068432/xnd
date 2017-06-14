@@ -21,7 +21,6 @@
         }
       },
       created: function () {
-        // console.log('this.$route.name=' + .name)
         this.id = localStorage.getItem('id')
         // 已经登录过
         if (this.id) {
