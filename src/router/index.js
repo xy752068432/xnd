@@ -4,6 +4,7 @@ import UserIndex from '@/components/user/Index'
 import UserInfo from '@/components/user/Info'
 import Login from '@/components/Login'
 import Index from '@/components/Index'
+// import home from '@/components/home'
 
 Vue.use(Router)
 
