@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <div class="header">
-      <img src="./assets/logo-right.png">
-    </div>
-    <div class="line-top"></div>
+    <headerbar></headerbar>
     <router-view></router-view>
     <div class="line-bottom">
       <img src="./assets/line-bottom.png">
@@ -23,35 +20,17 @@
 </template>
 
 <script>
+import headerbar from './components/headerbar'
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    headerbar
+  }
 }
 </script>
 
 <style>
-  .header{
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 36px;
-    z-index: 100;
-    background-color: #fff;
-    background-image: url("./assets/logo.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 107.5px 27px;
-  }
-  .header img{
-    float: right;
-    height: 100%;
-  }
-  .line-top{
-    position: fixed;
-    top: 36px;
-    width: 100%;
-    height: 0.5px;
-    background: url("./assets/line-top.png");
-  }
+  @import "./common/mixin.css";
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -62,9 +41,9 @@ export default {
   }
   .line-bottom{
     width: 100%;
-    height: 3.5px;
+    height: 0.093333rem;
     position: fixed;
-    bottom: 56px;
+    bottom: 1.493333rem;
   }
   .line-bottom img{
     width: 100%;
@@ -75,8 +54,8 @@ export default {
     background-color: #fff;
     display: flex;
     width: 100%;
-    height: 56px;
-    line-height: 56px;
+    height: 1.493333rem;
+    line-height: 1.493333rem;
     position: fixed;
     bottom: 0;
   }
@@ -103,7 +82,7 @@ export default {
     background-image: url("./assets/info-active.png");
   }
   .tab-item p{
-    font-size: 9px;
+    font-size: .24rem;
     font-family: "Microsoft YaHei UI";
     letter-spacing: 0;
     position: relative;
@@ -114,8 +93,8 @@ export default {
     color: #000;
     text-decoration: none;
     background-repeat: no-repeat;
-    background-position: center 6.5px;
-    background-size: 25px 25px;
+    background-position: center 0.17333rem;
+    background-size: .666667rem .666667rem;
   }
   .tab-item a.router-link-exact-active{
     color: #32ab42;

@@ -1,7 +1,11 @@
 <template lang="html">
     <div id="home">
+      <scroller
+        :on-refresh="refresh"
+        :on-infinite="infinite"
+        style="padding-top: 0.966rem;padding-bottom: 24px;"> 
       <ul>
-        <li class="goods-item">
+        <li class="goods-item" @click="toItem">
           <div class="icon">
             <div class="tag"><p>促销<br>热卖</p></div>
             <div class="sale-time"><p>2017年05月09日24:00出售</p></div>
@@ -51,13 +55,45 @@
             <a class="toCart"></a>
           </div>
         </li>
+        <li v-show="loadStatus"><p class="loadmore">加载中</p></li>
       </ul>
-    </div>
+      </scroller>  
+      <div class="toTop" @click="toTop"></div>
+    </div> 
 </template>
 <script>
-    export default{}
+    import utils from '../common/utils'
+    import VueScroller from 'vue-scroller'
+    console.log(utils)
+    // console.log(VueScroller.Scroller)
+    export default{
+      name: 'home',
+      components: {VueScroller},
+      data: function () {
+        return {
+          loadStatus: false
+        }
+      },
+      methods: {
+        toTop () {
+          console.log('totop')
+          VueScroller.scrollTo(0, 0)
+          // utils.toTop()
+          // document.body.scrollTop = 0
+        },
+        toItem () {
+          this.$router.push({path: '/detail'})
+        },
+        refresh: function () {
+
+        },
+        infinite: function () {
+
+        }
+      }
+    }
 </script>
-<style>
+<style scoped>
   @import "../common/mixin.css";
   #home{
     margin-top: 1.19rem;
@@ -157,11 +193,17 @@
     background: url("../assets/sale.png") no-repeat ;
     background-size: 100% 100%;
   }
-  /*@media screen and (max-width: 320px) {*/
-    /*.content .name{*/
-      /*font-size: 14.5px;*/
-      /*line-height: 18.5px;*/
-      /*margin-bottom: 5.5px;*/
-    /*}*/
-  /*}*/
+  .loadmore{
+    height: .426667rem;
+    line-height: .426667rem;
+    font-size: .32rem;
+  }
+  .toTop{
+    background-color: #000;
+    width: 1.066667rem;
+    height: 1.066667rem;
+    position: fixed;
+    bottom: 2rem;
+    right: .266667rem;
+  }
 </style>
