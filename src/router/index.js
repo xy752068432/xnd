@@ -4,7 +4,8 @@ import UserIndex from '@/components/user/Index'
 import UserInfo from '@/components/user/Info'
 import Login from '@/components/Login'
 import Index from '@/components/Index'
-
+// import home from '@/components/home'
+import detail from '@/components/detail'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -21,6 +22,7 @@ export default new Router({
         {path: 'home', name: 'UserHome', component: UserHome},
         {path: 'info', name: 'UserInfo', component: UserInfo}
       ]
-    }
+    },
+    {path: '/detail', name: 'detail', component: detail}
   ]
 })

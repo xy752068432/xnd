@@ -3,6 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueScroller from 'vue-scroller'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueScroller)
+Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
 
