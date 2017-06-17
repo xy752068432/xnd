@@ -4,3 +4,15 @@ html{
 @media screen and (min-width: 320px) {
   html {font-size: 32px;}
 }
+@media screen and (min-width: 375px) {
+  html {font-size: 37.5px;}
+}
+@media screen and (min-width: 410px) {
+  html {font-size: 41px;}
+}
+/*toast自定义CSS*/
+    .toast{
+        margin-bottom: 1.6rem !important;
+        font-size: .32rem !important;
+    }
+

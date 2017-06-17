@@ -1,5 +1,6 @@
 <template lang="html">
     <div id="home">
+
       <scroller
         :on-refresh="refresh"
         :on-infinite="infinite"
@@ -55,20 +56,40 @@
             <a class="toCart"></a>
           </div>
         </li>
-        <li v-show="loadStatus"><p class="loadmore">加载中</p></li>
+        <li class="goods-item">
+          <div class="icon">
+            <img src="../assets/goods.png" >
+          </div>
+          <div class="content">
+            <h2 class="name">阳澄湖大闸蟹阳澄湖大闸蟹</h2>
+            <p class="desc">肉鲜肥美 苏州直供</p>
+            <p class="old-price"><span class="old-attach">&yen;</span>30.5<span class="old-attach">/只</span></p>
+            <p class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></p>
+            <a class="toCart"></a>
+          </div>
+        </li>
       </ul>
-      </scroller>  
+      </scroller>
+      
+      <bottombar></bottombar>
+      <!--回到顶部-->
       <div class="toTop" @click="toTop"></div>
     </div> 
 </template>
 <script>
     import utils from '../common/utils'
     import VueScroller from 'vue-scroller'
+    import bottombar from '../components/bottombar'
+    import Toast from 'vue-easy-toast'
     console.log(utils)
     // console.log(VueScroller.Scroller)
     export default{
       name: 'home',
-      components: {VueScroller},
+      components: {
+        VueScroller,
+        bottombar,
+        Toast
+      },
       data: function () {
         return {
           loadStatus: false
@@ -84,11 +105,17 @@
         toItem () {
           this.$router.push({path: '/detail'})
         },
-        refresh: function () {
-
+        refresh: function (done) {
+          setTimeout(() => {
+            done()
+            utils.toToast('刷新成功')
+          }, 1500)
         },
-        infinite: function () {
-
+        infinite: function (done) {
+          setTimeout(() => {
+            done()
+            utils.toToast('加载成功')
+          }, 1500)
         }
       }
     }
@@ -199,6 +226,7 @@
     font-size: .32rem;
   }
   .toTop{
+    display: none;
     background-color: #000;
     width: 1.066667rem;
     height: 1.066667rem;
