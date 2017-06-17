@@ -14,7 +14,7 @@
     top: 0;
     width: 100%;
     height: .96rem;
-    z-index: 100;
+    z-index: 300;
     background-color: #fff;
     background-image: url("../assets/logo.png");
     background-repeat: no-repeat;
@@ -29,7 +29,8 @@
     position: fixed;
     top: .98rem;
     width: 100%;
-    height: 0.013333rem;
+    height: 0.023333rem;
     background: url("../assets/line-top.png");
+    z-index: 300
   }    
 </style>

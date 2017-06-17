@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import Index from '@/components/Index'
 // import home from '@/components/home'
 import detail from '@/components/detail'
+import cart from '@/components/cart'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -23,6 +24,7 @@ export default new Router({
         {path: 'info', name: 'UserInfo', component: UserInfo}
       ]
     },
-    {path: '/detail', name: 'detail', component: detail}
+    {path: '/detail', name: 'detail', component: detail},
+    {path: '/cart', name: 'cart', component: cart}
   ]
 })
