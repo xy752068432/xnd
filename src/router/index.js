@@ -6,12 +6,9 @@ import Login from '@/components/Login'
 import Index from '@/components/Index'
 // import home from '@/components/home'
 import detail from '@/components/detail'
-<<<<<<< HEAD
 import center from '@/components/center'
-
-=======
 import cart from '@/components/cart'
->>>>>>> 773d0f351520689095901da4be8125f18a6e8f62
+
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
