@@ -200,8 +200,8 @@ export default {
 .willmestxt 
 {
   position: absolute;
-  top: 0.5rem;
-  left: 0.7rem;
+  top: 0.45rem;
+  left: 0.66555rem;
   color: white;
   font-size: 0.3rem;
 }
