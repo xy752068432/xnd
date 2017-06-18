@@ -1,79 +1,30 @@
 <template lang="html">
     <div id="home">
-
       <scroller
         :on-refresh="refresh"
         :on-infinite="infinite"
         style="padding-top: 0.966rem;padding-bottom: 24px;"> 
       <ul>
-        <li class="goods-item" @click="toItem">
+        <li class="goods-item" v-for="(item,index) in goods" @click="toItem(index)">
           <div class="icon">
-            <div class="tag"><p>促销<br>热卖</p></div>
-            <div class="sale-time"><p>2017年05月09日24:00出售</p></div>
-              <img src="../assets/goods.png" >
+            <div class="tag" v-show="goods.status_text"><p>促销<br>热卖</p></div>
+            <div class="sale-time" v-show="item.start_time > currentTime"><p>{{item.start_time | formatTime}}出售</p></div>
+            <img :src="item.goods_img" >
           </div>
           <div class="content">
-            <h2 class="name">阳澄湖大闸蟹阳澄湖大闸蟹</h2>
-            <p class="desc">肉鲜肥美 苏州直供</p>
-            <p class="old-price"><span class="old-attach">&yen;</span>30.5<span class="old-attach">/只</span></p>
-            <p class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></p>
-            <a class="toCart"></a>
-          </div>
-        </li>
-        <li class="goods-item">
-          <div class="icon">
-            <img src="../assets/goods.png" >
-          </div>
-          <div class="content">
-            <h2 class="name">阳澄湖大闸蟹阳澄湖大闸蟹</h2>
-            <p class="desc">肉鲜肥美 苏州直供</p>
-            <p class="old-price"><span class="old-attach">&yen;</span>30.5<span class="old-attach">/只</span></p>
-            <p class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></p>
-            <a class="toCart"></a>
-          </div>
-        </li>
-        <li class="goods-item">
-          <div class="icon">
-            <img src="../assets/goods.png" >
-          </div>
-          <div class="content">
-            <h2 class="name">阳澄湖大闸蟹阳澄湖大闸蟹</h2>
-            <p class="desc">肉鲜肥美 苏州直供</p>
-            <p class="old-price"><span class="old-attach">&yen;</span>30.5<span class="old-attach">/只</span></p>
-            <p class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></p>
-            <a class="toCart"></a>
-          </div>
-        </li>
-        <li class="goods-item">
-          <div class="icon">
-            <img src="../assets/goods.png" >
-          </div>
-          <div class="content">
-            <h2 class="name">阳澄湖大闸蟹阳澄湖大闸蟹</h2>
-            <p class="desc">肉鲜肥美 苏州直供</p>
-            <p class="old-price"><span class="old-attach">&yen;</span>30.5<span class="old-attach">/只</span></p>
-            <p class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></p>
-            <a class="toCart"></a>
-          </div>
-        </li>
-        <li class="goods-item">
-          <div class="icon">
-            <img src="../assets/goods.png" >
-          </div>
-          <div class="content">
-            <h2 class="name">阳澄湖大闸蟹阳澄湖大闸蟹</h2>
-            <p class="desc">肉鲜肥美 苏州直供</p>
-            <p class="old-price"><span class="old-attach">&yen;</span>30.5<span class="old-attach">/只</span></p>
-            <p class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></p>
-            <a class="toCart"></a>
+            <h2 class="name">{{item.title}}</h2>
+            <p class="desc">{{item.description}}</p>
+            <p class="old-price"><span class="old-attach">&yen;</span>{{item.origin_price}}<span class="old-attach">/{{item.unit}}</span></p>
+            <p class="price"><span class="attach">&yen;</span>{{item.price}}<span class="attach">/{{item.unit}}</span></p>
+            <a class="toCart" :class="item.start_time < currentTime && item.end_time > currentTime ? 'onsale' : 'unsale'"></a>
           </div>
         </li>
       </ul>
-      </scroller>
-      
+      </scroller>      
       <bottombar></bottombar>
       <!--回到顶部-->
       <div class="toTop" @click="toTop"></div>
+      <!--<router-view :goodsId="goodsId"></router-view>-->
     </div> 
 </template>
 <script>
@@ -81,7 +32,8 @@
     import VueScroller from 'vue-scroller'
     import bottombar from '../components/bottombar'
     import Toast from 'vue-easy-toast'
-    console.log(utils)
+    import request from '@/common/request'
+    // console.log(utils)
     // console.log(VueScroller.Scroller)
     export default{
       name: 'home',
@@ -90,10 +42,25 @@
         bottombar,
         Toast
       },
+      // goods => 商品列表 currentPage => 当前分页
       data: function () {
         return {
-          loadStatus: false
+          goods: [],
+          goodsId: 0,
+          currentTime: 0,
+          currentPage: 1
         }
+      },
+      created: function () {
+        // let url = 'goods'
+        var self = this
+        request.get(this.$route, {page: 1}, function (data) {
+          self.goods = data
+          console.log(self.goods.length)
+        })
+        let d = new Date()
+        this.currentTime = Math.floor(d.getTime() / 1000)
+        // console.log(this.currentTime)
       },
       methods: {
         toTop () {
@@ -102,20 +69,77 @@
           // utils.toTop()
           // document.body.scrollTop = 0
         },
-        toItem () {
+        toItem (index) {
+          // console.log(this.goods[index].id)
+          var goodsId = this.goods[index].id
+          this.goodsId = goodsId
+          // 暂时先用localStorage传值
+          localStorage.setItem('goodsId', goodsId)
+          console.log(goodsId)
+          // this.$router.push({path: '/detail', params: {id: goodsId}})
           this.$router.push({path: '/detail'})
         },
+        getItem (page) {
+          var refreshData
+          var self = this
+          request.get(this.$route, {page: page}, function (data) {
+            refreshData = data
+            if (refreshData.length < 10) {
+              console.log('无更多数据')
+              self.loadmore = false
+            } else {
+              self.currentPage++
+              self.goods = self.goods.concat(refreshData)
+              self.loadmore = true
+            }
+          })
+          if (self.loadmore) {
+            return false
+          } else {
+            return true
+          }
+        },
         refresh: function (done) {
-          setTimeout(() => {
+          var self = this
+          request.get(this.$route, {page: 1}, function (data) {
+            self.goods = data
             done()
             utils.toToast('刷新成功')
-          }, 1500)
+          })
         },
         infinite: function (done) {
-          setTimeout(() => {
-            done()
-            utils.toToast('加载成功')
-          }, 1500)
+          // console.log(this.goods.length)
+          var refreshData
+          var self = this
+          request.get(this.$route, {page: self.currentPage + 1}, function (data) {
+            refreshData = data
+            if (refreshData.length < 10) {
+              console.log('无更多数据')
+              self.goods = self.goods.concat(refreshData)
+              done(true)
+              // self.loadmore = false
+            } else {
+              self.currentPage++
+              self.goods = self.goods.concat(refreshData)
+              done()
+            }
+          })
+          if (this.getItem(this.currentPage + 1)) {
+            setTimeout(() => {
+              done(true)
+            }, 1500)
+          } else {
+            setTimeout(() => {
+              done()
+              utils.toToast('加载成功')
+            }, 1500)
+          }
+        }
+      },
+      filters: {
+        formatTime: function (time) {
+          console.log(utils.formatDate(time))
+          return utils.formatDate(time)
         }
       }
     }
@@ -217,7 +241,14 @@
     transform: translate(-50%,0);
     width: 73.2%;
     height: 0.64rem;
+    /*background-size: 100% 100%;*/
+  }
+  .toCart.onsale{
     background: url("../assets/sale.png") no-repeat ;
+    background-size: 100% 100%;
+  }
+  .toCart.unsale{
+    background: url("../assets/unsale.png") no-repeat ;
     background-size: 100% 100%;
   }
   .loadmore{

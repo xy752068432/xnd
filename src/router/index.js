@@ -15,6 +15,14 @@ const UserHome = { template: '<div>Home</div>' }
 
 export default new Router({
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'Index',
+    //   component: Index,
+    //   children: [
+    //     {path: '/detail', name: 'detail', component: detail}
+    //   ]
+    // },
     {path: '/', name: 'Index', component: Index},
     {path: '/login', name: 'Login', component: Login},
     {
