@@ -195,13 +195,13 @@ export default {
   height: 0.466667rem;
   position: absolute;
   top: 0.4rem;
-  right: 0rem;
+  right: -0.025rem;
 }
 .willmestxt 
 {
   position: absolute;
-  top: 0.45rem;
-  left: 0.66555rem;
+  top: 0.4777rem;
+  left: 0.7222rem;
   color: white;
   font-size: 0.3rem;
 }
