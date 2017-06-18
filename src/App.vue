@@ -13,7 +13,7 @@
         <router-link to='/cart'><p>购物车</p></router-link>
       </div>
       <div class="tab-item info">
-        <router-link to='/info'><p>个人中心</p></router-link>
+        <router-link to='/person'><p>个人中心</p></router-link>
       </div>
     </div>-->
   </div>
