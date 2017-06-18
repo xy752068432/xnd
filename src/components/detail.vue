@@ -1,13 +1,23 @@
 <template>
   <div id="detail">
+    <div class="swiper-wrap">  
     <swiper :options="swiperOption"  ref="mySwiper" class="swiper">  
        <!-- 这部分放你要渲染的那些内容 -->  
        <swiper-slide class="slide"><div><img src="../assets/detail/item1.jpg"></div></swiper-slide>
        <swiper-slide class="slide"><div><img src="../assets/detail/item2.jpg"></div></swiper-slide> 
        <swiper-slide class="slide"><div><img src="../assets/detail/item3.jpg"></div></swiper-slide>   
        <!-- 这是轮播的小圆点 -->  
-       <div class="swiper-pagination" slot="pagination"></div>  
-    </swiper>      
+       <div class="swiper-pagination" slot="pagination"></div>
+       
+    </swiper>
+        <!--左上角tag-->
+       <div class="tag presale offsale "><p>即将<br>开售</p></div>
+       <!--热卖倒计时-->
+       <div class="timeout">
+           <div class="time-title"><p>距结束仅剩</p></div>
+           <div class="time-remain"><p>5天12小时58分58</p></div>    
+       </div>
+    </div>   
     <div class="detail-text">
         <h2 class="name">阳澄湖大闸蟹</h2>
         <p class="desc">肉鲜肥美 苏州直供</p>
@@ -21,20 +31,47 @@
     <div class="btn-arrow">
         <img src="../assets/detail/bottom-arrow.png">
     </div>
+    <div class="item-detail">
+        <img src="../assets/detail/item-detail.jpg">
+    </div>    
     <div class="btn-line">
         <img src="../assets/detail/line-horzontail.png">
     </div> 
     <div class="btn-bar">
-    </div>          
+        <div class="btn-bar-wrap">
+            <router-link to='/'>
+            <div class="btn-home btn">
+                <div class="img-wrap"><img src="../assets/detail/item-home.png"></div>
+                <p class="btn-title">首页</p>
+            </div>
+            </router-link>
+            <router-link to='/cart'>
+            <div class="btn-cart btn">
+                <div class="img-wrap"><img src="../assets/detail/cart.png"><div class="cart-amount"><p class="cart-amount-num">88</p></div></div>
+                <p class="btn-title">购物车</p>
+            </div>
+            </router-link> 
+            <div class="btn-addCart onsale saleout" @click="addCart">
+                
+            </div>
+        </div>    
+    </div>
+    <!--加入购物车弹出层-->
+    <div class="addcart-ok">
+        <img src="../assets/detail/addcart-success.png" class="addcartsucc">
+    </div>    
   </div>    
 </template>
 <script>
     import { swiper, swiperSlide } from 'vue-awesome-swiper'
+    import Toast from 'vue-easy-toast'
+    import utils from '../common/utils'
     export default {
       name: 'detail',
       components: {
         swiper,
-        swiperSlide
+        swiperSlide,
+        Toast
       },
       data () {
         return {
@@ -53,6 +90,11 @@
             }
           }
         }
+      },
+      methods: {
+        addCart: function () {
+          utils.toToast('加载成功')
+        }
       }
     }
 </script>
@@ -65,12 +107,79 @@
         width: 88.53%;
         height: 10rem;
     }
+    .swiper-container{
+        /*overflow: visible;*/
+    }
     .swiper img{
         width: 100%;
         height:8.8rem;
     }
     .swiper-pagination-bullet-active{
         background-color: #32ab42 !important;
+    }
+    .swiper-wrap{
+        position: relative;
+    }
+    .swiper-wrap .tag{
+        display: table;
+        position: absolute;
+        top: -.293333rem;
+        left: 0.4666rem;
+        width: 1.3066rem;
+        height: 1.3066rem;
+        color: #fff;
+        background-size: cover;
+        z-index: 100;
+    }
+    .swiper-wrap .tag p{
+        display: table-cell;
+        vertical-align: middle;
+        width: 1.1rem;
+        font-size: .3866rem;
+        letter-spacing: 0;
+    }
+    .swiper-wrap .presale{
+        background-image: url("../assets/detail/unsale.png");
+    }
+    .swiper-wrap .offsale{
+        /*商品下架样式*/
+        /*background-image: url("../assets/detail/offsale.png");*/
+    }
+    .swiper-wrap .timeout{
+        width: 5.1rem;
+        position: absolute;
+        bottom: 1.2rem;
+        left: 50%;
+        transform: translate(-50%,0);
+        font-size: 0;
+        height: .5733rem;
+        z-index: 100;
+    }
+    .swiper-wrap .time-title{
+        display: inline-block;
+        /*width:1.8533rem*/
+        width: 1.9533rem;
+        height: 100%;
+        background-image: url("../assets/detail/time-red.png");
+    }
+    .time-title p{
+        color: #fff;
+        height: .5733rem;
+        line-height: .5733rem;
+        font-size: .293333rem;
+    }
+    .swiper-wrap .time-remain{
+        display: inline-block;
+        /*width:2.8666rem*/
+        width: 3.0666rem;
+        height: 100%;
+        background-image: url("../assets/detail/time-gray.png");
+    }
+    .time-remain p{
+        height: .5733rem;
+        line-height: .5733rem;
+        font-size: .24rem;
+        color: #fff;
     }
     .detail-text{
         font-size: 0;
@@ -110,10 +219,20 @@
     .btn-arrow img{
         vertical-align: top
     }
+    .item-detail{
+        margin-top: 2.133333rem;
+        width: 100%;
+    }
+    .item-detail img{
+        width: 100%;
+    }
     .btn-line{
         position: fixed;
         bottom: 1.43333rem;
         z-index: 2000;
+    }
+    .btn-line img{
+        width: 88.53%;
     }
     .btn-bar{
         background-color: #fff;
@@ -123,5 +242,85 @@
         position: fixed;
         bottom: 0;
         z-index: 1000;
+    }
+    .btn-bar-wrap{
+        width: 88.53%;
+        height: 100%;
+        margin: 0 auto;
+        font-size: 0;
+    }
+    .btn-bar-wrap .btn{
+        display: inline-block;
+        margin-top: 0.2333rem;
+        float: left;
+    }
+    .btn-bar-wrap .btn img{
+        width: 100%;
+        height: 100%;
+    }
+    .btn-bar-wrap .btn .btn-title{
+        font-size: .266667rem;
+        text-align: center;
+        line-height: .266667rem;
+        margin-top:.24rem;
+    }
+    .btn-bar-wrap .img-wrap{
+        width: .7066rem;
+        height: .7066rem;
+        margin: 0 auto;
+    }
+    .btn-home{
+        padding-right: 0.4666rem;
+        border-right: .053333rem solid #ecedef;
+    }
+    .btn-cart{
+        margin-left: 0.4666rem;
+    }
+    .btn-cart .img-wrap{
+        position: relative
+    }
+    .btn-cart .cart-amount{
+        position: absolute;
+        display: table;
+        width: 0.4666rem;
+        height: 0.4666rem;
+        background-image: url("../assets/detail/cart-amount.png");
+        background-size: cover;
+        top: -.08rem;
+        right: -.213333rem
+        
+    }
+    .cart-amount .cart-amount-num{
+        display: table-cell;
+        vertical-align: middle;
+        letter-spacing: 0;
+        font-size: 0.2266rem;
+        line-height: 0.4666rem;
+        color: #fff;
+    }
+    .btn-addCart{
+        width: 3.08rem;
+        height: .7066rem;
+        background-size: 100% 100%;
+        margin-top: .45rem;
+        float: right;
+    }
+    .onsale{
+        background-image: url("../assets/detail/add-cart.png");
+    }
+    .saleout{
+        /*商品下架样式*/
+        /*background-image: url("../assets/detail/saleout.png");*/
+    }
+    .addcart-ok{
+        position: absolute;
+        top: 43%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        z-index: 200;
+    }
+    .addcart-ok img{
+        width: 4.853333rem;
+        height: 3.12rem;
     }
 </style>
