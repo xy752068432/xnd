@@ -3,9 +3,7 @@
     <div class="swiper-wrap">  
     <swiper :options="swiperOption"  ref="mySwiper" class="swiper">  
        <!-- 这部分放你要渲染的那些内容 -->  
-       <swiper-slide class="slide"><div><img src="../assets/detail/item1.jpg"></div></swiper-slide>
-       <swiper-slide class="slide"><div><img src="../assets/detail/item2.jpg"></div></swiper-slide> 
-       <swiper-slide class="slide"><div><img src="../assets/detail/item3.jpg"></div></swiper-slide>   
+       <swiper-slide class="slide" v-for="(url,index) in goodsImg" :key="index"><div ><img :src="url"></div></swiper-slide>
        <!-- 这是轮播的小圆点 -->  
        <div class="swiper-pagination" slot="pagination"></div>
        
@@ -15,24 +13,24 @@
        <!--热卖倒计时-->
        <div class="timeout">
            <div class="time-title"><p>距结束仅剩</p></div>
-           <div class="time-remain"><p>5天12小时58分58</p></div>    
+           <div class="time-remain"><p>{{goodsDetail.leave_end_time_text}}</p></div>    
        </div>
     </div>   
     <div class="detail-text">
-        <h2 class="name">阳澄湖大闸蟹</h2>
-        <p class="desc">肉鲜肥美 苏州直供</p>
+        <h2 class="name">{{goodsDetail.title}}</h2>
+        <p class="desc">{{goodsDetail.description}}</p>
         <p>
             <span class="attach">&yen;</span>
-            <span class="price">25.5</span>
-            <span class="attach">/只</span>            
+            <span class="price">{{goodsDetail.price}}</span>
+            <span class="attach">/{{goodsDetail.unit}}</span>            
         </p>
-        <p class="start-time">预计8月15日发货</p>
+        <p class="start-time">{{goodsDetail.sendtime}}</p>
     </div>
     <div class="btn-arrow">
         <img src="../assets/detail/bottom-arrow.png">
     </div>
     <div class="item-detail">
-        <img src="../assets/detail/item-detail.jpg">
+        <img :src="goodsDetail.detail">
     </div>    
     <div class="btn-line">
         <img src="../assets/detail/line-horzontail.png">
@@ -56,8 +54,8 @@
             </div>
         </div>    
     </div>
-    <!--加入购物车弹出层-->
-    <div class="addcart-ok">
+    <!--加入购物车弹出层!暂时不用-->
+    <div class="addcart-ok" v-show="false">
         <img src="../assets/detail/addcart-success.png" class="addcartsucc">
     </div>    
   </div>    
@@ -66,6 +64,7 @@
     import { swiper, swiperSlide } from 'vue-awesome-swiper'
     import Toast from 'vue-easy-toast'
     import utils from '../common/utils'
+    import request from '@/common/request'
     export default {
       name: 'detail',
       components: {
@@ -88,12 +87,31 @@
             //  this.page = swiper.realIndex+1;
             //  this.index = swiper.realIndex;
             }
-          }
+          },
+          goodsId: '',
+          goodsDetail: '',
+          goodsImg: ''
         }
+      },
+      // props: ['goodsId'],
+      created: function () {
+        // console.log(this.$route.params.id)
+        // console.log(this.goodsId)
+        this.goodsId = localStorage.getItem('goodsId')
+
+        // this.$route.id = this.goodsId
+        // console.log(this.$route.id)
+        var self = this
+        request.get(this.$route, {goodsId: this.goodsId}, function (data) {
+          // console.log(data.buy)
+          self.goodsDetail = data.detail
+          self.goodsImg = data.goods_imgs
+          console.log(self.goodsImg)
+        })
       },
       methods: {
         addCart: function () {
-          utils.toToast('加载成功')
+          utils.toToast('加入购物车成功')
         }
       }
     }
@@ -101,14 +119,12 @@
 <style>
     @import "../common/mixin.css";
     #detail{
+        z-index: 200;
         margin-top: 1.49rem;
     }
     .swiper{
         width: 88.53%;
         height: 10rem;
-    }
-    .swiper-container{
-        /*overflow: visible;*/
     }
     .swiper img{
         width: 100%;

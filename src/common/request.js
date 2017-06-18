@@ -33,7 +33,9 @@ var preFix = '/api'
  */
 var urls = {
   Login: '/v1/login',
-  UserInfo: '/v1/user/{uid}'
+  UserInfo: '/v1/user/{uid}',
+  Index: '/v1/goods?page={page}',
+  detail: '/v1/goods/{goodsId}'
 }
 
 /*
@@ -41,9 +43,9 @@ var urls = {
 
     router: 路由对象
  */
-var getUrl = function (router) {
-  let bindObj = {uid: localStorage.getItem('id')}
-  return preFix + urls[router.name].format(bindObj)
+var getUrl = function (router, data) {
+  data.uid = localStorage.getItem('id')
+  return preFix + urls[router.name].format(data)
 }
 
 /*
@@ -58,7 +60,7 @@ var getUrl = function (router) {
 var request = function (method, router, data, successFun, errorFun) {
   axios.request({
     method: method,
-    url: getUrl(router),
+    url: getUrl(router, data),
     data: data,
     timeout: 5000,
     headers: {
@@ -106,8 +108,8 @@ var request = function (method, router, data, successFun, errorFun) {
 /*
     http get 请求封装
  */
-var get = function (router, successFun, errorFun) {
-  request('get', router, {}, successFun, errorFun)
+var get = function (router, data, successFun, errorFun) {
+  request('get', router, data, successFun, errorFun)
 }
 
 /*
