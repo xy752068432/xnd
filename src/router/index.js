@@ -6,6 +6,8 @@ import Login from '@/components/Login'
 import Index from '@/components/Index'
 // import home from '@/components/home'
 import detail from '@/components/detail'
+import center from '@/components/center'
+
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -23,6 +25,8 @@ export default new Router({
         {path: 'info', name: 'UserInfo', component: UserInfo}
       ]
     },
-    {path: '/detail', name: 'detail', component: detail}
+    {path: '/detail', name: 'detail', component: detail},
+    {path: '/person', name: 'person', component: center}
+
   ]
 })
