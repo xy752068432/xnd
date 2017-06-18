@@ -8,6 +8,8 @@ import Index from '@/components/Index'
 import detail from '@/components/detail'
 import center from '@/components/center'
 import cart from '@/components/cart'
+import myaddress from '@/components/myaddress'
+import newaddress from '@/components/newaddress'
 
 Vue.use(Router)
 
@@ -28,6 +30,8 @@ export default new Router({
     },
     {path: '/detail', name: 'detail', component: detail},
     {path: '/person', name: 'person', component: center},
+    {path: '/myaddress', name: 'myaddress', component: myaddress},
+    {path: '/newaddress', name: 'newaddress', component: newaddress},
     {path: '/cart', name: 'cart', component: cart}
 
   ]

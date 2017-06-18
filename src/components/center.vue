@@ -56,25 +56,15 @@
         <div class="licut">
           
         </div>
-        <div class="list">
         
-              <img id="address" src="../assets/personcenter/address.png">
+        <div class="list" @click="tomyaddress">
+            <img id="address" src="../assets/personcenter/address.png">
                <span id="address1">收货地址</span>
                <div class="arrow">
                  <img src="../assets/personcenter/arrow.png">
                </div>
         </div>
-        <div class="licut">
-          
-        </div>
-        <div class="list">
-         
-              <img  id="card" src="../assets/personcenter/card.png">
-               <span id="card1">优惠卷</span>
-               <div class="arrow">
-                 <img src="../assets/personcenter/arrow.png">
-               </div>
-        </div>
+        
         <div class="licut">
           
         </div>
@@ -96,7 +86,12 @@
 
 <script>
 export default {
-  name: 'center'
+  name: 'center',
+  methods: {
+    tomyaddress () {
+      this.$router.push({path: '/myaddress'})
+    }
+  }
 }
 </script>
 <style>
@@ -224,12 +219,6 @@ export default {
   width: 0.626667rem;
   height: 0.546667rem;
   margin: 0.52rem 0 0 0.56rem;
-}
-#card
-{
-  width: 0.573333rem;
-  height: 0.413333rem;
-  margin: 0.586667rem 0 0 0.6rem;
 }
 #link
 {
