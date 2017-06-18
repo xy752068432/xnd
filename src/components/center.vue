@@ -123,13 +123,13 @@ export default {
   width: 0.626667rem;
   height:0.586667rem;
   position: absolute;
-  top: 1.266667rem;
+  top: 1.6rem;
   right:0.626667rem;
 }
 #mes
 {
   position: absolute;
-  top: 0.6rem;
+  top: 0.9rem;
   right: 0.573333rem;
 }
 #mes img
