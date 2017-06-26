@@ -2,7 +2,7 @@
   <div id="app">
     <headerbar></headerbar>
     <router-view></router-view>
-    <!--<div class="line-bottom">
+    <div class="line-bottom">
       <img src="./assets/line-bottom.png">
     </div>
     <div class="tab">
@@ -13,9 +13,9 @@
         <router-link to='/cart'><p>购物车</p></router-link>
       </div>
       <div class="tab-item info">
-        <router-link to='/info'><p>个人中心</p></router-link>
+        <router-link to='/person'><p>个人中心</p></router-link>
       </div>
-    </div>-->
+    </div>
   </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
     color: #2c3e50;
     margin-top: 0px;
   }
-  /*.line-bottom{
+  .line-bottom{
     width: 100%;
     height: 0.093333rem;
     position: fixed;
@@ -98,5 +98,5 @@ export default {
   }
   .tab-item a.router-link-exact-active{
     color: #32ab42;
-  }*/
+  }
 </style>
