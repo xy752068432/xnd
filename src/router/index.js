@@ -7,6 +7,7 @@ import Index from '@/components/Index'
 // import home from '@/components/home'
 import detail from '@/components/detail'
 import cart from '@/components/cart'
+import order from '@/components/order'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -33,6 +34,7 @@ export default new Router({
       ]
     },
     {path: '/detail', name: 'detail', component: detail},
-    {path: '/cart', name: 'cart', component: cart}
+    {path: '/cart', name: 'cart', component: cart},
+    {path: '/order', name: 'order', component: order}
   ]
 })

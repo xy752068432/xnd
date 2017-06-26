@@ -1,12 +1,12 @@
 <template lang="html">
     <div id="cart">
         <!--收货地址-->
-        <div class="address">
+        <!--<div class="address">
            <div class="address-name">宋海松松<span class="address-tel">15474587458</span></div>
            
           <div class="address-text">湖南省长沙市岳麓区尖山小区902</div>
           <img src="../assets/cart/right-arrow.png" class="right-arrow">
-        </div>
+        </div>-->
         <!--购物车-->
         <div class="cart-item">
         <scroller
@@ -16,13 +16,33 @@
           <ul>
             <li class="cart-item-wrap">
               <div class="icon">
-                <div class="choose"></div>
-                <div class="icon-logo">
+                <div class="choose" @click="selectItem(item)"></div>
+                <div class="icon-logo" @click.stop="toDetail">
                   <div class="tag"><p>促销<br>热卖</p></div>
                   <img src="../assets/cart/item.png">
                 </div>  
               </div>
-              <div class="content">
+              <div class="content" @click="toDetail">
+                <h2 class="name">阳澄湖大闸蟹</h2>
+                <p class="desc">肉鲜肥美 苏州直供</p>
+                <p class="price-line"><span class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></span><span class="old-price">&yen;30.5/只</span></p>
+                <p class="deliver-time">预计8月15发货</p>
+              </div>
+              <div class="amount">
+                <span class="btn-minus" @click="changeAmount(item,0)"></span>
+                <input class="amount-num" type="number" value="999"></input>
+                <span class="btn-plus" @click="changeAmount(item,1)"></span>
+              </div>      
+            </li>
+            <!--<li class="cart-item-wrap">
+              <div class="icon" >
+                <div class="choose" @click="choose"></div>
+                <div class="icon-logo" >
+                  <div class="tag"><p>促销<br>热卖</p></div>
+                  <img src="../assets/cart/item.png">
+                </div>  
+              </div>
+              <div class="content" >
                 <h2 class="name">阳澄湖大闸蟹</h2>
                 <p class="desc">肉鲜肥美 苏州直供</p>
                 <p class="price-line"><span class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></span><span class="old-price">&yen;30.5/只</span></p>
@@ -33,21 +53,49 @@
                 <input class="amount-num" type="number" value="999"></input>
                 <span class="btn-plus"></span>
               </div>      
-            </li>
+            </li>-->
           </ul>
         </scroller>    
         </div>
+        <div class="toPay">
+          <div class="chooseAll" @click="selectAll"></div>
+          <p class="chooseAll-text">全选</p>
+          <div class="pay-sum-wrap">
+          <p><span class="pay-sum">合计：</span>&yen;12434.23<span class="deliver">(不含运费)</span></p>
+          </div>
+          <div class="toPayBtn" @click="toCheck"></div>
+        </div>  
         <bottombar></bottombar>
     </div>    
 </template>
 <script>
+import Vue from 'vue'
 import utils from '../common/utils'
 import VueScroller from 'vue-scroller'
 import bottombar from '../components/bottombar'
 export default {
+  //  itemList => 购物车列表
+  data () {
+    return {
+      itemList: [],
+      selectAll: false
+    }
+  },
   components: {
     bottombar,
     VueScroller
+  },
+  computed: {
+    //  计算总金额
+    totalMoney: function () {
+      var total = 0
+      this.itemList.forEach(function (item, index) {
+        if (item.checked) {
+          total += item.quantity * item.price
+        }
+      })
+      return total
+    }
   },
   methods: {
     refresh: function (done) {
@@ -60,6 +108,42 @@ export default {
       setTimeout(() => {
         done(true)
       }, 500)
+    },
+    //  进入商品详情页
+    toDetail: function () {
+      console.log('toDetail')
+      this.$router.push({path: '/detail'})
+    },
+    // 去结算
+    toCheck: function () {
+      this.$router.push({path: '/order'})
+    },
+    //  选中购物车商品
+    selectItem: function (item) {
+      if (typeof item.checked === 'undefined') {
+        Vue.set(item, 'checked', true)
+      } else {
+        item.checked = !item.checked
+      }
+    },
+    //  全选
+    selectAll: function () {
+      this.selectAll = !this.selectAll
+      this.itemList.forEach((item, index) => {
+        if (typeof item.checked === 'undefined') {
+          Vue.set(item, 'checked', this.selectAll)
+        } else {
+          item.checked = this.selectAll
+        }
+      })
+    },
+    //  改变购物车数量
+    changeAmount: function (item, type) {
+      if (type) {
+        item.quantity++
+      } else {
+        item.quantity--
+      }
     }
   }
 }
@@ -92,15 +176,13 @@ export default {
   .address .address-text{
     font-size: .306666rem;
     margin-top: .213333rem
-  }.address .right-arrow{
+  }
+  .address .right-arrow{
     position: absolute;
     right: .573333rem;
     top:.746667rem;
     width: .2rem;
     height: .333333rem;
-  }
-  ._v-container{
-    margin-top: 1.84rem !important;
   }
   .cart-item-wrap{
     padding: .4666rem 5.73%;
@@ -234,5 +316,58 @@ export default {
     height: .533333rem;
     background-image: url("../assets/cart/tag-plus.png");
     background-size: 100% 100%;
+  }
+  .toPay{
+    background-color: #fff;
+    position: fixed;
+    bottom: 1.58666rem;
+    width: 100%;
+    height: 1.213333rem;
+    letter-spacing: 0;
+    font-size: 0;
+    border-top: 1px solid #ecedef;
+  }
+  .chooseAll{
+    float: left;
+    margin-left: 5.73333%;
+    margin-top: .306666rem;
+    background-image: url("../assets/cart/choose.png");
+    width: .586667rem;
+    height: .586667rem;
+    background-size: 100% 100%;
+  }
+  .chooseAll-text{
+    float: left;
+    margin-left: .053333rem;
+    margin-top: .453333rem;
+    font-size: .293333rem;
+  }
+  .pay-sum-wrap{
+    float: left;
+    width: 49.3333%;
+  }
+  .pay-sum-wrap p{
+    float: left;
+    font-size: .346667rem;
+    margin-left: 4.53333%;
+    margin-top: .453333rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pay-sum-wrap .pay-sum{
+    font-weight: bold;
+  }
+  .pay-sum-wrap .deliver{
+    font-size: .28rem;
+  }
+  .toPayBtn{
+    float: right;
+    margin-top: .253333rem;
+    margin-right: 5.73333%;
+    background-image: url("../assets/cart/topay.png");
+    background-size: 100% 100%;
+    width: 24.93333%;
+    height:.706666rem;
   }
 </style>
