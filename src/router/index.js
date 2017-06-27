@@ -9,6 +9,7 @@ import detail from '@/components/detail'
 import center from '@/components/center'
 import cart from '@/components/cart'
 import order from '@/components/order'
+import orderDetail from '@/components/orderDetail'
 
 Vue.use(Router)
 
@@ -36,8 +37,9 @@ export default new Router({
       ]
     },
     {path: '/detail', name: 'detail', component: detail},
+    {path: '/cart', name: 'cart', component: cart},
     {path: '/order', name: 'order', component: order},
-    {path: '/person', name: 'person', component: center},
-    {path: '/cart', name: 'cart', component: cart}
+    {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
+    {path: '/person', name: 'person', component: center}
   ]
 })

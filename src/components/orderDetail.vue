@@ -1,10 +1,9 @@
 <template lang="html">
-  <div id="order">
+  <div id="orderDetail">
         <div class="address">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
             <div class="address-name">宋海松松<span class="address-tel">15474587458</span></div>   
             <div class="address-text">湖南省长沙市岳麓区尖山小区902</div>
-            <img src="../assets/cart/right-arrow.png" class="right-arrow">
         </div>
         <div class="deliver">
             <div class="deliver-title">发货时间</div>
@@ -13,10 +12,13 @@
                 <span class="deliver-day">约三天到货</span>
             </div>
         </div>
-        <div class="discount">
-            <div class="discount-title">优惠码</div>
-            <div class="discount-detail">暂无可用优惠码</div>
-            <img src="../assets/cart/right-arrow.png" class="right-arrow" @click="toastShow">
+        <div class="orderStatus" v-show="payStatus">
+            <ul>
+                <li><span class="orderStatus-left">订单状态：</span><span class="orderStatus-right">已支付</span></li>
+                <li><span class="orderStatus-left">订单号：</span><span class="orderStatus-right">2020382515</span></li>
+                <li><span class="orderStatus-left">支付方式：</span><span class="orderStatus-right">微信支付</span></li>
+                <li><span class="orderStatus-left">支付时间：</span><span class="orderStatus-right">2017-05-15 13:55:12</span></li>
+            </ul>
         </div>
         <div class="order-list">
             <ul>
@@ -30,42 +32,30 @@
         </div>
         <div class="toCheck">
             <span class="check-all-money">合计：&yen;110.00</span>
-            <span class="check-btn"></span>
-        </div>
-        <!--优惠码输入弹窗-->
-        <transition name="fade">
-            <div class="mask" v-show="toastDisplay">
-                <div class="discount-toast" v-show="toastDisplay">
-                    <input type="text" placeholder="请输入优惠码">
-                    <div class="discount-toast-confirm">
-                        <div class="btn" @click="toastShow">取消</div>
-                        <div class="btn">确认</div>
-                    </div>    
-                </div>
-            </div>    
-        </transition>
+            <span class="check-btn" :class="payStatus ? 'pay' : 'unpay' ">等待收货</span>
+        </div>        
+        <bottombar></bottombar>                      
   </div>
 </template>
-<<script>
+<script>
+import bottombar from '../components/bottombar'
 export default {
   data () {
     return {
-      toastDisplay: false
+      payStatus: false
     }
   },
-  methods: {
-    toastShow: function () {
-      this.toastDisplay = !this.toastDisplay
-    }
+  components: {
+    bottombar
   }
 }
 </script>
-<style scoped>
+<style>
     @import "../common/mixin.css";  
-    #order{
+    #orderDetail{
         margin-top: .983333rem;
         position: relative;
-    }  
+    }
     .address{
         z-index: 200;
         background-color: #fff;
@@ -130,20 +120,33 @@ export default {
     }
     .deliver .deliver-time .deliver-day{
         float: right;
+    }    
+    .orderStatus{
+        padding: .373333rem .573333rem;
+        box-sizing: border-box;
+        font-size: 0;
+        letter-spacing: 0;
+        border-bottom: .026667rem solid #ecedef;         
     }
-    .discount{
-        position: relative;
-    }
-    .discount .discount-detail{
+    .orderStatus li span{
         font-size: .413333rem;
-        text-align: left;
     }
-    .discount img{
-        position: absolute;
-        bottom: .4rem;
-        right: .573333rem;
-        width: .2rem;
-        height: .333333rem;
+    .orderStatus li{
+        margin-bottom: .373333rem;
+    }
+    .orderStatus li::after{
+        display: block;
+        content: '';
+        height: 0;
+        clear:both;
+        overflow: hidden;
+        visibility: hidden;
+    }
+    .orderStatus li .orderStatus-left{
+        float: left;
+    }
+    .orderStatus li .orderStatus-right{
+        float: right;
     }
     .order-list{
         padding: .373333rem .573333rem;
@@ -184,12 +187,12 @@ export default {
     }
     .order-list li .list-right-item .price{
         float: right;
-    }
+    }    
     .toCheck{
         position: fixed;
-        bottom: 0;
+        bottom: 1.5856rem;
         width: 100%;
-        height: 1.533333rem;
+        height: 1.3733333rem;
         padding: 0 .573333rem;
         border-top: .026667rem solid #ecedef; 
         box-sizing: border-box;
@@ -198,64 +201,22 @@ export default {
     }
     .toCheck .check-all-money{
         float: left;
-        margin-top: .533333rem;
+        margin-top: .48rem;
         font-size: .466666rem;
     }
     .toCheck .check-btn{
         float: right;
-        margin-top: .386666rem;
+    }    
+    .toCheck .pay{
+        font-size: .466666rem;
+        color: rgb(50,171,66);
+        margin-top: .453333rem;        
+    }
+    .toCheck .unpay{
+        margin-top: .306666rem;
         width: 3.08rem;
         height: .746667rem;
         background-image:url("../assets/cart/toCheck.png");
         background-size: 100% 100%; 
-    }
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s
-    }
-    .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-        opacity: 0
-    }
-    .mask{
-        position: fixed;
-        z-index: 1000;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.6);
-    }
-    .discount-toast{
-        z-index: 2000;
-        width: 60%;
-        height: 2.666667rem;
-        background-color: #fff;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        border-radius: 3px;
-        transition: 2s;
-    }
-    .discount-toast input{
-        width: 80%;
-        height: .64rem;
-        outline: none;
-        border: 1px solid #ecedef;
-        font-size: .373333rem;
-        line-height: .64rem;
-    }
-    .discount-toast .discount-toast-confirm{
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        padding: .133333rem 0;
-    }
-    .discount-toast .discount-toast-confirm .btn{
-        cursor: pointer;
-        float: left;
-        width: 50%;
-        font-size: .48rem;
-        color: #31ab43;
-        text-align: center;
-    }
+    }      
 </style>

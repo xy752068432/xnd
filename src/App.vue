@@ -2,7 +2,7 @@
   <div id="app">
     <headerbar></headerbar>
     <router-view></router-view>
-    <div class="line-bottom">
+    <!--<div class="line-bottom">
       <img src="./assets/line-bottom.png">
     </div>
     <div class="tab">
@@ -15,7 +15,7 @@
       <div class="tab-item info">
         <router-link to='/person'><p>个人中心</p></router-link>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
