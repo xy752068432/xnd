@@ -1,12 +1,5 @@
 <template lang="html">
     <div id="cart">
-        <!--收货地址-->
-        <!--<div class="address">
-           <div class="address-name">宋海松松<span class="address-tel">15474587458</span></div>
-           
-          <div class="address-text">湖南省长沙市岳麓区尖山小区902</div>
-          <img src="../assets/cart/right-arrow.png" class="right-arrow">
-        </div>-->
         <!--购物车-->
         <div class="cart-item">
         <scroller
@@ -14,54 +7,34 @@
           :on-infinite="infinite"
           style="padding-top: 0.966rem;padding-bottom: 24px;">           
           <ul>
-            <li class="cart-item-wrap">
+            <li class="cart-item-wrap" v-for="(item,index) in goods">
               <div class="icon">
-                <div class="choose" @click="selectItem(item)"></div>
+                <div class="choose-btn" @click="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
                 <div class="icon-logo" @click.stop="toDetail">
                   <div class="tag"><p>促销<br>热卖</p></div>
-                  <img src="../assets/cart/item.png">
+                  <img :src="item.goods_info.goods_img">
                 </div>  
               </div>
               <div class="content" @click="toDetail">
-                <h2 class="name">阳澄湖大闸蟹</h2>
-                <p class="desc">肉鲜肥美 苏州直供</p>
-                <p class="price-line"><span class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></span><span class="old-price">&yen;30.5/只</span></p>
-                <p class="deliver-time">预计8月15发货</p>
+                <h2 class="name">{{item.goods_info.title}}</h2>
+                <p class="desc">{{item.goods_info.description}}</p>
+                <p class="price-line"><span class="price"><span class="attach">&yen;</span>{{item.goods_info.price}}<span class="attach">/{{item.goods_info.unit}}</span></span><span class="old-price">&yen;{{item.goods_info.origin_price}}/{{item.unit}}</span></p>
+                <p class="deliver-time">预计{{item.goods_info.send_time}}发货</p>
               </div>
               <div class="amount">
                 <span class="btn-minus" @click="changeAmount(item,0)"></span>
-                <input class="amount-num" type="number" value="999"></input>
+                <input class="amount-num" type="number" :value="item.goods_num"></input>
                 <span class="btn-plus" @click="changeAmount(item,1)"></span>
               </div>      
             </li>
-            <!--<li class="cart-item-wrap">
-              <div class="icon" >
-                <div class="choose" @click="choose"></div>
-                <div class="icon-logo" >
-                  <div class="tag"><p>促销<br>热卖</p></div>
-                  <img src="../assets/cart/item.png">
-                </div>  
-              </div>
-              <div class="content" >
-                <h2 class="name">阳澄湖大闸蟹</h2>
-                <p class="desc">肉鲜肥美 苏州直供</p>
-                <p class="price-line"><span class="price"><span class="attach">&yen;</span>25.5<span class="attach">/只</span></span><span class="old-price">&yen;30.5/只</span></p>
-                <p class="deliver-time">预计8月15发货</p>
-              </div>
-              <div class="amount">
-                <span class="btn-minus"></span>
-                <input class="amount-num" type="number" value="999"></input>
-                <span class="btn-plus"></span>
-              </div>      
-            </li>-->
           </ul>
         </scroller>    
         </div>
         <div class="toPay">
-          <div class="chooseAll" @click="selectAll"></div>
+          <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
           <p class="chooseAll-text">全选</p>
           <div class="pay-sum-wrap">
-          <p><span class="pay-sum">合计：</span>&yen;12434.23<span class="deliver">(不含运费)</span></p>
+          <p><span class="pay-sum">合计：</span>&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
           </div>
           <div class="toPayBtn" @click="toCheck"></div>
         </div>  
@@ -73,28 +46,41 @@ import Vue from 'vue'
 import utils from '../common/utils'
 import VueScroller from 'vue-scroller'
 import bottombar from '../components/bottombar'
+import request from '../common/request'
 export default {
   //  itemList => 购物车列表
   data () {
     return {
-      itemList: [],
-      selectAll: false
+      selectAll: false,
+      goods: []
     }
   },
   components: {
     bottombar,
     VueScroller
   },
+  created: function () {
+    localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+    // var self = this
+    // request.get(this.route)
+    var self = this
+    request.get(this.$route, {}, function (data) {
+      console.log('cart')
+      console.log(data)
+      self.goods = data
+      console.log(self.goods)
+    })
+  },
   computed: {
     //  计算总金额
     totalMoney: function () {
       var total = 0
-      this.itemList.forEach(function (item, index) {
+      this.goods.forEach(function (item, index) {
         if (item.checked) {
-          total += item.quantity * item.price
+          total += item.goods_num * item.goods_info.price
         }
       })
-      return total
+      return total.toFixed(2)
     }
   },
   methods: {
@@ -127,9 +113,9 @@ export default {
       }
     },
     //  全选
-    selectAll: function () {
+    chooseAll: function () {
       this.selectAll = !this.selectAll
-      this.itemList.forEach((item, index) => {
+      this.goods.forEach((item, index) => {
         if (typeof item.checked === 'undefined') {
           Vue.set(item, 'checked', this.selectAll)
         } else {
@@ -140,10 +126,13 @@ export default {
     //  改变购物车数量
     changeAmount: function (item, type) {
       if (type) {
-        item.quantity++
+        item.goods_num++
       } else {
-        item.quantity--
+        if (item.goods_num > 1) {
+          item.goods_num--
+        }
       }
+      // request.put(this.$route, )
     }
   }
 }
@@ -201,7 +190,7 @@ export default {
     width: 34.64%;
     margin-right: 2.666667%;
   }
-  .icon .choose{
+  .icon .choose-btn{
     display: inline-block;
     float: left;
     width: .586667rem;
@@ -209,8 +198,14 @@ export default {
     margin-top: .746667rem;
     margin-right: 9.11%;
     background-size: 100% 100%;
-    background-image: url("../assets/cart/unchoose.png");
+    
     background-repeat: no-repeat
+  }
+  .icon .choose{
+    background-image: url("../assets/cart/choose.png");
+  }
+  .icon .unchoose{
+    background-image: url("../assets/cart/unchoose.png");
   }
   .icon .icon-logo{
     position: relative;
@@ -331,10 +326,15 @@ export default {
     float: left;
     margin-left: 5.73333%;
     margin-top: .306666rem;
-    background-image: url("../assets/cart/choose.png");
     width: .586667rem;
     height: .586667rem;
     background-size: 100% 100%;
+  }
+  .chooseAll.select{
+    background-image: url("../assets/cart/choose.png");
+  }
+  .chooseAll.unselect{
+    background-image: url("../assets/cart/unchoose.png");
   }
   .chooseAll-text{
     float: left;

@@ -35,7 +35,9 @@ var urls = {
   Login: '/v1/login',
   UserInfo: '/v1/user/{uid}',
   Index: '/v1/goods?page={page}',
-  detail: '/v1/goods/{goodsId}'
+  detail: '/v1/goods/{goodsId}',
+  cart: '/v1/user/2/goods_car',
+  addcart: '/v1/user/2/goods_car'
 }
 
 /*

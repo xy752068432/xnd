@@ -50,7 +50,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
     @import "../common/mixin.css";  
     #orderDetail{
         margin-top: .983333rem;
@@ -100,14 +100,14 @@ export default {
         width: .2rem;
         height: .333333rem;
     }
-    .deliver, .discount{
+    .deliver{
         font-size: 0;
         height: 1.853333rem;
         padding: .373333rem .573333rem;
         box-sizing: border-box;
         border-bottom: .026667rem solid #ecedef; 
     }
-    .deliver .deliver-title , .discount .discount-title{
+    .deliver .deliver-title{
         text-align: left;
         font-size: .413333rem;
         margin-bottom: .28rem;

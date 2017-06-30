@@ -216,6 +216,9 @@
     font-size: 0.226rem;
     color: rgba(0,0,0,0.6);
     margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .old-price{
     text-decoration: line-through;

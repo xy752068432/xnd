@@ -10,7 +10,7 @@ import center from '@/components/center'
 import cart from '@/components/cart'
 import order from '@/components/order'
 import orderDetail from '@/components/orderDetail'
-
+import addcart from '@/components/addcart'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -36,8 +36,19 @@ export default new Router({
         {path: 'info', name: 'UserInfo', component: UserInfo}
       ]
     },
-    {path: '/detail', name: 'detail', component: detail},
-    {path: '/cart', name: 'cart', component: cart},
+    {
+      path: '/detail',
+      name: 'detail',
+      component: detail,
+      children: [
+        {path: 'addcart', name: 'addcart', component: addcart}
+      ]
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: cart
+    },
     {path: '/order', name: 'order', component: order},
     {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
     {path: '/person', name: 'person', component: center}

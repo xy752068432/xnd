@@ -117,7 +117,12 @@ export default {
         box-sizing: border-box;
         border-bottom: .026667rem solid #ecedef; 
     }
-    .deliver .deliver-title , .discount .discount-title{
+    .deliver .deliver-title{
+        text-align: left;
+        font-size: .413333rem;
+        margin-bottom: .28rem;
+    }    
+    .discount .discount-title{
         text-align: left;
         font-size: .413333rem;
         margin-bottom: .28rem;
