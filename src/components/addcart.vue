@@ -25,32 +25,19 @@
     // import axios from 'axios'
     export default {
       name: 'addcart',
+      props: ['goodsId'],
+      created: function () {
+      },
       methods: {
         addCart: function () {
-          request.post(this.$route, {goods_id: localStorage.getItem('goodsId'), goods_num: 1}, function (data) {
+          request.post(this.$route, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
             console.log(data)
+            if (data.state === 0) {
+              utils.toToast('加入购物车成功')
+            } else {
+              utils.toToast('再等等哦~商品还没开售呢')
+            }
           })
-        //   axios.post('/api/v1/user/2/goods_car', {
-        //     headers: {'Authorization': localStorage.getItem('token')}
-        //     // goods_num: 1
-        //   })
-        //   .then((res) => {
-        //     console.log(res)
-        //   })
-        // var data = {
-        //   'goods_id': localStorage.getItem('goodsId'),
-        //   'goods_num': 1
-        // }
-        // axios.request({
-        //   method: 'post',
-        //   url: '/api/v1/user/2/goods_car',
-        //   data: data,
-        //   timeout: 5000,
-        //   headers: {
-        //   'Authorization': localStorage.getItem('token')
-        //   }
-        // })
-          utils.toToast('加入购物车成功')
         }
       }
     }

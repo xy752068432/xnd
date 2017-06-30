@@ -36,7 +36,7 @@
         <img src="../assets/detail/line-horzontail.png">
     </div>
     <!--<router-view></router-view>-->
-    <addcart></addcart>
+    <addcart :goodsId="goodsId"></addcart>
     <!--<div class="btn-bar">
         <div class="btn-bar-wrap">
             <router-link to='/'>
@@ -99,12 +99,8 @@
       },
       // props: ['goodsId'],
       created: function () {
-        // console.log(this.$route.params.id)
-        // console.log(this.goodsId)
-        this.goodsId = localStorage.getItem('goodsId')
-
-        // this.$route.id = this.goodsId
-        // console.log(this.$route.id)
+        console.log('传过来的参数' + this.$route.query.goodsId)
+        this.goodsId = this.$route.query.goodsId
         var self = this
         request.get(this.$route, {goodsId: this.goodsId}, function (data) {
           // console.log(data.buy)

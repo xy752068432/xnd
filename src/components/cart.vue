@@ -7,7 +7,7 @@
           :on-infinite="infinite"
           style="padding-top: 0.966rem;padding-bottom: 24px;">           
           <ul>
-            <li class="cart-item-wrap" v-for="(item,index) in goods">
+            <li class="cart-item-wrap" v-for="(item,index) in goods" v-show="!item.state">
               <div class="icon">
                 <div class="choose-btn" @click="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
                 <div class="icon-logo" @click.stop="toDetail">
@@ -15,7 +15,7 @@
                   <img :src="item.goods_info.goods_img">
                 </div>  
               </div>
-              <div class="content" @click="toDetail">
+              <div class="content" @click="toDetail(item)">
                 <h2 class="name">{{item.goods_info.title}}</h2>
                 <p class="desc">{{item.goods_info.description}}</p>
                 <p class="price-line"><span class="price"><span class="attach">&yen;</span>{{item.goods_info.price}}<span class="attach">/{{item.goods_info.unit}}</span></span><span class="old-price">&yen;{{item.goods_info.origin_price}}/{{item.unit}}</span></p>
@@ -52,7 +52,8 @@ export default {
   data () {
     return {
       selectAll: false,
-      goods: []
+      goods: [],
+      currentPage: 1
     }
   },
   components: {
@@ -64,7 +65,7 @@ export default {
     // var self = this
     // request.get(this.route)
     var self = this
-    request.get(this.$route, {}, function (data) {
+    request.get(this.$route, {page: 1}, function (data) {
       console.log('cart')
       console.log(data)
       self.goods = data
@@ -85,20 +86,34 @@ export default {
   },
   methods: {
     refresh: function (done) {
-      setTimeout(() => {
+      var self = this
+      request.get(this.$route, {page: 1}, function (data) {
+        self.goods = data
         done()
         utils.toToast('刷新成功')
-      }, 500)
+      })
     },
     infinite: function (done) {
-      setTimeout(() => {
-        done(true)
-      }, 500)
+      var refreshData
+      var self = this
+      request.get(this.$route, {page: self.currentPage + 1}, function (data) {
+        refreshData = data
+        if (refreshData.length < 10) {
+          console.log('无更多数据')
+          self.goods = self.goods.concat(refreshData)
+          done(true)
+          // self.loadmore = false
+        } else {
+          self.currentPage++
+          self.goods = self.goods.concat(refreshData)
+          done()
+        }
+      })
     },
     //  进入商品详情页
-    toDetail: function () {
+    toDetail: function (item) {
       console.log('toDetail')
-      this.$router.push({path: '/detail'})
+      this.$router.push({path: '/detail', query: { goodsId: 1 }})
     },
     // 去结算
     toCheck: function () {
@@ -127,12 +142,20 @@ export default {
     changeAmount: function (item, type) {
       if (type) {
         item.goods_num++
+        request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
       } else {
         if (item.goods_num > 1) {
           item.goods_num--
+          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+        } else {
+          request.delete(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+            console.log(data)
+            if (!data.status) {
+              this.refresh()
+            }
+          })
         }
       }
-      // request.put(this.$route, )
     }
   }
 }
