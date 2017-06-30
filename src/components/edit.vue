@@ -47,7 +47,7 @@ import vueArea from 'vue-area'
 import request from '@/common/request'
 
 export default {
-  name: 'newaddress',
+  name: 'edit',
   components: {
     vueArea
   },
@@ -57,9 +57,23 @@ export default {
       show: false,
       name: '',
       phone: '',
+      add: '',
       detail: '',
-      sex: 0
+      sex: '男'
     }
+  },
+  created: function () {
+    var that = this
+    localStorage.setItem('id', 2)
+    localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+    request.get(this.$route, {
+      id: 2,
+      addr_id: 7}, function (data) {
+        console.log(data)
+        that.name = data.msg.name
+        that.phone = data.msg.phone
+        that.add = data.msg.fullAddr
+      })
   },
   methods: {
     back2 () {
@@ -70,20 +84,18 @@ export default {
       this.result = result
     },
     saveback () {
-      localStorage.setItem('id', 2)
-      localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
       request.post(this.$route, {
         id: 2,
         sex: this.sex,
         name: this.name,
         phone: this.phone,
-        province: this.result.province.code,
-        city: this.result.city.code,
-        area: this.result.area.code,
+        province: this.result.province.name,
+        city: this.result.city.name,
+        area: this.result.area.name,
         detail: this.detail}, function (data) {
           console.log(data)
         })
-     // this.$router.push({path: '/myaddress'})
+      this.$router.push({path: '/myaddress'})
     }
   }
 }

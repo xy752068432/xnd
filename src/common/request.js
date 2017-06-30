@@ -33,7 +33,10 @@ var preFix = '/api'
  */
 var urls = {
   Login: '/v1/login',
-  UserInfo: '/v1/user/{uid}'
+  UserInfo: '/v1/user/{uid}',
+  newaddress: '/v1/user/{uid}/address',
+  edit: '/v1/user/{uid}/address/7',
+  myaddress: '/v1/user/{uid}/address'
 }
 
 /*
@@ -85,7 +88,7 @@ var request = function (method, router, data, successFun, errorFun) {
       if (error.response.data &&
         error.response.data.code === 3) {
         // 未登录或者登录已经过期
-        router.push({path: '/login'})
+        this.router.push({path: '/login'})
       }
       // 自定义错误函数
       if (errorFun) {
@@ -106,8 +109,8 @@ var request = function (method, router, data, successFun, errorFun) {
 /*
     http get 请求封装
  */
-var get = function (router, successFun, errorFun) {
-  request('get', router, {}, successFun, errorFun)
+var get = function (router, data, successFun, errorFun) {
+  request('get', router, data, successFun, errorFun)
 }
 
 /*

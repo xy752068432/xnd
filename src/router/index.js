@@ -10,6 +10,9 @@ import center from '@/components/center'
 import cart from '@/components/cart'
 import myaddress from '@/components/myaddress'
 import newaddress from '@/components/newaddress'
+import message from '@/components/message'
+import edit from '@/components/edit'
+import logdetail from '@/components/logisticsdetail'
 
 Vue.use(Router)
 
@@ -32,7 +35,9 @@ export default new Router({
     {path: '/person', name: 'person', component: center},
     {path: '/myaddress', name: 'myaddress', component: myaddress},
     {path: '/newaddress', name: 'newaddress', component: newaddress},
-    {path: '/cart', name: 'cart', component: cart}
-
+    {path: '/cart', name: 'cart', component: cart},
+    {path: '/message', name: 'message', component: message},
+    {path: '/edit', name: 'edit', component: edit},
+    {path: '/logdetail', name: 'logdetail', component: logdetail}
   ]
 })

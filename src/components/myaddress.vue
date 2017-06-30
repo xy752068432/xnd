@@ -1,31 +1,22 @@
 <template lang="html">
-<div>
-	<div id="back1">
-       <img class="arrowwh" src="../assets/personcenter/arrow.png">
+<div id="contain">
+    
+	<div id="back1" @click="back">
+       <img class="arrowwh" src="../assets/back.png">
        <span>我的地址</span>
     </div>
+  
     <div class="licut">
   	   
     </div>
     <ul>
-    	<li>
-    		<div class="addressdetail" @click="clicked1">
-    			<div class="name f1"><span>柏巴拉·格列朗木</span></div> <div class="tel f1"><span>13055144755</span></div>
-    			<div class="address">湖南省长沙市岳麓区尖山小区902</div>
-    			<img class="select" src="../assets/personaddress1/selected.png" @click="select" />
-                <img class="edit" src="../assets/personaddress1/edit.png" />
-                <img class="delete" src="../assets/personaddress1/delete.png" />
-    		</div>
-    		<div class="licut">
-  	   
-            </div>
-    	</li>
-        <li>
+    	<li v-for="(item,index) in addressList">
     		<div class="addressdetail">
-    			<div class="name f1"><span>柏巴拉·格列朗木</span></div> <div class="tel f1"><span>13055144755</span></div>
-    			<div class="address">湖南省长沙市岳麓区尖山小区902</div>
-    			<img class="select" src="../assets/personaddress1/noselect.png" />
-                <img class="edit" src="../assets/personaddress1/edit.png" />
+    			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
+    			<div class="address">{{item.msg.fullAddr}}</div>
+          <img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/noselect.png"  />
+    			<img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/selected.png"  />
+                <img  @click="clicked3" class="edit"  src="../assets/personaddress1/edit.png" />
                 <img class="delete" src="../assets/personaddress1/delete.png" />
     		</div>
     		<div class="licut">
@@ -33,26 +24,75 @@
             </div>
     	</li>
     </ul>
+    
+      
+       <div id="add2" @click="clicked2">
+          <div id="add2content">
+            <span> + 添加新地址</span>
+          </div>
+      </div>
 </div>
  </template>
 
 <script>
+import request from '@/common/request'
 export default {
   name: 'myaddress',
+  data: function () {
+    return {
+      addressList: [],
+      isDefault: false
+    }
+  },
+  created: function () {
+    var that = this
+   // console.log(this.$route)
+    // console.log(that.addressList)
+    localStorage.setItem('id', 2)
+    localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+    request.get(this.$route, {
+      id: 2, limit: 10, page: 1}, function (data) {
+        that.addressList = data
+        console.log(data)
+      })
+  },
   methods: {
     clicked1 () {
       this.$router.push({path: '/newaddress'})
+    },
+    back () {
+      this.$router.push({path: '/person'})
+    },
+    clicked2 () {
+      this.$router.push({path: '/newaddress'})
+    },
+    clicked3 () {
+      this.$router.push({path: '/edit'})
+    },
+    setDefault (addressID) {
+      for (var i = 0; i < this.addressList.length; i++) {
+        if (this.addressList[i].msg.id === addressID) {
+          this.addressList[i].msg.state = true
+        } else {
+          this.addressList[i].msg.state = false
+        }
+      }
     }
   }
 }
+
 </script>
 <style>
 @import "../common/mixin.css";
+#contain
+{
+  overflow-y: auto;
+}
 #back1
 {
 	margin-top: 0.96rem;
 	width: 100%;
-	height: 1.413333rem;
+	height: 1.24rem;
 	text-align: left;
 }
 .arrowwh
@@ -126,5 +166,20 @@ export default {
 .delete
 {
 	right: 0.573333rem;
+}
+#add2
+{ position: fixed;
+  left: 1.733333rem;
+  bottom: 2.04rem;
+  width: 6.773333rem;
+  height: 1.12rem;
+  font-size: 0.4rem;
+  background-color: white;
+  border:#ADADAD solid 0.013333rem;
+  color: #ADADAD;
+}
+#add2content
+{
+  margin-top:0.333333rem; 
 }
 </style>

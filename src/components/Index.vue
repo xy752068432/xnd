@@ -81,7 +81,7 @@
     import VueScroller from 'vue-scroller'
     import bottombar from '../components/bottombar'
     import Toast from 'vue-easy-toast'
-    console.log(utils)
+    // console.log(utils)
     // console.log(VueScroller.Scroller)
     export default{
       name: 'home',
@@ -97,7 +97,7 @@
       },
       methods: {
         toTop () {
-          console.log('totop')
+          // console.log('totop')
           VueScroller.scrollTo(0, 0)
           // utils.toTop()
           // document.body.scrollTop = 0

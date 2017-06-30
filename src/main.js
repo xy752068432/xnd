@@ -6,6 +6,7 @@ import router from './router'
 import VueScroller from 'vue-scroller'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Toast from 'vue-easy-toast'
+
 Vue.use(VueScroller)
 Vue.use(VueAwesomeSwiper)
 Vue.use(Toast)
@@ -19,3 +20,4 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+

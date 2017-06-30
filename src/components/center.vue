@@ -6,7 +6,7 @@
           <div id="logo21">
               <img src="../assets/personcenter/tx.png">
           </div>
-          <div id="meslogo">
+          <div id="meslogo" @click="mes">
             <img id="meslogo1" src="../assets/personcenter/meslogo.png">
             <div id="mes">
                 <img src="../assets/personcenter/mes.png">
@@ -45,7 +45,7 @@
           
         </div>
         
-        <div class="list">
+        <div class="list" @click="tologdetail">
          
               <img id="allform" src="../assets/personcenter/allform.png">
               <span id="allform1">全部订单</span>
@@ -68,7 +68,7 @@
         <div class="licut">
           
         </div>
-        <div class="list">
+        <div class="list" herf="tel:123456">
          
               <img id="link" src="../assets/personcenter/link.png">
                <span id="link1">联系客服</span>
@@ -90,6 +90,12 @@ export default {
   methods: {
     tomyaddress () {
       this.$router.push({path: '/myaddress'})
+    },
+    mes () {
+      this.$router.push({path: '/message'})
+    },
+    tologdetail () {
+      this.$router.push({path: '/logdetail'})
     }
   }
 }
