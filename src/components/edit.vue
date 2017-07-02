@@ -1,7 +1,7 @@
 <template>
     <div>
     	<div id="back2" @click="back2">
-           <img class="arrowwh" src="../assets/personcenter/arrow.png">
+           <img class="arrowwh" src="../assets/back.png">
            <span>我的地址</span>
         </div>
         <div class="licut">
@@ -59,16 +59,19 @@ export default {
       phone: '',
       add: '',
       detail: '',
-      sex: '男'
+      sex: '男',
+      addr_id: ''
     }
   },
-  created: function () {
+  mounted: function () {
     var that = this
     localStorage.setItem('id', 2)
     localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+    this.addr_id = localStorage.getItem('addr_id')
+    console.log(this.addr_id)
     request.get(this.$route, {
-      id: 2,
-      addr_id: 7}, function (data) {
+      uid: 2,
+      addr_id: this.addr_id}, function (data) {
         console.log(data)
         that.name = data.msg.name
         that.phone = data.msg.phone
@@ -84,14 +87,16 @@ export default {
       this.result = result
     },
     saveback () {
-      request.post(this.$route, {
-        id: 2,
+      request.put(this.$route, {
+        uid: 2,
+        addr_id: this.addr_id,
+        rootName: 'saveedit',
         sex: this.sex,
         name: this.name,
         phone: this.phone,
-        province: this.result.province.name,
-        city: this.result.city.name,
-        area: this.result.area.name,
+        province: this.result.province.code,
+        city: this.result.city.code,
+        area: this.result.area.code,
         detail: this.detail}, function (data) {
           console.log(data)
         })
@@ -159,8 +164,12 @@ export default {
 #makeoveradd
 {
 	position: absolute;
+  text-align: right;
 	top: 0.413333rem;
 	right: 1.586667rem;
+  width: 5.333333rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 #toarrow
 {

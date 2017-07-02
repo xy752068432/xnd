@@ -35,8 +35,11 @@ var urls = {
   Login: '/v1/login',
   UserInfo: '/v1/user/{uid}',
   newaddress: '/v1/user/{uid}/address',
-  edit: '/v1/user/{uid}/address/7',
-  myaddress: '/v1/user/{uid}/address'
+  edit: '/v1/user/{uid}/address/{addr_id}',
+  saveedit: '/v1/user/{uid}/address/{addr_id}',
+  myaddress: '/v1/user/{uid}/address',
+  deladdress: '/v1/user/{uid}/address/{addr_id}',
+  setaddress: '/v1/user/{uid}/address/set/{addr_id}'
 }
 
 /*
@@ -44,11 +47,23 @@ var urls = {
 
     router: 路由对象
  */
-var getUrl = function (router) {
+/* var getUrl = function (router) {
   let bindObj = {uid: localStorage.getItem('id')}
   return preFix + urls[router.name].format(bindObj)
-}
+} */
 
+var getUrl = function (router, data) {
+   // console.log(data)
+   // console.log(router.name)
+   // console.log(data.rootName)
+   data.uid = localStorage.getItem('id')
+   // console.log(router)
+   var routerName = data.rootName ? data.rootName : router.name
+  // console.log(routerName)
+   data.rootName = undefined
+   // console.log(routerName)
+   return preFix + urls[routerName].format(data)
+ }
 /*
     http get 请求封装
     method: 请求http方式
@@ -61,7 +76,7 @@ var getUrl = function (router) {
 var request = function (method, router, data, successFun, errorFun) {
   axios.request({
     method: method,
-    url: getUrl(router),
+    url: getUrl(router,data),
     data: data,
     timeout: 5000,
     headers: {
@@ -110,6 +125,7 @@ var request = function (method, router, data, successFun, errorFun) {
     http get 请求封装
  */
 var get = function (router, data, successFun, errorFun) {
+  // console.log(data)
   request('get', router, data, successFun, errorFun)
 }
 
@@ -134,9 +150,13 @@ var patch = function (router, data, successFun, errorFun) {
   request('patch', router, data, successFun, errorFun)
 }
 
+var DELETE = function (router, data, successFun, errorFun) {
+  request('DELETE', router, data, successFun, errorFun)
+}
 export default {
   get: get,
   post: post,
   put: put,
-  patch: patch
+  patch: patch,
+  delete: DELETE
 }

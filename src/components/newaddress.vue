@@ -1,44 +1,47 @@
 <template>
-    <div>
+    <div id="main">
     	<div id="back2" @click="back2">
-           <img class="arrowwh" src="../assets/personcenter/arrow.png">
+           <img class="arrowwh" src="../assets/back.png">
            <span>我的地址</span>
-        </div>
-        <div class="licut">
-  	   
-        </div>
-        <div class="addlist">
-        	<label>收货人</label><input type="text" name="" v-model="name" />
-        </div>
-        <div class="licut">
-  	   
-        </div>
-        <div class="addlist">
-        	<label>联系电话</label><input type="text" name="" v-model="phone"/>
-        </div>
-        <div class="licut">
-  	   
-        </div>
-        <div class="addlist" @click="show = true">
-        	<label>所在地区</label><div id="makeoveradd" v-if="result"><span>{{result.province.name}}{{result.city.name}}{{result.area.name}}</span></div>
-
-        	<img class="arrowwh" id="toarrow" src="../assets/personcenter/arrow.png">
-        </div>
-        <div class="licut">
-  	   
-        </div>
-        <div id="txtarea">
-        	<textarea placeholder="请填写详细地址，如街道、楼牌号等" v-model="detail"></textarea>
-        </div>
-        <div class="licut">
-  	   
-        </div>
-       <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
-        <div id="save" @click="saveback">
-          <div id="savecontent">
-            <span>保存</span>
-          </div>
       </div>
+        <div class="licut">
+  	   
+        </div>
+        <div id="content">
+            <div class="addlist">
+                <label>收货人</label><input type="text" name="" v-model="name" />
+            </div>
+           <div class="licut">
+       
+            </div>
+            <div class="addlist">
+               <label>联系电话</label><input type="text" name="" v-model="phone"/>
+            </div>
+           <div class="licut">
+       
+           </div>
+           <div class="addlist" @click="show = true">
+               <label>所在地区</label><div id="makeoveradd" v-if="result"><span>{{result.province.name}}{{result.city.name}}{{result.area.name}}</span></div>
+
+              <img class="arrowwh" id="toarrow" src="../assets/personcenter/arrow.png">
+           </div>
+           <div class="licut">
+       
+           </div>
+           <div id="txtarea">
+            <textarea placeholder="请填写详细地址，如街道、楼牌号等" v-model="detail"></textarea>
+           </div>
+           <div class="licut">
+       
+           </div>
+           <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
+           <div id="save" @click="saveback">
+             <div id="savecontent">
+                <span>保存</span>
+             </div>
+          </div>
+        </div>
+        
     </div>
 	
 </template>
@@ -83,7 +86,7 @@ export default {
         detail: this.detail}, function (data) {
           console.log(data)
         })
-     // this.$router.push({path: '/myaddress'})
+      this.$router.push({path: '/myaddress'})
     }
   }
 }

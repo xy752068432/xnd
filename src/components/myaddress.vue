@@ -1,5 +1,5 @@
 <template lang="html">
-<div id="contain">
+<div>
     
 	<div id="back1" @click="back">
        <img class="arrowwh" src="../assets/back.png">
@@ -9,30 +9,33 @@
     <div class="licut">
   	   
     </div>
-    <ul>
+    <div id="contain">
+    	<ul>
     	<li v-for="(item,index) in addressList">
     		<div class="addressdetail">
     			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
     			<div class="address">{{item.msg.fullAddr}}</div>
-          <img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/noselect.png"  />
-    			<img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/selected.png"  />
-                <img  @click="clicked3" class="edit"  src="../assets/personaddress1/edit.png" />
-                <img class="delete" src="../assets/personaddress1/delete.png" />
+          <img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/noselect.png"  />
+    			<img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/selected.png"  />
+                <img  @click="clicked3(item.msg.id)" class="edit"  src="../assets/personaddress1/edit.png" />
+                <img class="delete" @click="deletes(item.msg.id)" src="../assets/personaddress1/delete.png" />
     		</div>
     		<div class="licut">
   	   
             </div>
     	</li>
-    </ul>
+       </ul>
+    </div>
+    
     
       
        <div id="add2" @click="clicked2">
           <div id="add2content">
             <span> + 添加新地址</span>
           </div>
-      </div>
+       </div>
 </div>
- </template>
+</template>
 
 <script>
 import request from '@/common/request'
@@ -41,21 +44,20 @@ export default {
   data: function () {
     return {
       addressList: [],
-      isDefault: false
+      data: []
     }
   },
-  created: function () {
-    var that = this
-   // console.log(this.$route)
-    // console.log(that.addressList)
-    localStorage.setItem('id', 2)
-    localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
-    request.get(this.$route, {
-      id: 2, limit: 10, page: 1}, function (data) {
-        that.addressList = data
-        console.log(data)
-      })
+  mounted () {
+    this.$nextTick(() => {
+      this.getdata()
+    })
   },
+  updated () {
+    this.getdata()
+  },
+  /* watch: {
+    '$route': 'getdata'
+  }, */
   methods: {
     clicked1 () {
       this.$router.push({path: '/newaddress'})
@@ -66,15 +68,48 @@ export default {
     clicked2 () {
       this.$router.push({path: '/newaddress'})
     },
-    clicked3 () {
+    clicked3 (addid) {
+      localStorage.setItem('addr_id', addid)
       this.$router.push({path: '/edit'})
+    },
+    getdata () {
+      var that = this
+   // console.log(this.$route)
+    // console.log(that.addressList)
+      localStorage.setItem('id', 2)
+      localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+   // console.log('sdsfds')
+   // console.log(this.data)
+      request.get(this.$route, this.data, function (data) {
+        that.addressList = data
+      // console.log(data)
+      })
     },
     setDefault (addressID) {
       for (var i = 0; i < this.addressList.length; i++) {
         if (this.addressList[i].msg.id === addressID) {
-          this.addressList[i].msg.state = true
-        } else {
+          this.data.rootName = 'setaddress'
+          this.data.addr_id = addressID
+         // console.log(this.data.rootName)
           this.addressList[i].msg.state = false
+          request.put(this.$route, this.data, function (data) {
+           // console.log(data)
+          })
+        } else {
+          this.addressList[i].msg.state = true
+        }
+      }
+    },
+    deletes (addressid) {
+      for (var i = 0; i < this.addressList.length; i++) {
+        if (this.addressList[i].msg.id === addressid) {
+          this.data.addr_id = addressid
+         // console.log(this.data.addr_id)
+          this.addressList.splice(i, 1)
+          this.data.rootName = 'deladdress'
+          request.delete(this.$route, this.data, function (data) {
+          // console.log(data)
+          })
         }
       }
     }
@@ -86,6 +121,7 @@ export default {
 @import "../common/mixin.css";
 #contain
 {
+  height:12rem; 
   overflow-y: auto;
 }
 #back1
