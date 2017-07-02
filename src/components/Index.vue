@@ -73,32 +73,29 @@
           // console.log(this.goods[index].id)
           var goodsId = this.goods[index].id
           this.goodsId = goodsId
-          // 暂时先用localStorage传值
-          localStorage.setItem('goodsId', goodsId)
           console.log(goodsId)
-          // this.$router.push({path: '/detail', params: {id: goodsId}})
-          this.$router.push({path: '/detail'})
+          this.$router.push({path: '/detail', query: { goodsId: goodsId }})
         },
-        getItem (page) {
-          var refreshData
-          var self = this
-          request.get(this.$route, {page: page}, function (data) {
-            refreshData = data
-            if (refreshData.length < 10) {
-              console.log('无更多数据')
-              self.loadmore = false
-            } else {
-              self.currentPage++
-              self.goods = self.goods.concat(refreshData)
-              self.loadmore = true
-            }
-          })
-          if (self.loadmore) {
-            return false
-          } else {
-            return true
-          }
-        },
+        // getItem (page) {
+        //   var refreshData
+        //   var self = this
+        //   request.get(this.$route, {page: page}, function (data) {
+        //     refreshData = data
+        //     if (refreshData.length < 10) {
+        //       console.log('无更多数据')
+        //       self.loadmore = false
+        //     } else {
+        //       self.currentPage++
+        //       self.goods = self.goods.concat(refreshData)
+        //       self.loadmore = true
+        //     }
+        //   })
+        //   if (self.loadmore) {
+        //     return false
+        //   } else {
+        //     return true
+        //   }
+        // },
         refresh: function (done) {
           var self = this
           request.get(this.$route, {page: 1}, function (data) {
@@ -124,16 +121,16 @@
               done()
             }
           })
-          if (this.getItem(this.currentPage + 1)) {
-            setTimeout(() => {
-              done(true)
-            }, 1500)
-          } else {
-            setTimeout(() => {
-              done()
-              utils.toToast('加载成功')
-            }, 1500)
-          }
+          // if (this.getItem(this.currentPage + 1)) {
+          //   setTimeout(() => {
+          //     done(true)
+          //   }, 1500)
+          // } else {
+          //   setTimeout(() => {
+          //     done()
+          //     utils.toToast('加载成功')
+          //   }, 1500)
+          // }
         }
       },
       filters: {
@@ -216,6 +213,9 @@
     font-size: 0.226rem;
     color: rgba(0,0,0,0.6);
     margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .old-price{
     text-decoration: line-through;

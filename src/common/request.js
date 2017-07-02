@@ -35,7 +35,10 @@ var urls = {
   Login: '/v1/login',
   UserInfo: '/v1/user/{uid}',
   Index: '/v1/goods?page={page}',
-  detail: '/v1/goods/{goodsId}'
+  detail: '/v1/goods/{goodsId}',
+  cart: '/v1/user/2/goods_car?page={page}',
+  addCart: '/v1/user/2/goods_car',
+  updateCart: '/v1/user/2/goods_car/{goods_car_id}'
 }
 
 /*
@@ -45,7 +48,10 @@ var urls = {
  */
 var getUrl = function (router, data) {
   data.uid = localStorage.getItem('id')
-  return preFix + urls[router.name].format(data)
+  console.log(router)
+  var routerName = data.rootName ? data.rootName : router.name
+  data.rootName = undefined
+  return preFix + urls[routerName].format(data)
 }
 
 /*
@@ -132,10 +138,16 @@ var put = function (router, data, successFun, errorFun) {
 var patch = function (router, data, successFun, errorFun) {
   request('patch', router, data, successFun, errorFun)
 }
-
+/*
+   http delete
+ */
+var DELETE = function (router, data, successFun, errorFun) {
+  request('DELETE', router, data, successFun, errorFun)
+}  
 export default {
   get: get,
   post: post,
   put: put,
-  patch: patch
+  patch: patch,
+  delete: DELETE
 }

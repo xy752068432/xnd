@@ -34,8 +34,10 @@
     </div>    
     <div class="btn-line">
         <img src="../assets/detail/line-horzontail.png">
-    </div> 
-    <div class="btn-bar">
+    </div>
+    <!--<router-view></router-view>-->
+    <addcart :goodsId="goodsId"></addcart>
+    <!--<div class="btn-bar">
         <div class="btn-bar-wrap">
             <router-link to='/'>
             <div class="btn-home btn">
@@ -53,7 +55,7 @@
                 
             </div>
         </div>    
-    </div>
+    </div>-->
     <!--加入购物车弹出层!暂时不用-->
     <div class="addcart-ok" v-show="false">
         <img src="../assets/detail/addcart-success.png" class="addcartsucc">
@@ -65,12 +67,14 @@
     import Toast from 'vue-easy-toast'
     import utils from '../common/utils'
     import request from '@/common/request'
+    import addcart from '../components/addcart'
     export default {
       name: 'detail',
       components: {
         swiper,
         swiperSlide,
-        Toast
+        Toast,
+        addcart
       },
       data () {
         return {
@@ -95,12 +99,8 @@
       },
       // props: ['goodsId'],
       created: function () {
-        // console.log(this.$route.params.id)
-        // console.log(this.goodsId)
-        this.goodsId = localStorage.getItem('goodsId')
-
-        // this.$route.id = this.goodsId
-        // console.log(this.$route.id)
+        console.log('传过来的参数' + this.$route.query.goodsId)
+        this.goodsId = this.$route.query.goodsId
         var self = this
         request.get(this.$route, {goodsId: this.goodsId}, function (data) {
           // console.log(data.buy)

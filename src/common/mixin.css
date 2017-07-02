@@ -4,6 +4,9 @@ html{
 @media screen and (min-width: 320px) {
   html {font-size: 32px;}
 }
+@media screen and (min-width: 360px) {
+  html {font-size: 36px;}
+}
 @media screen and (min-width: 375px) {
   html {font-size: 37.5px;}
 }
