@@ -65,20 +65,6 @@ var getUrl = function (router, data) {
   data.rootName = undefined
   return preFix + urls[routerName].format(data)
 }
-
-
-var getUrl = function (router, data) {
-   // console.log(data)
-   // console.log(router.name)
-   // console.log(data.rootName)
-   data.uid = localStorage.getItem('id')
-   // console.log(router)
-   var routerName = data.rootName ? data.rootName : router.name
-  // console.log(routerName)
-   data.rootName = undefined
-   // console.log(routerName)
-   return preFix + urls[routerName].format(data)
- }
 /*
     http get 请求封装
     method: 请求http方式
@@ -118,7 +104,7 @@ var request = function (method, router, data, successFun, errorFun) {
       if (error.response.data &&
         error.response.data.code === 3) {
         // 未登录或者登录已经过期
-        this.router.push({path: '/login'})
+        router.push({path: '/login'})
       }
       // 自定义错误函数
       if (errorFun) {

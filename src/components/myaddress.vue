@@ -53,7 +53,7 @@ export default {
       data: []
     }
   },
-  mounted () {
+  created () {
     this.$nextTick(() => {
       this.getdata()
     })
