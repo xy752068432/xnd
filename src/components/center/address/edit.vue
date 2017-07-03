@@ -1,7 +1,7 @@
 <template>
     <div>
-    	<div id="back2" @click="back2">
-           <img class="arrowwh" src="../assets/back.png">
+    	<div id="back2" @click="back">
+           <img class="arrowwh" src="../../../assets/back.png">
            <span>我的地址</span>
         </div>
         <div class="licut">
@@ -22,7 +22,7 @@
         <div class="addlist" @click="show = true">
         	<label>所在地区</label><div id="makeoveradd" v-if="result"><span>{{result.province.name}}{{result.city.name}}{{result.area.name}}</span></div>
 
-        	<img class="arrowwh" id="toarrow" src="../assets/personcenter/arrow.png">
+        	<img class="arrowwh" id="toarrow" src="../../../assets/personcenter/arrow.png">
         </div>
         <div class="licut">
   	   
@@ -34,7 +34,7 @@
   	   
         </div>
        <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
-        <div id="save" @click="saveback">
+        <div id="save" @click="save">
           <div id="savecontent">
             <span>保存</span>
           </div>
@@ -45,8 +45,8 @@
 </template>
 <script>
 import vueArea from 'vue-area'
-import request from '@/common/request'
-import bottombar from '../components/bottombar'
+import request from '../../../common/request'
+import bottombar from '../../../components/bottombar'
 
 export default {
   name: 'edit',
@@ -82,14 +82,14 @@ export default {
       })
   },
   methods: {
-    back2 () {
+    back () {
       this.$router.push({path: '/myaddress'})
     },
     areaResult: function (show, result) {
       this.show = show
       this.result = result
     },
-    saveback () {
+    save () {
       request.put(this.$route, {
         uid: 2,
         addr_id: this.addr_id,
@@ -109,7 +109,7 @@ export default {
 }
 </script>
 <style>
-@import "../common/mixin.css";
+@import "../../../common/mixin.css";
 #back2
 {
 	margin-top: 0.96rem;
@@ -135,7 +135,7 @@ export default {
 {
   width: 100%;
   height: 0.04rem;
-  background: url(../assets/licut.png);
+  background: url(../../../assets/licut.png);
 }
 .addlist
 {
