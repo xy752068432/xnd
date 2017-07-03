@@ -2,7 +2,7 @@
 <div>
     
 	<div id="back1" @click="back">
-       <img class="arrowwh" src="../assets/back.png">
+       <img class="arrowwh" src="../../../assets/back.png">
        <span>我的地址</span>
     </div>
   
@@ -15,10 +15,10 @@
     		<div class="addressdetail">
     			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
     			<div class="address">{{item.msg.fullAddr}}</div>
-          <img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/noselect.png"  />
-    			<img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../assets/personaddress1/selected.png"  />
-                <img  @click="clicked3(item.msg.id)" class="edit"  src="../assets/personaddress1/edit.png" />
-                <img class="delete" @click="deletes(item.msg.id)" src="../assets/personaddress1/delete.png" />
+          <img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/noselect.png"  />
+    			<img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/selected.png"  />
+                <img  @click="toedit(item.msg.id)" class="edit"  src="../../../assets/personaddress1/edit.png" />
+                <img class="delete" @click="deletes(item.msg.id)" src="../../../assets/personaddress1/delete.png" />
     		</div>
     		<div class="licut">
   	   
@@ -29,7 +29,7 @@
     
     
       
-       <div id="add2" @click="clicked2">
+       <div id="add2" @click="tonewadd">
           <div id="add2content">
             <span> + 添加新地址</span>
           </div>
@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import bottombar from '../components/bottombar'
-import request from '@/common/request'
+import bottombar from '../../../components/bottombar'
+import request from '../../../common/request'
 export default {
   name: 'myaddress',
   components: {
@@ -58,23 +58,25 @@ export default {
       this.getdata()
     })
   },
-  updated () {
+  /* updated () {
     this.getdata()
-  },
+  }, */
   /* watch: {
     '$route': 'getdata'
   }, */
+  /* watch: {
+    '$route' (to, from) {
+      console.log(to)
+    }
+  }, */
   methods: {
-    clicked1 () {
+    tonewadd () {
       this.$router.push({path: '/newaddress'})
     },
     back () {
       this.$router.push({path: '/person'})
     },
-    clicked2 () {
-      this.$router.push({path: '/newaddress'})
-    },
-    clicked3 (addid) {
+    toedit (addid) {
       localStorage.setItem('addr_id', addid)
       this.$router.push({path: '/edit'})
     },
@@ -124,7 +126,7 @@ export default {
 
 </script>
 <style>
-@import "../common/mixin.css";
+@import "../../../common/mixin.css";
 #contain
 {
   height:12rem; 
@@ -155,7 +157,7 @@ export default {
 {
   width: 100%;
   height: 0.04rem;
-  background: url(../assets/licut.png);
+  background: url(../../../assets/licut.png);
 }
 .addressdetail
 {

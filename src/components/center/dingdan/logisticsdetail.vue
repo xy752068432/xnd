@@ -1,7 +1,7 @@
 <template>
 <div>
 	<div id="back1" @click="back">
-       <img class="arrowwh" src="../assets/back.png">
+       <img class="arrowwh" src="../../../assets/back.png">
        <span>物流详情</span>
     </div>
     <div class="licut">
@@ -12,7 +12,7 @@
 	
 </template>
 <script>
-import bottombar from '../components/bottombar'
+import bottombar from '../../../components/bottombar'
 export default {
   name: 'logisticsdetail',
   components: {
@@ -51,6 +51,6 @@ export default {
 {
   width: 100%;
   height: 0.04rem;
-  background: url(../assets/licut.png);
+  background: url(../../../assets/licut.png);
 }	
 </style>

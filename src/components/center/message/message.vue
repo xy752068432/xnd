@@ -5,7 +5,7 @@
 		  <li class="meslist1">
 			<div class="meslist2">
 			  <div class="mesimg">
-				<img src="../assets/message/logistics.png">
+				<img src="../../../assets/message/logistics.png">
 			  </div>
 			  <div class="mestype">
 			  	<span>物流通知</span>
@@ -24,7 +24,7 @@
 		  <li class="meslist1">
 			<div class="meslist2">
 			  <div class="mesimg">
-				<img src="../assets/message/moneycard.png">
+				<img src="../../../assets/message/moneycard.png">
 			  </div>
 			  <div class="mestype">
 			  	<span>代金券</span>
@@ -43,7 +43,7 @@
 		  <li class="meslist1">
 			<div class="meslist2">
 			  <div class="mesimg">
-				<img src="../assets/message/newproduct.png">
+				<img src="../../../assets/message/newproduct.png">
 			  </div>
 			  <div class="mestype">
 			  	<span>新品上架</span>
@@ -65,7 +65,7 @@
 	</div>
 </template>
 <script>
-import bottombar from '../components/bottombar'
+import bottombar from '../../../components/bottombar'
 export default {
   name: 'message',
   components: {
@@ -78,7 +78,7 @@ export default {
 {
   width: 100%;
   height: 0.04rem;
-  background: url(../assets/licut.png);
+  background: url(../../../assets/licut.png);
 }
 #meslist
 {
