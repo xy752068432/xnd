@@ -13,13 +13,23 @@ import newaddress from '@/components/newaddress'
 import message from '@/components/message'
 import edit from '@/components/edit'
 import logdetail from '@/components/logisticsdetail'
-
+import order from '@/components/order'
+import orderDetail from '@/components/orderDetail'
+import addcart from '@/components/addcart'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
 
 export default new Router({
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'Index',
+    //   component: Index,
+    //   children: [
+    //     {path: '/detail', name: 'detail', component: detail}
+    //   ]
+    // },
     {path: '/', name: 'Index', component: Index},
     {path: '/login', name: 'Login', component: Login},
     {
@@ -38,6 +48,21 @@ export default new Router({
     {path: '/cart', name: 'cart', component: cart},
     {path: '/message', name: 'message', component: message},
     {path: '/edit', name: 'edit', component: edit},
-    {path: '/logdetail', name: 'logdetail', component: logdetail}
+    {path: '/logdetail', name: 'logdetail', component: logdetail},
+    {
+      path: '/detail',
+      name: 'detail',
+      component: detail,
+      children: [
+        {path: 'addcart', name: 'addcart', component: addcart}
+      ]
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: cart
+    },
+    {path: '/order', name: 'order', component: order},
+    {path: '/orderDetail', name: 'orderDetail', component: orderDetail}
   ]
 })

@@ -79,12 +79,13 @@
         <div class="licut">
           
         </div>       
-      
+        <bottombar></bottombar>
      </div> 
 
 </template>
 
 <script>
+import bottombar from '../components/bottombar'
 export default {
   name: 'center',
   methods: {
@@ -97,6 +98,9 @@ export default {
     tologdetail () {
       this.$router.push({path: '/logdetail'})
     }
+  },
+  components: {
+    bottombar
   }
 }
 </script>

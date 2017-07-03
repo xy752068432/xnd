@@ -7,12 +7,17 @@
     <div class="licut">
   	   
     </div>
+    <bottombar></bottombar> 
 </div>
 	
 </template>
 <script>
+import bottombar from '../components/bottombar'
 export default {
   name: 'logisticsdetail',
+  components: {
+    bottombar
+  },
   methods: {
     back () {
       this.$router.push({path: '/person'})

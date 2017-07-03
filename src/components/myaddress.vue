@@ -34,13 +34,19 @@
             <span> + 添加新地址</span>
           </div>
        </div>
+       <bottombar></bottombar>
 </div>
+
 </template>
 
 <script>
+import bottombar from '../components/bottombar'
 import request from '@/common/request'
 export default {
   name: 'myaddress',
+  components: {
+    bottombar
+  },
   data: function () {
     return {
       addressList: [],

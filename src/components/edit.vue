@@ -39,17 +39,20 @@
             <span>保存</span>
           </div>
       </div>
+      <bottombar></bottombar>
     </div>
 	
 </template>
 <script>
 import vueArea from 'vue-area'
 import request from '@/common/request'
+import bottombar from '../components/bottombar'
 
 export default {
   name: 'edit',
   components: {
-    vueArea
+    vueArea,
+    bottombar
   },
   data: function () {
     return {

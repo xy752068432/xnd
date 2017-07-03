@@ -61,12 +61,16 @@
 		  </li>
 		</ul>
 	  </div>
-		
+	<bottombar></bottombar> 	
 	</div>
 </template>
 <script>
+import bottombar from '../components/bottombar'
 export default {
-  name: 'message'
+  name: 'message',
+  components: {
+    bottombar
+  }
 }
 </script>
 <style>

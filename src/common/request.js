@@ -39,7 +39,12 @@ var urls = {
   saveedit: '/v1/user/{uid}/address/{addr_id}',
   myaddress: '/v1/user/{uid}/address',
   deladdress: '/v1/user/{uid}/address/{addr_id}',
-  setaddress: '/v1/user/{uid}/address/set/{addr_id}'
+  setaddress: '/v1/user/{uid}/address/set/{addr_id}',
+  Index: '/v1/goods?page={page}',
+  detail: '/v1/goods/{goodsId}',
+  cart: '/v1/user/2/goods_car?page={page}',
+  addCart: '/v1/user/2/goods_car',
+  updateCart: '/v1/user/2/goods_car/{goods_car_id}'
 }
 
 /*
@@ -47,10 +52,20 @@ var urls = {
 
     router: 路由对象
  */
+
 /* var getUrl = function (router) {
   let bindObj = {uid: localStorage.getItem('id')}
   return preFix + urls[router.name].format(bindObj)
 } */
+
+var getUrl = function (router, data) {
+  data.uid = localStorage.getItem('id')
+  console.log(router)
+  var routerName = data.rootName ? data.rootName : router.name
+  data.rootName = undefined
+  return preFix + urls[routerName].format(data)
+}
+
 
 var getUrl = function (router, data) {
    // console.log(data)
@@ -125,7 +140,6 @@ var request = function (method, router, data, successFun, errorFun) {
     http get 请求封装
  */
 var get = function (router, data, successFun, errorFun) {
-  // console.log(data)
   request('get', router, data, successFun, errorFun)
 }
 
@@ -149,10 +163,12 @@ var put = function (router, data, successFun, errorFun) {
 var patch = function (router, data, successFun, errorFun) {
   request('patch', router, data, successFun, errorFun)
 }
-
+/*
+   http delete
+ */
 var DELETE = function (router, data, successFun, errorFun) {
   request('DELETE', router, data, successFun, errorFun)
-}
+}  
 export default {
   get: get,
   post: post,
