@@ -58,11 +58,16 @@ export default {
       this.getdata()
     })
   },
-  updated () {
+  /* updated () {
     this.getdata()
-  },
+  }, */
   /* watch: {
     '$route': 'getdata'
+  }, */
+  /* watch: {
+    '$route' (to, from) {
+      console.log(to)
+    }
   }, */
   methods: {
     clicked1 () {
