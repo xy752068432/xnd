@@ -8,6 +8,11 @@ import Index from '@/components/Index'
 import detail from '@/components/detail'
 import center from '@/components/center'
 import cart from '@/components/cart'
+import myaddress from '@/components/center/address/myaddress'
+import newaddress from '@/components/center/address/newaddress'
+import message from '@/components/center/message/message'
+import edit from '@/components/center/address/edit'
+import logdetail from '@/components/center/dingdan/logisticsdetail'
 import order from '@/components/order'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
@@ -36,6 +41,14 @@ export default new Router({
         {path: 'info', name: 'UserInfo', component: UserInfo}
       ]
     },
+    {path: '/detail', name: 'detail', component: detail},
+    {path: '/person', name: 'person', component: center},
+    {path: '/myaddress', name: 'myaddress', component: myaddress},
+    {path: '/newaddress', name: 'newaddress', component: newaddress},
+    {path: '/cart', name: 'cart', component: cart},
+    {path: '/message', name: 'message', component: message},
+    {path: '/edit', name: 'edit', component: edit},
+    {path: '/logdetail', name: 'logdetail', component: logdetail},
     {
       path: '/detail',
       name: 'detail',
@@ -50,7 +63,6 @@ export default new Router({
       component: cart
     },
     {path: '/order', name: 'order', component: order},
-    {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
-    {path: '/person', name: 'person', component: center}
+    {path: '/orderDetail', name: 'orderDetail', component: orderDetail}
   ]
 })

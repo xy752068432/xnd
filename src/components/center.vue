@@ -6,7 +6,7 @@
           <div id="logo21">
               <img src="../assets/personcenter/tx.png">
           </div>
-          <div id="meslogo">
+          <div id="meslogo" @click="mes">
             <img id="meslogo1" src="../assets/personcenter/meslogo.png">
             <div id="mes">
                 <img src="../assets/personcenter/mes.png">
@@ -45,7 +45,7 @@
           
         </div>
         
-        <div class="list">
+        <div class="list" @click="tologdetail">
          
               <img id="allform" src="../assets/personcenter/allform.png">
               <span id="allform1">全部订单</span>
@@ -56,29 +56,19 @@
         <div class="licut">
           
         </div>
-        <div class="list">
         
-              <img id="address" src="../assets/personcenter/address.png">
+        <div class="list" @click="tomyaddress">
+            <img id="address" src="../assets/personcenter/address.png">
                <span id="address1">收货地址</span>
                <div class="arrow">
                  <img src="../assets/personcenter/arrow.png">
                </div>
         </div>
+        
         <div class="licut">
           
         </div>
-        <div class="list">
-         
-              <img  id="card" src="../assets/personcenter/card.png">
-               <span id="card1">优惠卷</span>
-               <div class="arrow">
-                 <img src="../assets/personcenter/arrow.png">
-               </div>
-        </div>
-        <div class="licut">
-          
-        </div>
-        <div class="list">
+        <div class="list" herf="tel:123456">
          
               <img id="link" src="../assets/personcenter/link.png">
                <span id="link1">联系客服</span>
@@ -98,6 +88,17 @@
 import bottombar from '../components/bottombar'
 export default {
   name: 'center',
+  methods: {
+    tomyaddress () {
+      this.$router.push({path: '/myaddress'})
+    },
+    mes () {
+      this.$router.push({path: '/message'})
+    },
+    tologdetail () {
+      this.$router.push({path: '/logdetail'})
+    }
+  },
   components: {
     bottombar
   }
@@ -228,12 +229,6 @@ export default {
   width: 0.626667rem;
   height: 0.546667rem;
   margin: 0.52rem 0 0 0.56rem;
-}
-#card
-{
-  width: 0.573333rem;
-  height: 0.413333rem;
-  margin: 0.586667rem 0 0 0.6rem;
 }
 #link
 {

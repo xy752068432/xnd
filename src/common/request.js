@@ -34,6 +34,12 @@ var preFix = '/api'
 var urls = {
   Login: '/v1/login',
   UserInfo: '/v1/user/{uid}',
+  newaddress: '/v1/user/{uid}/address',
+  edit: '/v1/user/{uid}/address/{addr_id}',
+  saveedit: '/v1/user/{uid}/address/{addr_id}',
+  myaddress: '/v1/user/{uid}/address',
+  deladdress: '/v1/user/{uid}/address/{addr_id}',
+  setaddress: '/v1/user/{uid}/address/set/{addr_id}',
   Index: '/v1/goods?page={page}',
   detail: '/v1/goods/{goodsId}',
   cart: '/v1/user/2/goods_car?page={page}',
@@ -47,6 +53,12 @@ var urls = {
 
     router: 路由对象
  */
+
+/* var getUrl = function (router) {
+  let bindObj = {uid: localStorage.getItem('id')}
+  return preFix + urls[router.name].format(bindObj)
+} */
+
 var getUrl = function (router, data) {
   data.uid = localStorage.getItem('id')
   console.log(router)
@@ -54,7 +66,6 @@ var getUrl = function (router, data) {
   data.rootName = undefined
   return preFix + urls[routerName].format(data)
 }
-
 /*
     http get 请求封装
     method: 请求http方式
@@ -67,7 +78,7 @@ var getUrl = function (router, data) {
 var request = function (method, router, data, successFun, errorFun) {
   axios.request({
     method: method,
-    url: getUrl(router, data),
+    url: getUrl(router,data),
     data: data,
     timeout: 5000,
     headers: {
