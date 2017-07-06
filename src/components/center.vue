@@ -90,7 +90,7 @@ export default {
   name: 'center',
   methods: {
     tomyaddress () {
-      this.$router.push({path: '/myaddress'})
+      this.$router.push({path: '/person/myaddress'})
     },
     mes () {
       this.$router.push({path: '/message'})

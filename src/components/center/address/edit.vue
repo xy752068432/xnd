@@ -20,9 +20,12 @@
   	   
         </div>
         <div class="addlist" @click="show = true">
-        	<label>所在地区</label><div id="makeoveradd" v-if="result"><span>{{result.province.name}}{{result.city.name}}{{result.area.name}}</span></div>
-
-        	<img class="arrowwh" id="toarrow" src="../../../assets/personcenter/arrow.png">
+        	<label>所在地区</label>
+          <div id="mradd" v-if="!result">{{this.province}}{{this.city}}{{this.area}}</div>
+          <div id="makeoveradd" v-else="result">
+             <span>{{result.province.name}}{{result.city.name}}{{result.area.name}}</span>
+          </div>
+          <img class="arrowwh" id="toarrow" src="../../../assets/personcenter/arrow.png">
         </div>
         <div class="licut">
   	   
@@ -46,6 +49,7 @@
 <script>
 import vueArea from 'vue-area'
 import request from '../../../common/request'
+// import utils from '../common/utils'
 import bottombar from '../../../components/bottombar'
 
 export default {
@@ -63,38 +67,42 @@ export default {
       add: '',
       detail: '',
       sex: '男',
-      addr_id: ''
+      addr_id: '',
+      area: '',
+      city: '',
+      province: ''
     }
   },
-  mounted: function () {
-    var that = this
-    localStorage.setItem('id', 2)
-    localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+  created: function () {
     this.addr_id = localStorage.getItem('addr_id')
     console.log(this.addr_id)
     request.get(this.$route, {
-      uid: 2,
       addr_id: this.addr_id}, function (data) {
         console.log(data)
-        that.name = data.msg.name
-        that.phone = data.msg.phone
-        that.add = data.msg.fullAddr
-      })
+        this.name = data.msg.name
+        this.phone = data.msg.phone
+        this.detail = data.msg.location
+        this.area = data.msg.areaName
+        this.city = data.msg.cityName
+        this.province = data.msg.provinceName
+      }.bind(this))
   },
   methods: {
-    back () {
-      this.$router.push({path: '/myaddress'})
+    back: function () {
+      this.$router.push({path: '/person/myaddress'})
     },
     areaResult: function (show, result) {
       this.show = show
       this.result = result
+      console.log(this.result)
     },
-    save () {
+    hidit: function () {
+      this.hidit = !this.hidit
+    },
+    save: function () {
       request.put(this.$route, {
-        uid: 2,
         addr_id: this.addr_id,
         rootName: 'saveedit',
-        sex: this.sex,
         name: this.name,
         phone: this.phone,
         province: this.result.province.code,
@@ -102,8 +110,8 @@ export default {
         area: this.result.area.code,
         detail: this.detail}, function (data) {
           console.log(data)
-        })
-      this.$router.push({path: '/myaddress'})
+          this.$router.push({path: '/person/myaddress'})
+        }.bind(this))
     }
   }
 }
@@ -171,6 +179,16 @@ export default {
 	top: 0.413333rem;
 	right: 1.586667rem;
   width: 5.333333rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+#mradd
+{
+  position: absolute;
+  text-align: right;
+  top: 0.413333rem;
+  right: 1.586667rem;
+   width: 5.333333rem;
   overflow-x: hidden;
   overflow-y: hidden;
 }

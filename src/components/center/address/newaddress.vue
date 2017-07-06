@@ -35,7 +35,7 @@
        
            </div>
            <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
-           <div id="save" @click="saveback">
+           <div id="save" @click="save">
              <div id="savecontent">
                 <span>保存</span>
              </div>
@@ -67,18 +67,14 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push({path: '/myaddress'})
+      this.$router.push({path: '/person/myaddress'})
     },
     areaResult: function (show, result) {
       this.show = show
       this.result = result
     },
-    saveback () {
-      localStorage.setItem('id', 2)
-      localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+    save () {
       request.post(this.$route, {
-        id: 2,
-        sex: this.sex,
         name: this.name,
         phone: this.phone,
         province: this.result.province.code,
@@ -86,8 +82,8 @@ export default {
         area: this.result.area.code,
         detail: this.detail}, function (data) {
           console.log(data)
-        })
-      this.$router.push({path: '/myaddress'})
+          this.$router.push({path: '/person/myaddress'})
+        }.bind(this))
     }
   }
 }
