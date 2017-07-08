@@ -44,7 +44,8 @@ var urls = {
   detail: '/v1/goods/{goodsId}',
   cart: '/v1/user/2/goods_car?page={page}',
   addCart: '/v1/user/2/goods_car',
-  updateCart: '/v1/user/2/goods_car/{goods_car_id}'
+  updateCart: '/v1/user/2/goods_car/{goods_car_id}',
+  cartAll: '/v1/user/2/goods_car/all'
 }
 
 /*

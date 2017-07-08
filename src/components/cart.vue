@@ -7,7 +7,7 @@
           :on-infinite="infinite"
           style="padding-top: 0.966rem;padding-bottom: 24px;">           
           <ul>
-            <li class="cart-item-wrap" v-for="(item,index) in goods" v-show="!item.state">
+            <li class="cart-item-wrap" v-for="(item,index) in goods">
               <div class="icon">
                 <div class="choose-btn" @click="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
                 <div class="icon-logo" @click.stop="toDetail">
@@ -148,7 +148,7 @@ export default {
           item.goods_num--
           request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else {
-          request.delete(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+          request.patch(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
             console.log(data)
             if (!data.status) {
               this.refresh()
