@@ -15,8 +15,8 @@
     		<div class="addressdetail">
     			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
     			<div class="address">{{item.msg.fullAddr}}</div>
-          <img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/noselect.png"  />
-    			<img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/selected.png"  />
+          <img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/noselect.png"  />
+    			<img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/selected.png"  />
                 <img  @click="toedit(item.msg.id)" class="edit"  src="../../../assets/personaddress1/edit.png" />
                 <img class="delete" @click="deletes(item.msg.id)" src="../../../assets/personaddress1/delete.png" />
     		</div>
@@ -58,53 +58,32 @@ export default {
       this.getdata()
     })
   },
-  /* updated () {
-    this.getdata()
-  }, */
-  /* watch: {
-    '$route': 'getdata'
-  }, */
-  /* watch: {
-    '$route' (to, from) {
-      console.log(to)
-    }
-  }, */
   methods: {
     tonewadd () {
-      this.$router.push({path: '/newaddress'})
+      this.$router.push({path: '/person/newaddress'})
     },
     back () {
       this.$router.push({path: '/person'})
     },
     toedit (addid) {
       localStorage.setItem('addr_id', addid)
-      this.$router.push({path: '/edit'})
+      this.$router.push({path: '/person/address/edit'})
     },
     getdata () {
-      var that = this
-   // console.log(this.$route)
-    // console.log(that.addressList)
-      localStorage.setItem('id', 2)
-      localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
-   // console.log('sdsfds')
-   // console.log(this.data)
       request.get(this.$route, this.data, function (data) {
-        that.addressList = data
-      // console.log(data)
-      })
+        this.addressList = data
+      }.bind(this))
     },
     setDefault (addressID) {
       for (var i = 0; i < this.addressList.length; i++) {
         if (this.addressList[i].msg.id === addressID) {
           this.data.rootName = 'setaddress'
           this.data.addr_id = addressID
-         // console.log(this.data.rootName)
-          this.addressList[i].msg.state = false
+          this.addressList[i].msg.state = true
           request.put(this.$route, this.data, function (data) {
-           // console.log(data)
           })
         } else {
-          this.addressList[i].msg.state = true
+          this.addressList[i].msg.state = false
         }
       }
     },
@@ -112,11 +91,9 @@ export default {
       for (var i = 0; i < this.addressList.length; i++) {
         if (this.addressList[i].msg.id === addressid) {
           this.data.addr_id = addressid
-         // console.log(this.data.addr_id)
           this.addressList.splice(i, 1)
           this.data.rootName = 'deladdress'
           request.delete(this.$route, this.data, function (data) {
-          // console.log(data)
           })
         }
       }
