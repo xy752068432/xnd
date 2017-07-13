@@ -19,11 +19,11 @@
                 <h2 class="name">{{item.goods_info.title}}</h2>
                 <p class="desc">{{item.goods_info.description}}</p>
                 <p class="price-line"><span class="price"><span class="attach">&yen;</span>{{item.goods_info.price}}<span class="attach">/{{item.goods_info.unit}}</span></span><span class="old-price">&yen;{{item.goods_info.origin_price}}/{{item.unit}}</span></p>
-                <p class="deliver-time">预计{{item.goods_info.send_time}}发货</p>
+                <p class="deliver-time">预计{{item.goods_info.send_time}}{{item.goods_car_id}}发货</p>
               </div>
               <div class="amount">
                 <span class="btn-minus" @click="changeAmount(item,0)"></span>
-                <input class="amount-num" type="number" :value="item.goods_num"></input>
+                <input class="amount-num" type="number"  v-model="item.goods_num" @keyup="maxnum(item.goods_car_id)" @blur="changenumfast(item.goods_car_id)"></input>
                 <span class="btn-plus" @click="changeAmount(item,1)"></span>
               </div>      
             </li>
@@ -53,7 +53,9 @@ export default {
     return {
       selectAll: false,
       goods: [],
-      currentPage: 1
+      currentPage: 1,
+      good_car_id: '',
+      good_car_id1: []
     }
   },
   components: {
@@ -64,13 +66,12 @@ export default {
     localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
     // var self = this
     // request.get(this.route)
-    var self = this
     request.get(this.$route, {page: 1}, function (data) {
-      console.log('cart')
-      console.log(data)
-      self.goods = data
-      console.log(self.goods)
-    })
+     // console.log('cart')
+     // console.log(data)
+      this.goods = data
+      console.log(this.goods)
+    }.bind(this))
   },
   computed: {
     //  计算总金额
@@ -86,29 +87,27 @@ export default {
   },
   methods: {
     refresh: function (done) {
-      var self = this
       request.get(this.$route, {page: 1}, function (data) {
-        self.goods = data
+        this.goods = data
         done()
         utils.toToast('刷新成功')
-      })
+      }.bind(this))
     },
     infinite: function (done) {
       var refreshData
-      var self = this
-      request.get(this.$route, {page: self.currentPage + 1}, function (data) {
+      request.get(this.$route, {page: this.currentPage + 1}, function (data) {
         refreshData = data
         if (refreshData.length < 10) {
           console.log('无更多数据')
-          self.goods = self.goods.concat(refreshData)
+          this.goods = this.goods.concat(refreshData)
           done(true)
           // self.loadmore = false
         } else {
-          self.currentPage++
-          self.goods = self.goods.concat(refreshData)
+          this.currentPage++
+          this.goods = this.goods.concat(refreshData)
           done()
         }
-      })
+      }.bind(this))
     },
     //  进入商品详情页
     toDetail: function (item) {
@@ -117,14 +116,33 @@ export default {
     },
     // 去结算
     toCheck: function () {
-      this.$router.push({path: '/order'})
+      // console.log(this.good_car_id)
+      if (this.good_car_id !== '') {
+        this.$router.push({path: '/preorder?goods_car_id=' + this.good_car_id})
+      }
     },
     //  选中购物车商品
     selectItem: function (item) {
       if (typeof item.checked === 'undefined') {
         Vue.set(item, 'checked', true)
+        this.good_car_id = this.good_car_id + item.goods_car_id + ','
+        console.log(this.good_car_id)
+      } else if (item.checked === false) {
+        item.checked = !item.checked
+        this.good_car_id = this.good_car_id + item.goods_car_id + ','
+        console.log(this.good_car_id)
       } else {
         item.checked = !item.checked
+        this.good_car_id1 = this.good_car_id.split(',')
+        console.log(this.good_car_id1.length)
+        if (this.good_car_id1.length === 2) {
+          this.good_car_id = ''
+        } else {
+          var reg = new RegExp(item.goods_car_id + ',', 'g')
+          console.log(reg)
+          this.good_car_id = this.good_car_id.replace(reg, ',')
+          console.log(this.good_car_id)
+        }
       }
     },
     //  全选
@@ -133,27 +151,62 @@ export default {
       this.goods.forEach((item, index) => {
         if (typeof item.checked === 'undefined') {
           Vue.set(item, 'checked', this.selectAll)
+          this.good_car_id = this.good_car_id + item.goods_car_id + ','
+          console.log(this.good_car_id)
         } else {
           item.checked = this.selectAll
+          this.good_car_id = ''
+          console.log(this.good_car_id)
         }
       })
     },
     //  改变购物车数量
     changeAmount: function (item, type) {
       if (type) {
-        item.goods_num++
-        request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+        console.log(item)
+        if (item.goods_num < 999) {
+          item.goods_num++
+          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+        } else if (item.goods_num > 999) {
+          item.goods = 999
+          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
+        }
       } else {
         if (item.goods_num > 1) {
           item.goods_num--
           request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else {
-          request.delete(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+          request.patch(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
             console.log(data)
             if (!data.status) {
               this.refresh()
             }
           })
+        }
+      }
+    },
+    changenumfast: function (goodcarid) {
+      console.log(this.goods.length)
+      for (var i = 0; i < this.goods.length; i++) {
+        if (this.goods[i].goods_car_id === goodcarid) {
+          if (this.goods[i].goods_num > 0 && this.goods[i].goods_num < 1000) {
+            request.put(this.$route, {rootName: 'updateCart', goods_car_id: this.goods[i].goods_car_id, goods_num: this.goods[i].goods_num})
+          } else if (this.goods[i].goods_num === '') {
+            this.goods[i].goods_num = 1
+            request.put(this.$route, {rootName: 'updateCart', goods_car_id: this.goods[i].goods_car_id, goods_num: this.goods[i].goods_num})
+          }
+        }
+      }
+    },
+    maxnum: function (goodcarId) {
+      for (var i = 0; i < this.goods.length; i++) {
+        if (this.goods[i].goods_car_id === goodcarId) {
+          // console.log(a.test(this.goods[i].goods_num))
+          if (this.goods[i].goods_num > 999) {
+            this.goods[i].goods_num = 999
+          } else if (this.goods[i].goods_num === '0') {
+            this.goods[i].goods_num = ''
+          }
         }
       }
     }

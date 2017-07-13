@@ -70,11 +70,14 @@ export default {
       addr_id: '',
       area: '',
       city: '',
-      province: ''
+      province: '',
+      areacode: '',
+      citycode: '',
+      provincecode: ''
     }
   },
   created: function () {
-    this.addr_id = localStorage.getItem('addr_id')
+    this.addr_id = this.$route.query.addr_id
     console.log(this.addr_id)
     request.get(this.$route, {
       addr_id: this.addr_id}, function (data) {
@@ -85,6 +88,10 @@ export default {
         this.area = data.msg.areaName
         this.city = data.msg.cityName
         this.province = data.msg.provinceName
+        this.areacode = data.msg.area_id
+        this.citycode = data.msg.city_id
+        this.provincecode = data.msg.province_id
+        console.log(this.citycode)
       }.bind(this))
   },
   methods: {
@@ -100,18 +107,34 @@ export default {
       this.hidit = !this.hidit
     },
     save: function () {
-      request.put(this.$route, {
-        addr_id: this.addr_id,
-        rootName: 'saveedit',
-        name: this.name,
-        phone: this.phone,
-        province: this.result.province.code,
-        city: this.result.city.code,
-        area: this.result.area.code,
-        detail: this.detail}, function (data) {
-          console.log(data)
-          this.$router.push({path: '/person/myaddress'})
-        }.bind(this))
+      console.log(this.result)
+      if (this.result === null) {
+        request.put(this.$route, {
+          addr_id: this.addr_id,
+          rootName: 'saveedit',
+          name: this.name,
+          phone: this.phone,
+          province: this.provincecode,
+          city: this.citycode,
+          area: this.areacode,
+          detail: this.detail}, function (data) {
+            console.log(data)
+            this.$router.push({path: '/person/myaddress'})
+          }.bind(this))
+      } else {
+        request.put(this.$route, {
+          addr_id: this.addr_id,
+          rootName: 'saveedit',
+          name: this.name,
+          phone: this.phone,
+          province: this.result.province.code,
+          city: this.result.city.code,
+          area: this.result.area.code,
+          detail: this.detail}, function (data) {
+            console.log(data)
+            this.$router.push({path: '/person/myaddress'})
+          }.bind(this))
+      }
     }
   }
 }

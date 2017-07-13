@@ -13,7 +13,7 @@ import newaddress from '@/components/center/address/newaddress'
 import message from '@/components/center/message/message'
 import edit from '@/components/center/address/edit'
 import logdetail from '@/components/center/dingdan/logisticsdetail'
-import order from '@/components/order'
+import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
 Vue.use(Router)
@@ -62,7 +62,7 @@ export default new Router({
       name: 'cart',
       component: cart
     },
-    {path: '/order', name: 'order', component: order},
+    {path: '/preorder', name: 'preorder', component: preorder},
     {path: '/orderDetail', name: 'orderDetail', component: orderDetail}
   ]
 })

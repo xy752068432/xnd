@@ -34,17 +34,19 @@ var preFix = '/api'
 var urls = {
   Login: '/v1/login',
   UserInfo: '/v1/user/{uid}',
-  newaddress: '/v1/user/{uid}/address',
-  edit: '/v1/user/{uid}/address/{addr_id}',
-  saveedit: '/v1/user/{uid}/address/{addr_id}',
-  myaddress: '/v1/user/{uid}/address',
-  deladdress: '/v1/user/{uid}/address/{addr_id}',
-  setaddress: '/v1/user/{uid}/address/set/{addr_id}',
+  newaddress: '/v1/user/2/address',
+  edit: '/v1/user/2/address/{addr_id}',
+  saveedit: '/v1/user/2/address/{addr_id}',
+  myaddress: '/v1/user/2/address',
+  deladdress: '/v1/user/2/address/{addr_id}',
+  setaddress: '/v1/user/2/address/set/{addr_id}',
   Index: '/v1/goods?page={page}',
   detail: '/v1/goods/{goodsId}',
   cart: '/v1/user/2/goods_car?page={page}',
   addCart: '/v1/user/2/goods_car',
-  updateCart: '/v1/user/2/goods_car/{goods_car_id}'
+  updateCart: '/v1/user/2/goods_car/{goods_car_id}',
+  preorder: '/v1/user/2/order/preOrder?goods_car_ids={goods_car_ids}&addr_id={addr_id}',
+  preordernum:'/v1/user/2/coupon?goods_car_ids={goods_car_ids}&code={code}'
 }
 
 /*

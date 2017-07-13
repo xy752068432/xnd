@@ -10,7 +10,6 @@ import Toast from 'vue-easy-toast'
 Vue.use(VueScroller)
 Vue.use(VueAwesomeSwiper)
 Vue.use(Toast)
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -9,9 +9,9 @@
     <div class="licut">
   	   
     </div>
-    <div id="contain">
+    <div id="contain" >
     	<ul>
-    	<li v-for="(item,index) in addressList">
+    	<li v-for="(item,index) in addressList" @click="selectadd(item.msg.id)">
     		<div class="addressdetail">
     			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
     			<div class="address">{{item.msg.fullAddr}}</div>
@@ -26,9 +26,7 @@
     	</li>
        </ul>
     </div>
-    
-    
-      
+       <!--添加新地址按钮-->
        <div id="add2" @click="tonewadd">
           <div id="add2content">
             <span> + 添加新地址</span>
@@ -50,31 +48,37 @@ export default {
   data: function () {
     return {
       addressList: [],
-      data: []
+      data: [],
+      mark: false
     }
   },
   created () {
     this.$nextTick(() => {
       this.getdata()
+      console.log(this.$route.query.id)
     })
   },
   methods: {
-    tonewadd () {
+    // 跳转新增地址界面
+    tonewadd: function () {
       this.$router.push({path: '/person/newaddress'})
     },
-    back () {
+    // 返回个人中心
+    back: function () {
       this.$router.push({path: '/person'})
     },
-    toedit (addid) {
-      localStorage.setItem('addr_id', addid)
-      this.$router.push({path: '/person/address/edit'})
+    // 跳转编辑地址界面
+    toedit: function (addid) {
+      this.$router.push({path: '/person/address/edit?addr_id=' + addid})
     },
-    getdata () {
+    // 获取地址条目
+    getdata: function () {
       request.get(this.$route, this.data, function (data) {
         this.addressList = data
       }.bind(this))
     },
-    setDefault (addressID) {
+    // 设置默认地址
+    setDefault: function (addressID) {
       for (var i = 0; i < this.addressList.length; i++) {
         if (this.addressList[i].msg.id === addressID) {
           this.data.rootName = 'setaddress'
@@ -87,14 +91,25 @@ export default {
         }
       }
     },
-    deletes (addressid) {
+    // 删除收货地址
+    deletes: function (addressid) {
       for (var i = 0; i < this.addressList.length; i++) {
         if (this.addressList[i].msg.id === addressid) {
           this.data.addr_id = addressid
           this.addressList.splice(i, 1)
           this.data.rootName = 'deladdress'
-          request.delete(this.$route, this.data, function (data) {
+          request.patch(this.$route, this.data, function (data) {
           })
+        }
+      }
+    },
+    // 选择收货地址
+    selectadd: function (addressId) {
+      if (this.$route.query.id === 'markadd') {
+        for (var i = 0; i < this.addressList.length; i++) {
+          if (this.addressList[i].msg.id === addressId) {
+            this.$router.push({path: '/preorder?addid=' + addressId + '&goods_car_id=' + this.$route.query.goods_car_id})
+          }
         }
       }
     }
