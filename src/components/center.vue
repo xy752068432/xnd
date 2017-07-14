@@ -21,19 +21,19 @@
         </div>
         <div id="status">
             <div id="status1">
-               <div id="willpay1" class="willpay will wills">
+               <div id="willpay1" @click="towillpay" class="willpay will wills">
                  <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png">
                  <p>待付款</p>
                  <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
                  <div class="willmestxt"><p>88</p></div>
                </div>
-               <div class="willout will wills">
+               <div class="willout will wills" @click="towillgive">
                  <img class="willimg" id="willout" src="../assets/personcenter/willout.png">
                  <p>待发货</p>
                  <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
                  <div class="willmestxt"><p>88</p></div>
                </div>
-               <div class="wills" id="willget1">
+               <div class="wills" id="willget1" @click="towillget">
                  <img class="willimg" id="willget" src="../assets/personcenter/willget.png">
                  <p>待收货</p>
                  <div class="willmes"><img  src="../assets/personcenter/willmes.png"></div>
@@ -45,10 +45,10 @@
           
         </div>
         
-        <div class="list" @click="tologdetail">
+        <div class="list" @click="toalldingdan">
          
               <img id="allform" src="../assets/personcenter/allform.png">
-              <span id="allform1">全部订单</span>
+              <span id="allform1" >全部订单</span>
               <div class="arrow">
                  <img src="../assets/personcenter/arrow.png">
                </div>
@@ -93,10 +93,22 @@ export default {
       this.$router.push({path: '/person/myaddress'})
     },
     mes () {
-      this.$router.push({path: '/message'})
+      this.$router.push({path: '/person/message'})
     },
-    tologdetail () {
+    /* tologdetail () {
       this.$router.push({path: '/logdetail'})
+    }, */
+    towillpay: function () {
+      this.$router.push({path: '/person/alldingdan/willpay'})
+    },
+    towillgive: function () {
+      this.$router.push({path: '/person/alldingdan/willgive'})
+    },
+    towillget: function () {
+      this.$router.push({path: '/person/alldingdan/willget'})
+    },
+    toalldingdan: function () {
+      this.$router.push({path: '/person/alldingdan/all'})
     }
   },
   components: {

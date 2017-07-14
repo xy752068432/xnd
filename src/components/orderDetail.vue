@@ -47,6 +47,8 @@ export default {
   },
   components: {
     bottombar
+  },
+  created: function () {
   }
 }
 </script>
