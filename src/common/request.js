@@ -50,10 +50,8 @@ var urls = {
   preordernum:'/v1/user/2/coupon?goods_car_ids={goods_car_ids}&code={code}',
   order:'/v1/user/2/order?status={status}',
   cancelorder:'/v1/user/2/order/{order_id}/cancel',
-  got:'/v1/user/2/order/{order_id}/finish'
-=======
+  got:'/v1/user/2/order/{order_id}/finish',
   cartAll: '/v1/user/2/goods_car/all'
->>>>>>> 91663710c014dc66018c4a678b37f9acb6330dda
 }
 
 /*
