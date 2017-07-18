@@ -47,10 +47,9 @@ var urls = {
   updateCart: '/v1/user/2/goods_car/{goods_car_id}',
   preorder: '/v1/user/2/order/preOrder?goods_car_ids={goods_car_ids}&addr_id={addr_id}',
   preordernum:'/v1/user/2/coupon?goods_car_ids={goods_car_ids}&code={code}',
-  willgive:'v1/user/2/order?status={status}',
-  willpay:'v1/user/2/order?status={status}',
-  willget:'v1/user/2/order?status={status}',
-  all:'v1/user/2/order?status={status}'
+  order:'/v1/user/2/order?status={status}',
+  cancelorder:'/v1/user/2/order/{order_id}/cancel',
+  got:'/v1/user/2/order/{order_id}/finish'
 }
 
 /*

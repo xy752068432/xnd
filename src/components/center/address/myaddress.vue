@@ -15,8 +15,8 @@
     		<div class="addressdetail">
     			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
     			<div class="address">{{item.msg.fullAddr}}</div>
-          <img class="select" v-show="!item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/noselect.png"  />
-    			<img class="select" v-show="item.msg.state" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/selected.png"  />
+          <img class="select" v-show="!item.msg.status" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/noselect.png"  />
+    			<img class="select" v-show="item.msg.status" @click="setDefault(item.msg.id)" src="../../../assets/personaddress1/selected.png"  />
                 <img  @click="toedit(item.msg.id)" class="edit"  src="../../../assets/personaddress1/edit.png" />
                 <img class="delete" @click="deletes(item.msg.id)" src="../../../assets/personaddress1/delete.png" />
     		</div>
@@ -75,6 +75,7 @@ export default {
     getdata: function () {
       request.get(this.$route, this.data, function (data) {
         this.addressList = data
+        console.log(data)
       }.bind(this))
     },
     // 设置默认地址
@@ -83,11 +84,11 @@ export default {
         if (this.addressList[i].msg.id === addressID) {
           this.data.rootName = 'setaddress'
           this.data.addr_id = addressID
-          this.addressList[i].msg.state = true
+          this.addressList[i].msg.status = true
           request.put(this.$route, this.data, function (data) {
           })
         } else {
-          this.addressList[i].msg.state = false
+          this.addressList[i].msg.status = false
         }
       }
     },

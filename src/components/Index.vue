@@ -53,6 +53,8 @@
         }
       },
       created: function () {
+        localStorage.setItem('token', '$2y$10$VMPISREduk8BTERybxMHXe1/iJW2ReAOuwYD/nfg2sp9LISU/SE0y')
+        localStorage.setItem('id', '2')
         // let url = 'goods'
         var self = this
         request.get(this.$route, {page: 1}, function (data) {

@@ -21,7 +21,7 @@
         </div>
         <div id="status">
             <div id="status1">
-               <div id="willpay1" @click="towillpay" class="willpay will wills">
+               <div id="willpay1" class="willpay will wills" @click="towillpay">
                  <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png">
                  <p>待付款</p>
                  <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
@@ -45,7 +45,7 @@
           
         </div>
         
-        <div class="list" @click="toalldingdan">
+        <div class="list" @click="toallorder">
          
               <img id="allform" src="../assets/personcenter/allform.png">
               <span id="allform1" >全部订单</span>
@@ -89,26 +89,29 @@ import bottombar from '../components/bottombar'
 export default {
   name: 'center',
   methods: {
+    // 跳转地址界面
     tomyaddress () {
       this.$router.push({path: '/person/myaddress'})
     },
+    // 跳转消息提醒界面
     mes () {
       this.$router.push({path: '/person/message'})
     },
-    /* tologdetail () {
-      this.$router.push({path: '/logdetail'})
-    }, */
+    // 跳转待付款界面
     towillpay: function () {
-      this.$router.push({path: '/person/alldingdan/willpay'})
+      this.$router.push({path: '/person/order/order?status=1'})
     },
+    // 跳转待发货界面
     towillgive: function () {
-      this.$router.push({path: '/person/alldingdan/willgive'})
+      this.$router.push({path: '/person/order/order?status=2'})
     },
+    // 跳转待收货界面
     towillget: function () {
-      this.$router.push({path: '/person/alldingdan/willget'})
+      this.$router.push({path: '/person/order/order?status=3'})
     },
-    toalldingdan: function () {
-      this.$router.push({path: '/person/alldingdan/all'})
+    // 跳转所有订单界面
+    toallorder: function () {
+      this.$router.push({path: '/person/order/order?status=0'})
     }
   },
   components: {

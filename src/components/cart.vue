@@ -63,7 +63,7 @@ export default {
     VueScroller
   },
   created: function () {
-    localStorage.setItem('token', '$2y$10$9q4C8UbXLiy66HmPLj9rPuIE1evB/dRMz4aCTWwj1biwKN905AXsi')
+    localStorage.setItem('token', '$2y$10$VMPISREduk8BTERybxMHXe1/iJW2ReAOuwYD/nfg2sp9LISU/SE0y')
     // var self = this
     // request.get(this.route)
     request.get(this.$route, {page: 1}, function (data) {

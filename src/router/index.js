@@ -12,12 +12,7 @@ import myaddress from '@/components/center/address/myaddress'
 import newaddress from '@/components/center/address/newaddress'
 import message from '@/components/center/message/message'
 import edit from '@/components/center/address/edit'
-import logdetail from '@/components/center/dingdan/logisticsdetail'
-import alldingdan from '@/components/center/dingdan/alldingdan'
-import willpay from '@/components/center/dingdan/willpay'
-import willgive from '@/components/center/dingdan/willgive'
-import willget from '@/components/center/dingdan/willget'
-import all from '@/components/center/dingdan/all'
+import order from '@/components/center/order/order'
 import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
@@ -53,18 +48,7 @@ export default new Router({
     {path: '/cart', name: 'cart', component: cart},
     {path: '/person/message', name: 'message', component: message},
     {path: '/person/address/edit', name: 'edit', component: edit},
-    {
-      path: '/person/alldingdan',
-      name: 'alldingdan',
-      component: alldingdan,
-      children: [
-        {path: '/person/alldingdan/willpay', name: 'willpay', component: willpay},
-        {path: '/person/alldingdan/willgive', name: 'willgive', component: willgive},
-        {path: '/person/alldingdan/willget', name: 'willget', component: willget},
-        {path: '/person/alldingdan/all', name: 'all', component: all}
-      ]
-    },
-    {path: '/logdetail', name: 'logdetail', component: logdetail},
+    {path: '/person/order/order', name: 'order', component: order},
     {
       path: '/detail',
       name: 'detail',
