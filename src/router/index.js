@@ -13,6 +13,7 @@ import newaddress from '@/components/center/address/newaddress'
 import message from '@/components/center/message/message'
 import edit from '@/components/center/address/edit'
 import order from '@/components/center/order/order'
+import logistic from '@/components/center/order/logisticsdetail'
 import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
@@ -49,6 +50,7 @@ export default new Router({
     {path: '/person/message', name: 'message', component: message},
     {path: '/person/address/edit', name: 'edit', component: edit},
     {path: '/person/order/order', name: 'order', component: order},
+    {path: '/person/order/logistic', name: 'logistic', component: logistic},
     {
       path: '/detail',
       name: 'detail',

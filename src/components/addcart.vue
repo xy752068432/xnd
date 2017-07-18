@@ -9,11 +9,11 @@
             </router-link>
             <router-link to='/cart'>
             <div class="btn-cart btn">
-                <div class="img-wrap"><img src="../assets/detail/cart.png"><div class="cart-amount"><p class="cart-amount-num">88</p></div></div>
+                <div class="img-wrap"><img src="../assets/detail/cart.png"><div class="cart-amount" v-show="cartAll>0"><p class="cart-amount-num">{{cartAll}}</p></div></div>
                 <p class="btn-title">购物车</p>
             </div>
             </router-link> 
-            <div class="btn-addCart onsale saleout" @click="addCart">
+            <div class="btn-addCart" @click="addCart" :class="goodsExp.can_click ? 'onsale' : 'saleout'">
                 
             </div>
         </div>     
@@ -26,16 +26,32 @@
     export default {
       name: 'addcart',
       props: ['goodsId'],
+      data () {
+        return {
+          cartAll: 0,
+          goodsExp: ''
+        }
+      },
       created: function () {
+        var self = this
+        request.get(this.$route, {rootName: 'cartAll'}, function (data) {
+          console.log(data.num)
+          self.cartAll = data.num
+        })
+        request.get(this.$route, {goodsId: this.goodsId}, function (data) {
+          // console.log(data.buy)
+          self.goodsExp = data.exp
+          console.log(self.goodsExp)
+        })
       },
       methods: {
         addCart: function () {
+          var self = this
           request.post(this.$route, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
             console.log(data)
             if (data.state === 0) {
               utils.toToast('加入购物车成功')
-            } else {
-              utils.toToast('再等等哦~商品还没开售呢')
+              self.cartAll++
             }
           })
         }
@@ -118,8 +134,8 @@
         background-image: url("../assets/detail/add-cart.png");
     }
     .saleout{
-        /*商品下架样式*/
-        /*background-image: url("../assets/detail/saleout.png");*/
+        /*商品下架或未开售样式*/
+        background-image: url("../assets/detail/saleout.png");
     }
 </style>
 

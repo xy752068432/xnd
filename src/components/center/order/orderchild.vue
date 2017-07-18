@@ -14,7 +14,7 @@
      <div v-else="!this.hidshow" class="manymes">
      	<ul>
      		<li v-for="item in items">
-     			<div class="detail">
+     			<div class="detail" @click="tologistic">
      				<div class="didangid"><span>订单号</span><span>：</span><span>{{item.order_info.order_num}}</span></div>
      				<div><span>下单时间</span><span>：</span><span>{{item.order_info.created_at}}</span></div>
      			</div>
@@ -23,8 +23,8 @@
                 	
                 		    <div class="licut">
   	   
-                            </div>
-                			<div class="good">
+                        </div>
+                			<div class="good" @click="togooddetail(item.goods_info.goods_id)">
                 				<div class="goodlist"><img src="goods.goods_img"></div>
                 				<div class="goodlist goodtxt"><div class="goodtxt1">{{item.goods_info.name}}</div><div class="goodtxt2">{{item.goods_info.goods_desc}}</div></div>
                 				<div class="goodnum">X{{item.goods_info.num}}{{item.goods_info.unit}}</div>
@@ -76,7 +76,6 @@ export default {
   watch: {
     statuss: function (newval, oldval) {
       this.getdatas()
-      console.log(this.status)
     }
   },
   props: ['statuss'],
@@ -108,13 +107,13 @@ export default {
           this.actives1 = data.actives[1].actived
           this.actives2 = data.actives[2].actived
           this.actives3 = data.actives[3].actived
+          // console.log(data)
           this.mes = data.msg
           if (data.num === 0) {
             this.hidshow = true
           } else {
             this.hidshow = false
             this.items = data.items
-            console.log()
           }
         }.bind(this))
     },
@@ -141,37 +140,54 @@ export default {
       }
     },
     cancel: function (orderid) {
-      console.log(orderid)
-      for (var i = this.items.length - 1; i >= 0; i--) {
-        if (this.items[i].order_info.order_id === orderid) {
-          this.items.splice(i, 1)
+      var prevent = true
+      if (prevent === true) {
+        prevent = false
+        for (var i = this.items.length - 1; i >= 0; i--) {
+          if (this.items[i].order_info.order_id === orderid) {
+            this.items.splice(i, 1)
+          }
         }
+        request.put(this.$route, {
+          rootName: 'cancelorder',
+          order_id: orderid}, function (data) {
+          }, function (err) {
+            console.log(err)
+            prevent = true
+          })
       }
-      request.put(this.$route, {
-        rootName: 'cancelorder',
-        order_id: orderid}, function (data) {
-          console.log(data)
-        })
     },
     paynow: function () {
     },
     got: function (orderid) {
-      for (var i = this.items.length - 1; i >= 0; i--) {
-        if (this.items[i].order_info.order_id === orderid) {
-          this.items.splice(i, 1)
+      var prevent = true
+      if (prevent === true) {
+        prevent = false
+        for (var i = this.items.length - 1; i >= 0; i--) {
+          if (this.items[i].order_info.order_id === orderid) {
+            this.items.splice(i, 1)
+          }
         }
+        request.put(this.$route, {
+          rootName: 'got',
+          order_id: orderid}, function (data) {
+          }, function (err) {
+            console.log(err)
+            prevent = true
+          })
       }
-      request.put(this.$route, {
-        rootName: 'got',
-        order_id: orderid}, function (data) {
-          console.log(data)
-        })
     },
     logistic: function () {
     },
     link: function () {
     },
     delorder: function () {
+    },
+    togooddetail: function (goodid) {
+      this.$router.push({path: '/detail?goodsId=' + goodid})
+    },
+    tologistic: function () {
+      this.$router.push({path: '/person/order/logistic'})
     }
   }
 }
