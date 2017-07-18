@@ -94,15 +94,15 @@ export default {
     },
     // 删除收货地址
     deletes: function (addressid) {
-      for (var i = 0; i < this.addressList.length; i++) {
-        if (this.addressList[i].msg.id === addressid) {
-          this.data.addr_id = addressid
-          this.addressList.splice(i, 1)
-          this.data.rootName = 'deladdress'
-          request.patch(this.$route, this.data, function (data) {
-          })
-        }
-      }
+      request.patch(this.$route, {
+        rootName: 'deladdress',
+        addr_id: addressid}, function (data) {
+          for (var i = 0; i < this.addressList.length; i++) {
+            if (this.addressList[i].msg.id === addressid) {
+              this.addressList.splice(i, 1)
+            }
+          }
+        }.bind(this))
     },
     // 选择收货地址
     selectadd: function (addressId) {

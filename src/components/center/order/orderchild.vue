@@ -143,15 +143,15 @@ export default {
       var prevent = true
       if (prevent === true) {
         prevent = false
-        for (var i = this.items.length - 1; i >= 0; i--) {
-          if (this.items[i].order_info.order_id === orderid) {
-            this.items.splice(i, 1)
-          }
-        }
         request.put(this.$route, {
           rootName: 'cancelorder',
           order_id: orderid}, function (data) {
-          }, function (err) {
+            for (var i = this.items.length - 1; i >= 0; i--) {
+              if (this.items[i].order_info.order_id === orderid) {
+                this.items.splice(i, 1)
+              }
+            }
+          }.bind(this), function (err) {
             console.log(err)
             prevent = true
           })
@@ -163,15 +163,15 @@ export default {
       var prevent = true
       if (prevent === true) {
         prevent = false
-        for (var i = this.items.length - 1; i >= 0; i--) {
-          if (this.items[i].order_info.order_id === orderid) {
-            this.items.splice(i, 1)
-          }
-        }
         request.put(this.$route, {
           rootName: 'got',
           order_id: orderid}, function (data) {
-          }, function (err) {
+            for (var i = this.items.length - 1; i >= 0; i--) {
+              if (this.items[i].order_info.order_id === orderid) {
+                this.items.splice(i, 1)
+              }
+            }
+          }.bind(this), function (err) {
             console.log(err)
             prevent = true
           })
@@ -181,7 +181,25 @@ export default {
     },
     link: function () {
     },
-    delorder: function () {
+    delorder: function (orderid) {
+      var prevent = true
+      if (prevent === true) {
+        prevent = false
+        request.patch(this.$route, {
+          rootName: 'delorder',
+          order_id: orderid}, function (data) {
+            console.log(data)
+            // console.log(this.items)
+            for (var i = this.items.length - 1; i >= 0; i--) {
+              if (this.items[i].order_info.order_id === orderid) {
+                this.items.splice(i, 1)
+              }
+            }
+          }.bind(this), function (err) {
+            console.log(err)
+            prevent = true
+          })
+      }
     },
     togooddetail: function (goodid) {
       this.$router.push({path: '/detail?goodsId=' + goodid})
