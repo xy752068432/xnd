@@ -14,7 +14,7 @@
      <div v-else="!this.hidshow" class="manymes">
      	<ul>
      		<li v-for="item in items">
-     			<div class="detail" @click="tologistic">
+     			<div class="detail" @click="tologistic(item.order_info.order_id)">
      				<div class="didangid"><span>订单号</span><span>：</span><span>{{item.order_info.order_num}}</span></div>
      				<div><span>下单时间</span><span>：</span><span>{{item.order_info.created_at}}</span></div>
      			</div>
@@ -204,8 +204,8 @@ export default {
     togooddetail: function (goodid) {
       this.$router.push({path: '/detail?goodsId=' + goodid})
     },
-    tologistic: function () {
-      this.$router.push({path: '/person/order/logistic'})
+    tologistic: function (orderid) {
+      this.$router.push({path: '/person/order/logistic?order_id=' + orderid})
     }
   }
 }

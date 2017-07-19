@@ -25,19 +25,22 @@
                  <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png">
                  <p>待付款</p>
                  <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>88</p></div>
+                 <div class="willmestxt"><p>{{this.data.WAIT_PAY
+                }}</p></div>
                </div>
                <div class="willout will wills" @click="towillgive">
                  <img class="willimg" id="willout" src="../assets/personcenter/willout.png">
                  <p>待发货</p>
                  <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>88</p></div>
+                 <div class="willmestxt"><p>{{this.data.WAIT_SEND
+                }}</p></div>
                </div>
                <div class="wills" id="willget1" @click="towillget">
                  <img class="willimg" id="willget" src="../assets/personcenter/willget.png">
                  <p>待收货</p>
                  <div class="willmes"><img  src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>88</p></div>
+                 <div class="willmestxt"><p>{{this.data.WAIT_RECV
+                }}</p></div>
                </div>
             </div>
         </div>
@@ -86,8 +89,20 @@
 
 <script>
 import bottombar from '../components/bottombar'
+import request from '../common/request'
 export default {
   name: 'center',
+  data () {
+    return {
+      data: ''
+    }
+  },
+  created: function () {
+    request.get(this.$route, {}, function (data) {
+      this.data = data
+      console.log(this.data)
+    }.bind(this))
+  },
   methods: {
     // 跳转地址界面
     tomyaddress () {
@@ -221,9 +236,11 @@ export default {
 {
   position: absolute;
   top: 0.4777rem;
-  left: 0.7222rem;
+  left: 0.673333rem;
   color: white;
   font-size: 0.3rem;
+  width: 0.466667rem;
+  text-align: center;
 }
 .list
 {

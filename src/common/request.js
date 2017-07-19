@@ -51,7 +51,9 @@ var urls = {
   cancelorder:'/v1/user/2/order/{order_id}/cancel',
   got:'/v1/user/2/order/{order_id}/finish',
   cartAll: '/v1/user/2/goods_car/all',
-  delorder:'/v1/user/2/order/{order_id}'
+  delorder:'/v1/user/2/order/{order_id}',
+  logistic:'/v1/user/2/order/{order_id}/logistics',
+  person:'/v1/user/2/order/count'
 }
 
 /*
