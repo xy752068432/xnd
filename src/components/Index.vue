@@ -53,13 +53,13 @@
         }
       },
       created: function () {
-        localStorage.setItem('token', '$2y$10$VMPISREduk8BTERybxMHXe1/iJW2ReAOuwYD/nfg2sp9LISU/SE0y')
+        localStorage.setItem('token', '$2y$10$D6T6YcogOEBIp/yuyPpNyeIhKk9DexHgirm0VRgwWC9fU6D2TpQhm')
         localStorage.setItem('id', '2')
         // let url = 'goods'
         var self = this
         request.get(this.$route, {page: 1}, function (data) {
           self.goods = data
-          console.log(self.goods.length)
+          // console.log(self.goods.length)
         })
         let d = new Date()
         this.currentTime = Math.floor(d.getTime() / 1000)
@@ -76,7 +76,7 @@
           // console.log(this.goods[index].id)
           var goodsId = this.goods[index].id
           this.goodsId = goodsId
-          console.log(goodsId)
+          // console.log(goodsId)
           this.$router.push({path: '/detail', query: { goodsId: goodsId }})
         },
         // getItem (page) {
@@ -114,7 +114,7 @@
           request.get(this.$route, {page: self.currentPage + 1}, function (data) {
             refreshData = data
             if (refreshData.length < 10) {
-              console.log('无更多数据')
+              // console.log('无更多数据')
               self.goods = self.goods.concat(refreshData)
               done(true)
               // self.loadmore = false
@@ -138,7 +138,7 @@
       },
       filters: {
         formatTime: function (time) {
-          console.log(utils.formatDate(time))
+          // console.log(utils.formatDate(time))
           return utils.formatDate(time)
         }
       }

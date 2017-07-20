@@ -9,7 +9,7 @@
        
     </swiper>
         <!--左上角tag-->
-       <div class="tag presale offsale "><p>即将<br>开售</p></div>
+       <div class="tag presale offsale "><p>{{this.txt}}</p></div>
        <!--热卖倒计时-->
        <div class="timeout">
            <div class="time-title"><p>距结束仅剩</p></div>
@@ -37,25 +37,6 @@
     </div>
     <!--<router-view></router-view>-->
     <addcart :goodsId="goodsId"></addcart>
-    <!--<div class="btn-bar">
-        <div class="btn-bar-wrap">
-            <router-link to='/'>
-            <div class="btn-home btn">
-                <div class="img-wrap"><img src="../assets/detail/item-home.png"></div>
-                <p class="btn-title">首页</p>
-            </div>
-            </router-link>
-            <router-link to='/cart'>
-            <div class="btn-cart btn">
-                <div class="img-wrap"><img src="../assets/detail/cart.png"><div class="cart-amount"><p class="cart-amount-num">88</p></div></div>
-                <p class="btn-title">购物车</p>
-            </div>
-            </router-link> 
-            <div class="btn-addCart onsale saleout" @click="addCart">
-                
-            </div>
-        </div>    
-    </div>-->
     <!--加入购物车弹出层!暂时不用-->
     <div class="addcart-ok" v-show="false">
         <img src="../assets/detail/addcart-success.png" class="addcartsucc">
@@ -65,7 +46,6 @@
 <script>
     import { swiper, swiperSlide } from 'vue-awesome-swiper'
     import Toast from 'vue-easy-toast'
-    import utils from '../common/utils'
     import request from '@/common/request'
     import addcart from '../components/addcart'
     export default {
@@ -94,25 +74,24 @@
           },
           goodsId: '',
           goodsDetail: '',
-          goodsImg: ''
+          goodsImg: '',
+          txt: ''
         }
       },
       // props: ['goodsId'],
       created: function () {
-        console.log('传过来的参数' + this.$route.query.goodsId)
+        // console.log('传过来的参数' + this.$route.query.goodsId)
+        localStorage.setItem('token', '$2y$10$X7n0EEvR6itmxkRTVFbbYO3ksrPDG2S7ekr7XHNU.ODx3XA3EZrwC')
         this.goodsId = this.$route.query.goodsId
-        var self = this
         request.get(this.$route, {goodsId: this.goodsId}, function (data) {
-          // console.log(data.buy)
-          self.goodsDetail = data.detail
-          self.goodsImg = data.goods_imgs
-          console.log(self.goodsImg)
-        })
-      },
-      methods: {
-        addCart: function () {
-          utils.toToast('加入购物车成功')
-        }
+          this.goodsDetail = data.detail
+          this.goodsImg = data.goods_imgs
+          if (data.exp.text === null) {
+            this.txt = data.category
+          } else {
+            this.txt = data.exp.text
+          }
+        }.bind(this))
       }
     }
 </script>

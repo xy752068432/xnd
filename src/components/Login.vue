@@ -27,12 +27,10 @@
       },
       methods: {
         login: function () {
-          let data = {
+          request.post(this.$route, {
             username: this.user,
             passwd: this.pwd
-          }
-
-          request.post(this.$route, data, function (data) {
+          }, function (data) {
             // 登录成功
             if (data.id) {
               console.log(data)

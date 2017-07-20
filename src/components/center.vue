@@ -24,22 +24,22 @@
                <div id="willpay1" class="willpay will wills" @click="towillpay">
                  <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png">
                  <p>待付款</p>
-                 <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>{{this.data.WAIT_PAY
+                 <div class="willmes" v-show="hidshow1"><img src="../assets/personcenter/willmes.png"></div>
+                 <div class="willmestxt" v-show="hidshow1"><p>{{this.data.WAIT_PAY
                 }}</p></div>
                </div>
                <div class="willout will wills" @click="towillgive">
                  <img class="willimg" id="willout" src="../assets/personcenter/willout.png">
                  <p>待发货</p>
-                 <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>{{this.data.WAIT_SEND
+                 <div class="willmes" v-show="hidshow2"><img src="../assets/personcenter/willmes.png"></div>
+                 <div class="willmestxt" v-show="hidshow2"><p>{{this.data.WAIT_SEND
                 }}</p></div>
                </div>
                <div class="wills" id="willget1" @click="towillget">
                  <img class="willimg" id="willget" src="../assets/personcenter/willget.png">
                  <p>待收货</p>
-                 <div class="willmes"><img  src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>{{this.data.WAIT_RECV
+                 <div class="willmes" v-show="hidshow3"><img  src="../assets/personcenter/willmes.png"></div>
+                 <div class="willmestxt" v-show="hidshow3"><p>{{this.data.WAIT_RECV
                 }}</p></div>
                </div>
             </div>
@@ -71,7 +71,7 @@
         <div class="licut">
           
         </div>
-        <div class="list" herf="tel:123456">
+        <div class="list" herf="tel:123456" @click="tologin">
          
               <img id="link" src="../assets/personcenter/link.png">
                <span id="link1">联系客服</span>
@@ -94,12 +94,24 @@ export default {
   name: 'center',
   data () {
     return {
-      data: ''
+      data: '',
+      hidshow1: true,
+      hidshow2: true,
+      hidshow3: true
     }
   },
   created: function () {
     request.get(this.$route, {}, function (data) {
       this.data = data
+      if (this.data.WAIT_PAY === 0) {
+        this.hidshow1 = false
+      }
+      if (this.data.WAIT_SEND === 0) {
+        this.hidshow2 = false
+      }
+      if (this.data.WAIT_RECV === 0) {
+        this.hidshow3 = false
+      }
       console.log(this.data)
     }.bind(this))
   },
@@ -127,6 +139,9 @@ export default {
     // 跳转所有订单界面
     toallorder: function () {
       this.$router.push({path: '/person/order/order?status=0'})
+    },
+    tologin: function () {
+      this.$router.push({path: '/login'})
     }
   },
   components: {

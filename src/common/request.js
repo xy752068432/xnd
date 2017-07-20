@@ -32,12 +32,12 @@ var preFix = '/api'
  * @value {Object}
  */
 var urls = {
-  Login: '/v1/login',
+  Login: 'v1/user/login',
   UserInfo: '/v1/user/{uid}',
   newaddress: '/v1/user/2/address',
   edit: '/v1/user/2/address/{addr_id}',
   saveedit: '/v1/user/2/address/{addr_id}',
-  myaddress: '/v1/user/2/address',
+  myaddress: '/v1/user/2/address?page={page}&limit={limit}',
   deladdress: '/v1/user/2/address/{addr_id}',
   setaddress: '/v1/user/2/address/set/{addr_id}',
   Index: '/v1/goods?page={page}',

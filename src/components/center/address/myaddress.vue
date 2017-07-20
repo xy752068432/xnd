@@ -5,10 +5,13 @@
        <img class="arrowwh" src="../../../assets/back.png">
        <span>我的地址</span>
     </div>
-  
-    <div class="licut">
-  	   
+    <div  id="top" class="licut">
+       
     </div>
+    <scroller
+    :on-refresh="refresh"
+    :on-infinite="infinite"
+    style="padding-top: 2rem;padding-bottom: 24px;">
     <div id="contain" >
     	<ul>
     	<li v-for="(item,index) in addressList" @click="selectadd(item.msg.id)">
@@ -26,6 +29,7 @@
     	</li>
        </ul>
     </div>
+    </scroller>
        <!--添加新地址按钮-->
        <div id="add2" @click="tonewadd">
           <div id="add2content">
@@ -38,25 +42,28 @@
 </template>
 
 <script>
+import utils from '../../../common/utils'
+import VueScroller from 'vue-scroller'
 import bottombar from '../../../components/bottombar'
 import request from '../../../common/request'
 export default {
   name: 'myaddress',
   components: {
-    bottombar
+    bottombar,
+    VueScroller
   },
   data: function () {
     return {
       addressList: [],
       data: [],
-      mark: false
+      mark: false,
+      currentPage: 0
     }
   },
   created () {
-    this.$nextTick(() => {
-      this.getdata()
-      console.log(this.$route.query.id)
-    })
+    // this.$nextTick(() => {
+   // this.getdata()
+   // })
   },
   methods: {
     // 跳转新增地址界面
@@ -73,7 +80,7 @@ export default {
     },
     // 获取地址条目
     getdata: function () {
-      request.get(this.$route, this.data, function (data) {
+      request.get(this.$route, {page: 1, limit: 4}, function (data) {
         this.addressList = data
         console.log(data)
       }.bind(this))
@@ -113,6 +120,31 @@ export default {
           }
         }
       }
+    },
+    refresh: function (done) {
+      request.get(this.$route, {page: this.currentPage, limit: 4}, function (data) {
+        this.addressList = data
+        done()
+        utils.toToast('刷新成功')
+        // console.log(data)
+      }.bind(this))
+    },
+    infinite: function (done) {
+      var refreshData
+      request.get(this.$route, {page: this.currentPage + 1, limit: 10}, function (data) {
+        refreshData = data
+        console.log(data)
+        if (refreshData.length < 10) {
+          console.log('无更多数据')
+          this.addressList = this.addressList.concat(refreshData)
+          done(true)
+          // self.loadmore = false
+        } else {
+          this.currentPage++
+          this.addressList = this.addressList.concat(refreshData)
+          done()
+        }
+      }.bind(this))
     }
   }
 }
@@ -122,15 +154,25 @@ export default {
 @import "../../../common/mixin.css";
 #contain
 {
+  margin-top: 1.226667rem;
   height:12rem; 
   overflow-y: auto;
 }
 #back1
 {
+  position: fixed;
 	margin-top: 0.96rem;
 	width: 100%;
+  background-color: white;
+  z-index: 999;
 	height: 1.24rem;
 	text-align: left;
+  /* border-bottom: #ADADAD solid 0.013333rem; */
+}
+#top
+{
+  margin-top: 2.2rem;
+  position: fixed;
 }
 .arrowwh
 {

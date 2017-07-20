@@ -63,10 +63,10 @@ export default {
     VueScroller
   },
   created: function () {
-    localStorage.setItem('token', '$2y$10$VMPISREduk8BTERybxMHXe1/iJW2ReAOuwYD/nfg2sp9LISU/SE0y')
+    // localStorage.setItem('token', '$2y$10$VMPISREduk8BTERybxMHXe1/iJW2ReAOuwYD/nfg2sp9LISU/SE0y')
     // var self = this
     // request.get(this.route)
-    request.get(this.$route, {page: 1}, function (data) {
+    request.get(this.$route, {page: 1, limit: 5}, function (data) {
      // console.log('cart')
      // console.log(data)
       this.goods = data
@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     refresh: function (done) {
-      request.get(this.$route, {page: 1}, function (data) {
+      request.get(this.$route, {page: 1, limit: 5}, function (data) {
         this.goods = data
         done()
         utils.toToast('刷新成功')
@@ -95,10 +95,10 @@ export default {
     },
     infinite: function (done) {
       var refreshData
-      request.get(this.$route, {page: this.currentPage + 1}, function (data) {
+      request.get(this.$route, {page: this.currentPage + 1, limit: 5}, function (data) {
         refreshData = data
         if (refreshData.length < 10) {
-          console.log('无更多数据')
+         // console.log('无更多数据')
           this.goods = this.goods.concat(refreshData)
           done(true)
           // self.loadmore = false

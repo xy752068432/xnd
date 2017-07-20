@@ -68,6 +68,8 @@
 <script>
 import bottombar from '../../../components/bottombar'
 import request from '../../../common/request'
+// import Toast from 'vue-easy-toast'
+import utils from '../../../common/utils'
 export default {
   name: 'orderchild',
   components: {
@@ -170,6 +172,7 @@ export default {
               if (this.items[i].order_info.order_id === orderid) {
                 this.items.splice(i, 1)
               }
+              utils.toToast('加入购物车成功')
             }
           }.bind(this), function (err) {
             console.log(err)
