@@ -1,18 +1,19 @@
 <template lang="html">
 <div>
-    
+
 	<div id="back1" @click="back">
        <img class="arrowwh" src="../../../assets/back.png">
        <span>我的地址</span>
     </div>
     <div  id="top" class="licut">
-       
+
     </div>
     <scroller
     :on-refresh="refresh"
     :on-infinite="infinite"
-    style="padding-top: 2rem;padding-bottom: 24px;">
-    <div id="contain" >
+    ref="my_scroller"
+    style="height:15rem;margin-top: 2.26667rem"
+    >
     	<ul>
     	<li v-for="(item,index) in addressList" @click="selectadd(item.msg.id)">
     		<div class="addressdetail">
@@ -24,11 +25,10 @@
                 <img class="delete" @click="deletes(item.msg.id)" src="../../../assets/personaddress1/delete.png" />
     		</div>
     		<div class="licut">
-  	   
+
             </div>
     	</li>
        </ul>
-    </div>
     </scroller>
        <!--添加新地址按钮-->
        <div id="add2" @click="tonewadd">
@@ -57,13 +57,17 @@ export default {
       addressList: [],
       data: [],
       mark: false,
-      currentPage: 0
+      currentPage: 1,
+      limit: 8
     }
   },
   created () {
-    // this.$nextTick(() => {
-   // this.getdata()
-   // })
+    this.$router.name = this.$route.name
+    // this.refs.my_scroller.height = '11rem'
+    // this.getdata()
+  },
+  mounted () {
+    // this.getdata()
   },
   methods: {
     // 跳转新增地址界面
@@ -80,9 +84,9 @@ export default {
     },
     // 获取地址条目
     getdata: function () {
-      request.get(this.$route, {page: 1, limit: 4}, function (data) {
+      request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
+        this.currentPage++
         this.addressList = data
-        console.log(data)
       }.bind(this))
     },
     // 设置默认地址
@@ -92,7 +96,7 @@ export default {
           this.data.rootName = 'setaddress'
           this.data.addr_id = addressID
           this.addressList[i].msg.status = true
-          request.put(this.$route, this.data, function (data) {
+          request.put(this.$router, this.data, function (data) {
           })
         } else {
           this.addressList[i].msg.status = false
@@ -101,7 +105,7 @@ export default {
     },
     // 删除收货地址
     deletes: function (addressid) {
-      request.patch(this.$route, {
+      request.patch(this.$router, {
         rootName: 'deladdress',
         addr_id: addressid}, function (data) {
           for (var i = 0; i < this.addressList.length; i++) {
@@ -122,26 +126,25 @@ export default {
       }
     },
     refresh: function (done) {
-      request.get(this.$route, {page: this.currentPage, limit: 4}, function (data) {
+      request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
         this.addressList = data
         done()
         utils.toToast('刷新成功')
-        // console.log(data)
       }.bind(this))
     },
     infinite: function (done) {
       var refreshData
-      request.get(this.$route, {page: this.currentPage + 1, limit: 10}, function (data) {
+      request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
+        this.currentPage++
         refreshData = data
-        console.log(data)
-        if (refreshData.length < 10) {
-          console.log('无更多数据')
+        if (refreshData.length < this.limit) {
           this.addressList = this.addressList.concat(refreshData)
           done(true)
-          // self.loadmore = false
+          return
         } else {
-          this.currentPage++
-          this.addressList = this.addressList.concat(refreshData)
+          for (var i = refreshData.length - 1; i >= 0; i--) {
+            this.addressList.push(refreshData[i])
+          }
           done()
         }
       }.bind(this))
@@ -154,9 +157,9 @@ export default {
 @import "../../../common/mixin.css";
 #contain
 {
-  margin-top: 1.226667rem;
-  height:12rem; 
-  overflow-y: auto;
+  /*margin-top: 1.226667rem;*/
+  /*height:12rem;*/
+  /*overflow-y: auto;*/
 }
 #back1
 {
@@ -259,6 +262,6 @@ export default {
 }
 #add2content
 {
-  margin-top:0.333333rem; 
+  margin-top:0.333333rem;
 }
 </style>

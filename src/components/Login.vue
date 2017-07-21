@@ -36,7 +36,7 @@
               console.log(data)
               localStorage.setItem('id', data.id)
               localStorage.setItem('token', data.token)
-              this.$router.push({path: '/user'})
+              this.$router.push({path: '/'})
             } else {
               alert(data.msg)
             }

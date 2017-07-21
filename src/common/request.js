@@ -32,7 +32,7 @@ var preFix = '/api'
  * @value {Object}
  */
 var urls = {
-  Login: 'v1/user/login',
+  Login: '/v1/login',
   UserInfo: '/v1/user/{uid}',
   newaddress: '/v1/user/2/address',
   edit: '/v1/user/2/address/{addr_id}',
@@ -163,7 +163,7 @@ var patch = function (router, data, successFun, errorFun) {
  */
 var DELETE = function (router, data, successFun, errorFun) {
   request('DELETE', router, data, successFun, errorFun)
-}  
+}
 export default {
   get: get,
   post: post,
