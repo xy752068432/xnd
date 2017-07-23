@@ -102,10 +102,17 @@ var request = function (method, router, data, successFun, errorFun) {
     console.log('失败')
     if (error.response) {
       // 特殊情况统一处理
+
+      if (error.response.status === 404) {
+        // 越权访问
+        router.push({path: '/login'})
+        return
+      }
       if (error.response.data &&
         error.response.data.code === 3) {
         // 未登录或者登录已经过期
         router.push({path: '/login'})
+        return
       }
       // 自定义错误函数
       if (errorFun) {
@@ -155,7 +162,7 @@ var patch = function (router, data, successFun, errorFun) {
  */
 var DELETE = function (router, data, successFun, errorFun) {
   request('DELETE', router, data, successFun, errorFun)
-}  
+}
 export default {
   get: get,
   post: post,
