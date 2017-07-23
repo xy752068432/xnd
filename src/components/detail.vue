@@ -9,7 +9,7 @@
        
     </swiper>
         <!--左上角tag-->
-       <div class="tag presale offsale "><p>{{this.txt}}</p></div>
+       <div class="tag" :class="{presale: state2,offsale:state3}" v-show="state1"><p>{{this.txt}}</p></div>
        <!--热卖倒计时-->
        <div class="timeout">
            <div class="time-title"><p>距结束仅剩</p></div>
@@ -75,21 +75,31 @@
           goodsId: '',
           goodsDetail: '',
           goodsImg: '',
-          txt: ''
+          txt: '',
+          state1: false,
+          state2: false,
+          state3: false
         }
       },
       // props: ['goodsId'],
       created: function () {
-        // console.log('传过来的参数' + this.$route.query.goodsId)
-        localStorage.setItem('token', '$2y$10$X7n0EEvR6itmxkRTVFbbYO3ksrPDG2S7ekr7XHNU.ODx3XA3EZrwC')
         this.goodsId = this.$route.query.goodsId
         request.get(this.$route, {goodsId: this.goodsId}, function (data) {
           this.goodsDetail = data.detail
           this.goodsImg = data.goods_imgs
           if (data.exp.text === null) {
-            this.txt = data.category
+            if (data.category === null) {
+              this.state1 = false
+            } else {
+              this.txt = data.category
+              this.state1 = true
+              this.state2 = true
+              this.state3 = false
+            }
           } else {
             this.txt = data.exp.text
+            this.state3 = true
+            this.state2 = false
           }
         }.bind(this))
       }

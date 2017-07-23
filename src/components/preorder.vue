@@ -13,9 +13,9 @@
                 <span class="deliver-day">{{order_info_stime[1]}}</span>
             </div>
         </div>
-        <div class="discount">
+        <div class="discount" @click="toastShow">
             <div class="discount-title">优惠码</div>
-            <img src="../assets/cart/right-arrow.png" class="right-arrow" @click="toastShow">
+            <img src="../assets/cart/right-arrow.png" class="right-arrow" >
         </div>
        <div class="order-list">
             <ul>
@@ -30,7 +30,7 @@
         </div>
         <div class="toCheck">
             <span class="check-all-money">合计：{{totalmoney}}</span>
-            <span class="check-btn" @click="pay"></span>
+            <span class="check-btn" @click.stop="pay"></span>
         </div>
         <!--优惠码输入弹窗-->
         <transition name="fade">
@@ -39,7 +39,7 @@
                     <input type="text" placeholder="请输入优惠码" v-model="idnum">
                     <div class="discount-toast-confirm">
                         <div class="btn" @click="toastShow">取消</div>
-                        <div class="btn" @click="useidnum">确认</div>
+                        <div class="btn" @click.stop="useidnum">确认</div>
                     </div>    
                 </div>
             </div>    
@@ -48,6 +48,7 @@
 </template>
 <script>
 import request from '../common/request'
+import utils from '../common/utils'
 export default {
   name: 'preorder',
   data () {
@@ -59,76 +60,79 @@ export default {
       price_info: [],
       idnum: '',
       totalmoney: '',
-      goods_id: []
+      goods_id: [],
+      addid: '',
+      coupon_id: '',
+      state: true
     }
   },
   created: function () {
-  // 接受购物车ID
-   // console.log(this.$route.query.goods_car_id)
-  /* if (this.$route.query.goods_car_id) {
-      this.good_car_ids = this.$route.query.goods_car_id.split(',')
-      this.good_car_ids.length = this.good_car_ids.length - 1
-      console.log(this.good_car_ids)
-    } */
-    // 接受地址ID
-    console.log(this.$route.query.addid)
     if (this.$route.query.addid) {
-      request.get(this.$route, {
-        goods_car_ids: this.$route.query.goods_car_id,
-        addr_id: this.$route.query.addid
-      }, function (data) {
-        console.log(data)
-        this.ordercontent = data.rcv_info.msg
-        this.order_info_stime = data.orders_info.send_time
-        this.price_info = data.orders_info.price_info
-        this.good_car_info = data.orders_info.goods_car_info
-        this.totalmoney = data.orders_info.price_info[1].value
-        for (var i = 0; i < this.good_car_info.length; i++) {
-          this.goods_id.push(this.good_car_info[i].goods_id)
-        }
-        console.log(this.good_car_info[0].goods_id)
-      }.bind(this))
-    } else {
-      console.log(this.$route.query.goods_car_id)
-      request.get(this.$route, {
-        goods_car_ids: this.$route.query.goods_car_id,
-        addr_id: ''
-      }, function (data) {
-        this.ordercontent = data.rcv_info.msg
-        this.order_info_stime = data.orders_info.send_time
-        this.price_info = data.orders_info.price_info
-        this.good_car_info = data.orders_info.goods_car_info
-        this.totalmoney = data.orders_info.price_info[1].value
-        for (var i = 0; i < this.good_car_info.length; i++) {
-          this.goods_id.push(this.good_car_info[i].goods_id)
-        }
-        console.log(data)
-      }.bind(this))
+      this.addid = this.$route.query.addid
     }
+    request.get(this.$route, {
+      goods_car_ids: this.$route.query.goods_car_id,
+      addr_id: this.addid
+    }, function (data) {
+      console.log(data)
+      this.ordercontent = data.rcv_info.msg
+      this.order_info_stime = data.orders_info.send_time
+      this.price_info = data.orders_info.price_info
+      this.good_car_info = data.orders_info.goods_car_info
+      this.totalmoney = data.orders_info.price_info[1].value
+      for (var i = 0; i < this.good_car_info.length; i++) {
+        this.goods_id.push(this.good_car_info[i].goods_id)
+      }
+      this.addid = data.rcv_info.msg.id
+    }.bind(this))
   },
   methods: {
     toastShow: function () {
       this.toastDisplay = !this.toastDisplay
     },
     toaddress: function () {
-      this.$router.push({path: '/person/myaddress?id=markadd&goods_car_id=' + this.$route.query.goods_car_id})
+      this.$router.push({path: '/person/Address?id=markadd&goods_car_id=' + this.$route.query.goods_car_id})
     },
     useidnum: function () {
-      console.log(this.goods_id)
       if (this.idnum !== '') {
         request.get(this.$route, {
           goods_car_ids: this.$route.query.goods_car_id,
-          rootName: 'preordernum',
+          rootName: 'coupon',
           code: this.idnum
         }, function (data) {
-          console.log(data)
-          this.totalmoney = data.msg.price
-          this.toastDisplay = !this.toastDisplay
-        }.bind(this))
+          if (data.code === 0) {
+            this.totalmoney = data.msg.all_price
+            this.toastDisplay = !this.toastDisplay
+            this.idnum = ''
+            this.coupon = data.msg.id
+            utils.toToast('使用成功')
+          } else {
+            this.idnum = ''
+            utils.toToast('优惠码无效')
+          }
+        }.bind(this), function (err) {
+          console.log(err)
+          utils.toToast('请求失败')
+        })
       }
     },
     pay: function () {
-      this.$router.push({path: '/orderDetail'})
+      if (this.state === true) {
+        this.state = false
+        request.get(this.$route, {
+          goods_car_ids: this.$route.query.goods_car_id,
+          rootName: 'pay',
+          addr_id: this.addid,
+          coupon_id: this.coupon
+        }, function (data) {
+          utils.toToast('支付成功')
+          this.$router.push({path: '/person/order/order?status=2'})
+        }.bind(this), function (err) {
+          console.log(err)
+          this.state = true
+          utils.toToast('支付失败')
+        }.bind(this))
+      }
     }
   }
 }

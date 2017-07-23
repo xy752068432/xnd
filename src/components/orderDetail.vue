@@ -12,7 +12,7 @@
                 <span class="deliver-day">约三天到货</span>
             </div>
         </div>
-        <div class="orderStatus" v-show="payStatus">
+        <div class="orderStatus">
             <ul>
                 <li><span class="orderStatus-left">订单状态：</span><span class="orderStatus-right">已支付</span></li>
                 <li><span class="orderStatus-left">订单号：</span><span class="orderStatus-right">2020382515</span></li>
@@ -39,6 +39,7 @@
 </template>
 <script>
 import bottombar from '../components/bottombar'
+import request from '../common/request'
 export default {
   data () {
     return {
@@ -49,6 +50,11 @@ export default {
     bottombar
   },
   created: function () {
+    request.get(this.$route, {
+      order_id: 13
+    }, function (data) {
+      console.log(data)
+    })
   }
 }
 </script>

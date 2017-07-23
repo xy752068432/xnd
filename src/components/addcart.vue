@@ -13,7 +13,7 @@
                 <p class="btn-title">购物车</p>
             </div>
             </router-link> 
-            <div class="btn-addCart" @click="addCart" :class="this.state1 ? 'onsale' : 'saleout'">
+            <div class="btn-addCart" @click.stop="addCart" :class="this.state1 ? 'onsale' : 'saleout'">
                 
             </div>
         </div>     
@@ -22,7 +22,6 @@
 <script>
     import utils from '../common/utils'
     import request from '@/common/request'
-    // import axios from 'axios'
     export default {
       name: 'addcart',
       props: ['goodsId'],
@@ -50,7 +49,11 @@
           request.post(this.$route, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
             if (this.state1 === true) {
               utils.toToast('加入购物车成功')
-              this.cartAll++
+              request.get(this.$route, {rootName: 'cartAll'}, function (data) {
+                console.log(data.num)
+                this.cartAll = data.num
+              }.bind(this))
+              // this.cartAll++
             }
           }.bind(this))
         }

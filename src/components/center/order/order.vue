@@ -1,9 +1,11 @@
 <template>
 <div>
     <div id="toggle">
-    <div id="back" @click="back">
+    <router-link to="/person">
+    <div id="back">
       <img class="arrowwh" src="../../../assets/back.png">
     </div>
+    </router-link>
     <ul id="dingdanlist">
     <li class="right" @click="statuss(1)">待付款</li>
     <li class="right" @click="statuss(2)">待发货</li>
@@ -33,9 +35,6 @@ export default {
     this.status = this.$route.query.status
   },
   methods: {
-    back: function () {
-      this.$router.push({path: '/person'})
-    },
     statuss: function (data) {
       if (data === 1) {
         this.clickstatus = 1

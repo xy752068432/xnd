@@ -5,13 +5,13 @@
         <scroller
           :on-refresh="refresh"
           :on-infinite="infinite"
-          style="padding-top: 0.966rem;padding-bottom: 24px;">           
+          ref="my_scroller" style="height:15rem;margin-top: 1rem">           
           <ul>
             <li class="cart-item-wrap" v-for="(item,index) in goods">
               <div class="icon">
-                <div class="choose-btn" @click="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
+                <div class="choose-btn" @click.stop="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
                 <div class="icon-logo" @click.stop="toDetail">
-                  <div class="tag"><p>促销<br>热卖</p></div>
+                  <div class="tag" :class="{presale: !item.state,offsale:item.state}" v-show="item.status_text"><p>{{item.status_text}}</p></div>
                   <img :src="item.goods_info.goods_img">
                 </div>  
               </div>
@@ -22,16 +22,16 @@
                 <p class="deliver-time">预计{{item.goods_info.send_time}}{{item.goods_car_id}}发货</p>
               </div>
               <div class="amount">
-                <span class="btn-minus" @click="changeAmount(item,0)"></span>
+                <span class="btn-minus" @click.stop="changeAmount(item,0)"></span>
                 <input class="amount-num" type="number"  v-model="item.goods_num" @keyup="maxnum(item.goods_car_id)" @blur="changenumfast(item.goods_car_id)"></input>
-                <span class="btn-plus" @click="changeAmount(item,1)"></span>
+                <span class="btn-plus" @click.stop="changeAmount(item,1)"></span>
               </div>      
             </li>
           </ul>
         </scroller>    
         </div>
         <div class="toPay">
-          <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
+          <div class="chooseAll" @click.stop="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
           <p class="chooseAll-text">全选</p>
           <div class="pay-sum-wrap">
           <p><span class="pay-sum">合计：</span>&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
@@ -53,9 +53,10 @@ export default {
     return {
       selectAll: false,
       goods: [],
-      currentPage: 1,
       good_car_id: '',
-      good_car_id1: []
+      good_car_id1: [],
+      currentPage: 1,
+      limit: 8
     }
   },
   components: {
@@ -63,15 +64,10 @@ export default {
     VueScroller
   },
   created: function () {
-    // localStorage.setItem('token', '$2y$10$VMPISREduk8BTERybxMHXe1/iJW2ReAOuwYD/nfg2sp9LISU/SE0y')
-    // var self = this
-    // request.get(this.route)
-    request.get(this.$route, {page: 1, limit: 5}, function (data) {
-     // console.log('cart')
-     // console.log(data)
-      this.goods = data
-      console.log(this.goods)
-    }.bind(this))
+    if (!localStorage.getItem('id') || !localStorage.getItem('token')) {
+      this.$router.push({path: '/login'})
+    }
+    this.$router.name = this.$route.name
   },
   computed: {
     //  计算总金额
@@ -87,36 +83,38 @@ export default {
   },
   methods: {
     refresh: function (done) {
-      request.get(this.$route, {page: 1, limit: 5}, function (data) {
+      this.currentPage = 1
+      request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
+        this.currentPage ++
         this.goods = data
+        // console.log(data)
         done()
         utils.toToast('刷新成功')
       }.bind(this))
     },
     infinite: function (done) {
       var refreshData
-      request.get(this.$route, {page: this.currentPage + 1, limit: 5}, function (data) {
+      request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
+        this.currentPage++
         refreshData = data
-        if (refreshData.length < 10) {
-         // console.log('无更多数据')
+        // console.log(data)
+        if (refreshData.length < this.limit) {
           this.goods = this.goods.concat(refreshData)
           done(true)
-          // self.loadmore = false
         } else {
-          this.currentPage++
-          this.goods = this.goods.concat(refreshData)
+          for (var i = refreshData.length - 1; i >= 0; i--) {
+            this.goods.push(refreshData[i])
+          }
           done()
         }
       }.bind(this))
     },
     //  进入商品详情页
     toDetail: function (item) {
-      console.log('toDetail')
       this.$router.push({path: '/detail', query: { goodsId: 1 }})
     },
     // 去结算
     toCheck: function () {
-      // console.log(this.good_car_id)
       if (this.good_car_id !== '') {
         this.$router.push({path: '/preorder?goods_car_id=' + this.good_car_id})
       }
@@ -139,9 +137,7 @@ export default {
           this.good_car_id = ''
         } else {
           var reg = new RegExp(item.goods_car_id + ',', 'g')
-          console.log(reg)
           this.good_car_id = this.good_car_id.replace(reg, ',')
-          console.log(this.good_car_id)
         }
       }
     },
@@ -152,11 +148,9 @@ export default {
         if (typeof item.checked === 'undefined') {
           Vue.set(item, 'checked', this.selectAll)
           this.good_car_id = this.good_car_id + item.goods_car_id + ','
-          console.log(this.good_car_id)
         } else {
           item.checked = this.selectAll
           this.good_car_id = ''
-          console.log(this.good_car_id)
         }
       })
     },
@@ -166,17 +160,17 @@ export default {
         console.log(item)
         if (item.goods_num < 999) {
           item.goods_num++
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else if (item.goods_num > 999) {
           item.goods = 999
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
         }
       } else {
         if (item.goods_num > 1) {
           item.goods_num--
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else {
-          request.patch(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+          request.patch(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
             console.log(data)
             if (!data.status) {
               this.refresh()
@@ -186,14 +180,14 @@ export default {
       }
     },
     changenumfast: function (goodcarid) {
-      console.log(this.goods.length)
+      // console.log(this.goods.length)
       for (var i = 0; i < this.goods.length; i++) {
         if (this.goods[i].goods_car_id === goodcarid) {
           if (this.goods[i].goods_num > 0 && this.goods[i].goods_num < 1000) {
-            request.put(this.$route, {rootName: 'updateCart', goods_car_id: this.goods[i].goods_car_id, goods_num: this.goods[i].goods_num})
+            request.put(this.$router, {rootName: 'updateCart', goods_car_id: this.goods[i].goods_car_id, goods_num: this.goods[i].goods_num})
           } else if (this.goods[i].goods_num === '') {
             this.goods[i].goods_num = 1
-            request.put(this.$route, {rootName: 'updateCart', goods_car_id: this.goods[i].goods_car_id, goods_num: this.goods[i].goods_num})
+            request.put(this.$router, {rootName: 'updateCart', goods_car_id: this.goods[i].goods_car_id, goods_num: this.goods[i].goods_num})
           }
         }
       }
@@ -202,9 +196,13 @@ export default {
       for (var i = 0; i < this.goods.length; i++) {
         if (this.goods[i].goods_car_id === goodcarId) {
           // console.log(a.test(this.goods[i].goods_num))
-          if (this.goods[i].goods_num > 999) {
-            this.goods[i].goods_num = 999
-          } else if (this.goods[i].goods_num === '0') {
+          if ((/\D/g.test(this.goods[i].goods_num)) === true) {
+            if (this.goods[i].goods_num > 999) {
+              this.goods[i].goods_num = 999
+            } else if (this.goods[i].goods_num === '0') {
+              this.goods[i].goods_num = ''
+            }
+          } else {
             this.goods[i].goods_num = ''
           }
         }
@@ -290,7 +288,7 @@ export default {
     width: 71.72%;
     height: 2.06666rem;
   }
-  .icon-logo .tag{
+  .icon-logo .presale{
     display: table;
     position: absolute;
     top: -.186667rem;
@@ -298,6 +296,16 @@ export default {
     width: .82666rem;
     height: .82666rem;
     background-image: url("../assets/cart/presale.png");
+    background-size: 100% 100%;
+  }
+  .icon-logo .offsale{
+    display: table;
+    position: absolute;
+    top: -.186667rem;
+    left:-.186667rem;
+    width: .82666rem;
+    height: .82666rem;
+    background-image: url("../assets/cart/offsale.png");
     background-size: 100% 100%;
   }
   .icon-logo .tag p{

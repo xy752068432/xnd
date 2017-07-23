@@ -24,7 +24,7 @@
                 		    <div class="licut">
   	   
                         </div>
-                			<div class="good" @click="togooddetail(item.goods_info.goods_id)">
+                			<div class="good" @click.stop="togooddetail(item.goods_info.goods_id)">
                 				<div class="goodlist"><img src="goods.goods_img"></div>
                 				<div class="goodlist goodtxt"><div class="goodtxt1">{{item.goods_info.name}}</div><div class="goodtxt2">{{item.goods_info.goods_desc}}</div></div>
                 				<div class="goodnum">X{{item.goods_info.num}}{{item.goods_info.unit}}</div>
@@ -47,7 +47,7 @@
   	   
                 </div>
                 <div class="buttons">
-                  <img @click="clicked(button.click,item.order_info.order_id)" class="buttonsimg" v-for="button in item.other_info.buttons" v-if="button.state" :src="button.img_url" > 
+                  <img @click.stop="clicked(button.click,item.order_info.order_id)" class="buttonsimg" v-for="button in item.other_info.buttons" v-if="button.state" :src="button.img_url" > 
                 </div>
                    
                     <div class="givetime" v-for="texts in item.other_info.texts" v-if="texts.state">
@@ -68,7 +68,6 @@
 <script>
 import bottombar from '../../../components/bottombar'
 import request from '../../../common/request'
-// import Toast from 'vue-easy-toast'
 import utils from '../../../common/utils'
 export default {
   name: 'orderchild',
@@ -90,7 +89,10 @@ export default {
       actives0: null,
       actives1: null,
       actives2: null,
-      actives3: null
+      actives3: null,
+      prevent: true,
+      prevent1: true,
+      prevent2: true
     }
   },
   created: function () {
@@ -134,7 +136,7 @@ export default {
           this.logistic(orderid)
           break
         case 5:
-          this.link(orderid)
+          this.link()
           break
         case 6:
           this.delorder(orderid)
@@ -142,9 +144,8 @@ export default {
       }
     },
     cancel: function (orderid) {
-      var prevent = true
-      if (prevent === true) {
-        prevent = false
+      if (this.prevent === true) {
+        this.prevent = false
         request.put(this.$route, {
           rootName: 'cancelorder',
           order_id: orderid}, function (data) {
@@ -153,18 +154,19 @@ export default {
                 this.items.splice(i, 1)
               }
             }
+            utils.toToast('取消成功')
           }.bind(this), function (err) {
             console.log(err)
-            prevent = true
-          })
+            utils.toToast('取消失败')
+            this.prevent = true
+          }.bind(this))
       }
     },
     paynow: function () {
     },
     got: function (orderid) {
-      var prevent = true
-      if (prevent === true) {
-        prevent = false
+      if (this.prevent2 === true) {
+        this.prevent2 = false
         request.put(this.$route, {
           rootName: 'got',
           order_id: orderid}, function (data) {
@@ -172,17 +174,20 @@ export default {
               if (this.items[i].order_info.order_id === orderid) {
                 this.items.splice(i, 1)
               }
-              utils.toToast('加入购物车成功')
             }
+            utils.toToast('确认收货成功')
           }.bind(this), function (err) {
             console.log(err)
-            prevent = true
-          })
+            utils.toToast('确认收货失败')
+            this.prevent2 = true
+          }.bind(this))
       }
     },
-    logistic: function () {
+    logistic: function (orderid) {
+      this.tologistic(orderid)
     },
     link: function () {
+      window.location.href = 'tel:17508404755'
     },
     delorder: function (orderid) {
       var prevent = true
@@ -198,8 +203,10 @@ export default {
                 this.items.splice(i, 1)
               }
             }
+            utils.toToast('删除成功')
           }.bind(this), function (err) {
             console.log(err)
+            utils.toToast('删除失败')
             prevent = true
           })
       }
