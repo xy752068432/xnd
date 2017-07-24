@@ -1,61 +1,144 @@
-<template lang="html">
+<template>
   <div id="order">
-        <div class="address">
+        <div id="address" @click="toaddress">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
-            <div class="address-name">宋海松松<span class="address-tel">15474587458</span></div>   
-            <div class="address-text">湖南省长沙市岳麓区尖山小区902</div>
+            <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>   
+            <div class="address-text">{{ordercontent.fullAddr}}</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow">
         </div>
         <div class="deliver">
             <div class="deliver-title">发货时间</div>
             <div class="deliver-time">
-                <span class="deliver-date">预计2017年8月9日发货</span>
-                <span class="deliver-day">约三天到货</span>
+                <span class="deliver-date">{{order_info_stime[0]}}</span>
+                <span class="deliver-day">{{order_info_stime[1]}}</span>
             </div>
         </div>
-        <div class="discount">
+        <div class="discount" @click="toastShow">
             <div class="discount-title">优惠码</div>
-            <div class="discount-detail">暂无可用优惠码</div>
-            <img src="../assets/cart/right-arrow.png" class="right-arrow" @click="toastShow">
+            <img src="../assets/cart/right-arrow.png" class="right-arrow" >
         </div>
-        <div class="order-list">
+       <div class="order-list">
             <ul>
                 <li class="list-title">订单详情</li>
-                <li><span class="list-left">订单总价：</span><span class="list-right">&yen;110.00</span></li>
-                <li><span class="list-left">配送费：</span><span class="list-right">&yen;00.00</span></li>
-                <li><span class="list-left">优惠码：</span><span class="list-right">-&yen;00.00</span></li>
-                <li><span class="list-left">阳澄湖大闸蟹：</span><span class="list-right-item"><span class="amount">3只</span><span class="price">&yen;55.00</span></span></li>
-                <li><span class="list-left">潜江大闸蟹：</span><span class="list-right-item"><span class="amount">1份</span><span class="price">&yen;55.00</span></span></li>                
+                <li v-for="item1 in price_info">
+                  <span class="list-left">{{item1.name}}</span><span class="list-right">{{item1.value}}</span>
+                </li>
+                <li v-for="item in good_car_info">
+                    <span class=" list-left">{{item.name}}：</span><span class="list-right-item"><span class="amount">{{item.num}}{{item.unit}}</span><span class="price">{{item.value}}</span></span>
+                </li> 
             </ul>
         </div>
         <div class="toCheck">
-            <span class="check-all-money">合计：&yen;110.00</span>
-            <span class="check-btn"></span>
+            <span class="check-all-money">合计：{{totalmoney}}</span>
+            <span class="check-btn" @click.stop="pay"></span>
         </div>
         <!--优惠码输入弹窗-->
         <transition name="fade">
             <div class="mask" v-show="toastDisplay">
                 <div class="discount-toast" v-show="toastDisplay">
-                    <input type="text" placeholder="请输入优惠码">
+                    <input type="text" placeholder="请输入优惠码" v-model="idnum">
                     <div class="discount-toast-confirm">
                         <div class="btn" @click="toastShow">取消</div>
-                        <div class="btn">确认</div>
+                        <div class="btn" @click.stop="useidnum">确认</div>
                     </div>    
                 </div>
             </div>    
         </transition>
   </div>
 </template>
-<<script>
+<script>
+import request from '../common/request'
+import utils from '../common/utils'
 export default {
+  name: 'preorder',
   data () {
     return {
-      toastDisplay: false
+      toastDisplay: false,
+      good_car_info: [],
+      ordercontent: [],
+      order_info_stime: [],
+      price_info: [],
+      idnum: '',
+      totalmoney: '',
+      goods_id: [],
+      addid: '',
+      coupon_id: '',
+      state: true
     }
+  },
+  created: function () {
+    this.$router.name = this.$route.name
+    if (this.$route.query.addid) {
+      this.addid = this.$route.query.addid
+    }
+    request.get(this.$router, {
+      goods_car_ids: this.$route.query.goods_car_id,
+      addr_id: this.addid
+    }, function (data) {
+      if (data.code && data.code === 11) {
+        utils.toToast('没有收货地址')
+        this.$router.push({path: '/person/address/add?id1=markadd1'})
+      } else {
+        this.ordercontent = data.rcv_info.msg
+        this.order_info_stime = data.orders_info.send_time
+        this.price_info = data.orders_info.price_info
+        this.good_car_info = data.orders_info.goods_car_info
+        this.totalmoney = data.orders_info.price_info[1].value
+        for (var i = 0; i < this.good_car_info.length; i++) {
+          this.goods_id.push(this.good_car_info[i].goods_id)
+        }
+        this.addid = data.rcv_info.msg.id
+      }
+    }.bind(this))
   },
   methods: {
     toastShow: function () {
       this.toastDisplay = !this.toastDisplay
+    },
+    toaddress: function () {
+      this.$router.push({path: '/person/address?id=markadd&goods_car_id=' + this.$route.query.goods_car_id})
+    },
+    useidnum: function () {
+      if (this.idnum !== '') {
+        request.get(this.$router, {
+          goods_car_ids: this.$route.query.goods_car_id,
+          rootName: 'coupon',
+          code: this.idnum
+        }, function (data) {
+          if (data.code === 0) {
+            this.totalmoney = data.msg.all_price
+            this.toastDisplay = !this.toastDisplay
+            this.idnum = ''
+            this.coupon = data.msg.id
+            utils.toToast('使用成功')
+          } else {
+            this.idnum = ''
+            utils.toToast('优惠码无效')
+          }
+        }.bind(this), function (err) {
+          console.log(err)
+          utils.toToast('请求失败')
+        })
+      }
+    },
+    pay: function () {
+      if (this.state === true) {
+        this.state = false
+        request.post(this.$router, {
+          goods_car_ids: this.$route.query.goods_car_id,
+          rootName: 'pay',
+          addr_id: this.addid,
+          pay_id: 4,
+          coupon_id: this.coupon
+        }, function (data) {
+          utils.toToast('支付成功')
+          this.$router.push({path: '/person/order/order?status=2'})
+        }.bind(this), function (err) {
+          console.log(err)
+          this.state = true
+          utils.toToast('支付失败')
+        }.bind(this))
+      }
     }
   }
 }
@@ -63,11 +146,11 @@ export default {
 <style scoped>
     @import "../common/mixin.css";  
     #order{
-        margin-top: .983333rem;
-        position: relative;
+        margin-top: 0.983333rem;
     }  
-    .address{
+    #address{
         z-index: 200;
+        width: 100%;
         background-color: #fff;
         padding: .426667rem .573333rem;
         height: 2.706666rem;
@@ -76,7 +159,7 @@ export default {
         border-bottom: .026667rem solid #ecedef; 
         box-sizing: border-box;
     }
-    .address div{
+    #address div{
         font-size: 0;
         letter-spacing: 0;
     }
@@ -92,18 +175,18 @@ export default {
         width: .32rem;
         height: .413333rem;
     }
-    .address .address-name{
+    #address .address-name{
         font-size: .48rem;
     }
-    .address .address-tel{
+    #address .address-tel{
         margin-left: .573333rem;
         font-size: .346667rem;
     }
-    .address .address-text{
+    #address .address-text{
         font-size: .306666rem;
         margin-top: .213333rem
     }
-    .address .right-arrow{
+    #address .right-arrow{
         position: absolute;
         right: .573333rem;
         top:1.173333rem;
@@ -138,10 +221,6 @@ export default {
     }
     .discount{
         position: relative;
-    }
-    .discount .discount-detail{
-        font-size: .413333rem;
-        text-align: left;
     }
     .discount img{
         position: absolute;

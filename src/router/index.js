@@ -8,12 +8,13 @@ import Index from '@/components/Index'
 import detail from '@/components/detail'
 import center from '@/components/center'
 import cart from '@/components/cart'
-import myaddress from '@/components/center/address/myaddress'
-import newaddress from '@/components/center/address/newaddress'
+import address from '@/components/center/address'
+import add from '@/components/center/address/add'
 import message from '@/components/center/message/message'
-import edit from '@/components/center/address/edit'
-import logdetail from '@/components/center/dingdan/logisticsdetail'
-import order from '@/components/order'
+import update from '@/components/center/address/update'
+import order from '@/components/center/order/order'
+import logistic from '@/components/center/order/logisticsdetail'
+import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
 Vue.use(Router)
@@ -22,14 +23,6 @@ const UserHome = { template: '<div>Home</div>' }
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'Index',
-    //   component: Index,
-    //   children: [
-    //     {path: '/detail', name: 'detail', component: detail}
-    //   ]
-    // },
     {path: '/', name: 'Index', component: Index},
     {path: '/login', name: 'Login', component: Login},
     {
@@ -43,12 +36,13 @@ export default new Router({
     },
     {path: '/detail', name: 'detail', component: detail},
     {path: '/person', name: 'person', component: center},
-    {path: '/person/myaddress', name: 'myaddress', component: myaddress},
-    {path: '/person/newaddress', name: 'newaddress', component: newaddress},
+    {path: '/person/address', name: 'address', component: address},
+    {path: '/person/address/add', name: 'add', component: add},
     {path: '/cart', name: 'cart', component: cart},
-    {path: '/message', name: 'message', component: message},
-    {path: '/person/address/edit', name: 'edit', component: edit},
-    {path: '/logdetail', name: 'logdetail', component: logdetail},
+    {path: '/person/message', name: 'message', component: message},
+    {path: '/person/address/update', name: 'update', component: update},
+    {path: '/person/order/order', name: 'order', component: order},
+    {path: '/person/order/logistic', name: 'logistic', component: logistic},
     {
       path: '/detail',
       name: 'detail',
@@ -62,7 +56,7 @@ export default new Router({
       name: 'cart',
       component: cart
     },
-    {path: '/order', name: 'order', component: order},
+    {path: '/preorder', name: 'preorder', component: preorder},
     {path: '/orderDetail', name: 'orderDetail', component: orderDetail}
   ]
 })

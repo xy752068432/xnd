@@ -13,7 +13,7 @@
                 <p class="btn-title">购物车</p>
             </div>
             </router-link> 
-            <div class="btn-addCart" @click="addCart" :class="goodsExp.can_click ? 'onsale' : 'saleout'">
+            <div class="btn-addCart" @click.stop="addCart" :class="this.state1 ? 'onsale' : 'saleout'">
                 
             </div>
         </div>     
@@ -22,38 +22,43 @@
 <script>
     import utils from '../common/utils'
     import request from '@/common/request'
-    // import axios from 'axios'
     export default {
       name: 'addcart',
       props: ['goodsId'],
       data () {
         return {
           cartAll: 0,
-          goodsExp: ''
+          state1: false
         }
       },
       created: function () {
-        var self = this
-        request.get(this.$route, {rootName: 'cartAll'}, function (data) {
-          console.log(data.num)
-          self.cartAll = data.num
-        })
-        request.get(this.$route, {goodsId: this.goodsId}, function (data) {
-          // console.log(data.buy)
-          self.goodsExp = data.exp
-          console.log(self.goodsExp)
-        })
+        this.$router.name = this.$route.name
+        if (localStorage.getItem('id') || localStorage.getItem('token')) {
+          request.get(this.$router, {rootName: 'cartAll'}, function (data) {
+            console.log(data.num)
+            this.cartAll = data.num
+          }.bind(this))
+          request.get(this.$router, {goodsId: this.goodsId}, function (data) {
+            if (data.car.can_click === 1) {
+              this.state1 = true
+            } else {
+              this.state1 = false
+            }
+          }.bind(this))
+        }
       },
       methods: {
         addCart: function () {
-          var self = this
-          request.post(this.$route, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
-            console.log(data)
-            if (data.state === 0) {
+          request.post(this.$router, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
+            if (this.state1 === true) {
               utils.toToast('加入购物车成功')
-              self.cartAll++
+              request.get(this.$router, {rootName: 'cartAll'}, function (data) {
+                console.log(data.num)
+                this.cartAll = data.num
+              }.bind(this))
+              // this.cartAll++
             }
-          })
+          }.bind(this))
         }
       }
     }

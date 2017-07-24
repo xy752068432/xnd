@@ -3,11 +3,12 @@
       <scroller
         :on-refresh="refresh"
         :on-infinite="infinite"
-        style="padding-top: 0.966rem;padding-bottom: 24px;"> 
+        ref="my_scroller" style="height:15rem;margin-top: 1rem"> 
       <ul>
         <li class="goods-item" v-for="(item,index) in goods" @click="toItem(index)">
           <div class="icon">
-            <div class="tag" v-show="goods.status_text"><p>促销<br>热卖</p></div>
+            <div class="tag" v-show="item.category.name"></div>
+            <div class="tag2" v-show="item.category.name"><div class="tag1"><span>{{item.category.name}}</span></div></div>
             <div class="sale-time" v-show="item.start_time > currentTime"><p>{{item.start_time | formatTime}}出售</p></div>
             <img :src="item.goods_img" >
           </div>
@@ -24,7 +25,6 @@
       <bottombar></bottombar>
       <!--回到顶部-->
       <div class="toTop" @click="toTop"></div>
-      <!--<router-view :goodsId="goodsId"></router-view>-->
     </div> 
 </template>
 <script>
@@ -34,8 +34,6 @@
     import Toast from 'vue-easy-toast'
     import request from '@/common/request'
 
-    // console.log(utils)
-    // console.log(VueScroller.Scroller)
     export default{
       name: 'home',
       components: {
@@ -49,94 +47,56 @@
           goods: [],
           goodsId: 0,
           currentTime: 0,
-          currentPage: 1
+          currentPage: 1,
+          limit: 8
         }
       },
       created: function () {
-        // let url = 'goods'
-        var self = this
-        request.get(this.$route, {page: 1}, function (data) {
-          self.goods = data
-          console.log(self.goods.length)
-        })
+        // localStorage.setItem('token', '$2y$10$D6T6YcogOEBIp/yuyPpNyeIhKk9DexHgirm0VRgwWC9fU6D2TpQhm')
+        // localStorage.setItem('id', '2')
+        // localStorage.setItem('headimgurl', 'http://wx.qlogo.cn/mmopen/VucCD4F16yoj6HKeqjw1NqsIZMCghPrcQIJ2lqhlUcM9ydicydMdAjyQ3Ws5xweuvxJ9oic6x5XicllicxYiaic1wqaS7rhEpTqiafL/0')
+        this.$router.name = this.$route.name
         let d = new Date()
         this.currentTime = Math.floor(d.getTime() / 1000)
-        // console.log(this.currentTime)
       },
       methods: {
         toTop () {
-          // console.log('totop')
           VueScroller.scrollTo(0, 0)
-          // utils.toTop()
-          // document.body.scrollTop = 0
         },
         toItem (index) {
-          // console.log(this.goods[index].id)
           var goodsId = this.goods[index].id
           this.goodsId = goodsId
-          console.log(goodsId)
           this.$router.push({path: '/detail', query: { goodsId: goodsId }})
         },
-        // getItem (page) {
-        //   var refreshData
-        //   var self = this
-        //   request.get(this.$route, {page: page}, function (data) {
-        //     refreshData = data
-        //     if (refreshData.length < 10) {
-        //       console.log('无更多数据')
-        //       self.loadmore = false
-        //     } else {
-        //       self.currentPage++
-        //       self.goods = self.goods.concat(refreshData)
-        //       self.loadmore = true
-        //     }
-        //   })
-        //   if (self.loadmore) {
-        //     return false
-        //   } else {
-        //     return true
-        //   }
-        // },
         refresh: function (done) {
-          var self = this
-          request.get(this.$route, {page: 1}, function (data) {
-            self.goods = data
+          this.currentPage = 1
+          request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
+            this.currentPage++
+            this.goods = data
             done()
             utils.toToast('刷新成功')
-          })
+          }.bind(this))
         },
         infinite: function (done) {
-          // console.log(this.goods.length)
           var refreshData
-          var self = this
-          request.get(this.$route, {page: self.currentPage + 1}, function (data) {
+          request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
+            this.currentPage++
             refreshData = data
-            if (refreshData.length < 10) {
-              console.log('无更多数据')
-              self.goods = self.goods.concat(refreshData)
+            if (refreshData.length < this.limit) {
+              this.goods = this.goods.concat(refreshData)
               done(true)
-              // self.loadmore = false
             } else {
-              self.currentPage++
-              self.goods = self.goods.concat(refreshData)
+              for (var i = refreshData.length - 1; i >= 0; i--) {
+                this.goods.push(refreshData[i])
+              }
               done()
             }
-          })
-          // if (this.getItem(this.currentPage + 1)) {
-          //   setTimeout(() => {
-          //     done(true)
-          //   }, 1500)
-          // } else {
-          //   setTimeout(() => {
-          //     done()
-          //     utils.toToast('加载成功')
-          //   }, 1500)
-          // }
+          }.bind(this))
         }
       },
       filters: {
         formatTime: function (time) {
-          console.log(utils.formatDate(time))
+          // console.log(utils.formatDate(time))
           return utils.formatDate(time)
         }
       }
@@ -154,7 +114,7 @@
     border-bottom: 1px solid #c0d4d5;
   }
   .icon{
-    display: inline-block;
+  
     float: left;
     position: relative;
     width: 59.3%;
@@ -166,7 +126,6 @@
     height: 100%;
   }
   .icon .tag{
-    display: table;
     position: absolute;
     top: -0.133rem;
     left: -0.226rem;
@@ -176,11 +135,26 @@
     background-size: cover;
     color: #fff;
   }
-  .icon .tag p{
-    display: table-cell;
-    vertical-align: middle;
-    font-size: 0.293rem;
+  .tag2
+  {
+    position: absolute;
+    top: 0.1rem;
+    left: 0;
+    margin: 0 auto;
+    display: table;
+    height: 0.8rem;
+    width: 0.8rem;
   }
+  .tag1
+  {
+    display: table-cell;
+    height: 0.8rem;
+    width: 0.8rem;
+    font-size: 0.38rem;
+    color: white;
+    vertical-align: middle;
+  }
+
   .icon .sale-time{
     width: 5.25rem;
     height: 0.533rem;

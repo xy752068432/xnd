@@ -27,18 +27,17 @@
       },
       methods: {
         login: function () {
-          let data = {
+          request.post(this.$route, {
             username: this.user,
             passwd: this.pwd
-          }
-
-          request.post(this.$route, data, function (data) {
+          }, function (data) {
             // 登录成功
             if (data.id) {
               console.log(data)
               localStorage.setItem('id', data.id)
               localStorage.setItem('token', data.token)
-              this.$router.push({path: '/user'})
+              localStorage.setItem('headimgurl', data.headimgurl)
+              this.$router.push({path: '/'})
             } else {
               alert(data.msg)
             }

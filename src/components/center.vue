@@ -4,14 +4,16 @@
      
         <div id="logo2">
           <div id="logo21">
-              <img src="../assets/personcenter/tx.png">
+              <img :src="this.imgurl"/>
           </div>
-          <div id="meslogo" @click="mes">
-            <img id="meslogo1" src="../assets/personcenter/meslogo.png">
+        
+          <div id="meslogo">
+            <img id="meslogo1" src="../assets/personcenter/meslogo.png"/>
             <div id="mes">
-                <img src="../assets/personcenter/mes.png">
+                <img src="../assets/personcenter/mes.png"/>
             </div>
           </div>
+          
           <div id="mestxt">
             <p>BUG MAKER</p>
           </div>
@@ -21,23 +23,26 @@
         </div>
         <div id="status">
             <div id="status1">
-               <div id="willpay1" class="willpay will wills">
-                 <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png">
+               <div id="willpay1" class="willpay will wills" @click="towillpay">
+                 <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png"/>
                  <p>待付款</p>
-                 <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>88</p></div>
+                 <div class="willmes" v-show="this.data.WAIT_PAY"><img src="../assets/personcenter/willmes.png"></div>
+                 <div class="willmestxt" v-show="this.data.WAIT_PAY"><p>{{this.data.WAIT_PAY
+                }}</p></div>
                </div>
-               <div class="willout will wills">
+               <div class="willout will wills" @click="towillgive">
                  <img class="willimg" id="willout" src="../assets/personcenter/willout.png">
                  <p>待发货</p>
-                 <div class="willmes"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>88</p></div>
+                 <div class="willmes" v-show="this.data.WAIT_SEND"><img src="../assets/personcenter/willmes.png"/></div>
+                 <div class="willmestxt" v-show="this.data.WAIT_SEND"><p>{{this.data.WAIT_SEND
+                }}</p></div>
                </div>
-               <div class="wills" id="willget1">
-                 <img class="willimg" id="willget" src="../assets/personcenter/willget.png">
+               <div class="wills" id="willget1" @click="towillget">
+                 <img class="willimg" id="willget" src="../assets/personcenter/willget.png"/>
                  <p>待收货</p>
-                 <div class="willmes"><img  src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt"><p>88</p></div>
+                 <div class="willmes" v-show="this.data.WAIT_RECV"><img  src="../assets/personcenter/willmes.png"/></div>
+                 <div class="willmestxt" v-show="this.data.WAIT_RECV"><p>{{this.data.WAIT_RECV
+                }}</p></div>
                </div>
             </div>
         </div>
@@ -45,37 +50,38 @@
           
         </div>
         
-        <div class="list" @click="tologdetail">
+        <div class="list" @click="toallorder">
          
-              <img id="allform" src="../assets/personcenter/allform.png">
-              <span id="allform1">全部订单</span>
+              <img id="allform" src="../assets/personcenter/allform.png"/>
+              <span id="allform1" >全部订单</span>
               <div class="arrow">
-                 <img src="../assets/personcenter/arrow.png">
+                 <img src="../assets/personcenter/arrow.png"/>
                </div>
         </div>
         <div class="licut">
           
         </div>
-        
-        <div class="list" @click="tomyaddress">
-            <img id="address" src="../assets/personcenter/address.png">
+        <router-link to="/person/address">
+        <div class="list">
+            <img id="address" src="../assets/personcenter/address.png"/>
                <span id="address1">收货地址</span>
                <div class="arrow">
-                 <img src="../assets/personcenter/arrow.png">
+                 <img src="../assets/personcenter/arrow.png"/>
                </div>
         </div>
-        
+        </router-link>
         <div class="licut">
           
         </div>
-        <div class="list" herf="tel:123456">
-         
-              <img id="link" src="../assets/personcenter/link.png">
-               <span id="link1">联系客服</span>
-               <div class="arrow">
-                 <img  src="../assets/personcenter/arrow.png">
-               </div>
+        
+        <div class="list" @click="linktel">
+           <img id="link" src="../assets/personcenter/link.png"/>
+           <span id="link1">联系客服</span>
+           <div class="arrow">
+              <img  src="../assets/personcenter/arrow.png"/>
+            </div>
         </div>
+       
         <div class="licut">
           
         </div>       
@@ -86,17 +92,42 @@
 
 <script>
 import bottombar from '../components/bottombar'
+import request from '../common/request'
 export default {
   name: 'center',
+  data () {
+    return {
+      data: '',
+      imgurl: ''
+    }
+  },
+  created: function () {
+    this.$router.name = this.$route.name
+    this.imgurl = localStorage.getItem('headimgurl')
+    request.get(this.$router, {}, function (data) {
+      this.data = data
+      // console.log(this.data)
+    }.bind(this))
+  },
   methods: {
-    tomyaddress () {
-      this.$router.push({path: '/person/myaddress'})
+    // 跳转待付款界面
+    towillpay: function () {
+      this.$router.push({path: '/person/order/order?status=1'})
     },
-    mes () {
-      this.$router.push({path: '/message'})
+    // 跳转待发货界面
+    towillgive: function () {
+      this.$router.push({path: '/person/order/order?status=2'})
     },
-    tologdetail () {
-      this.$router.push({path: '/logdetail'})
+    // 跳转待收货界面
+    towillget: function () {
+      this.$router.push({path: '/person/order/order?status=3'})
+    },
+    // 跳转所有订单界面
+    toallorder: function () {
+      this.$router.push({path: '/person/order/order?status=0'})
+    },
+    linktel: function () {
+      window.location.href = 'tel:17508404755'
     }
   },
   components: {
@@ -206,9 +237,11 @@ export default {
 {
   position: absolute;
   top: 0.4777rem;
-  left: 0.7222rem;
+  left: 0.673333rem;
   color: white;
   font-size: 0.3rem;
+  width: 0.466667rem;
+  text-align: center;
 }
 .list
 {
@@ -252,5 +285,9 @@ export default {
 {
   width: 0.2rem;
   height: 0.333333rem;
+}
+a
+{
+  color:black;
 }
 </style>
