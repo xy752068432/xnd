@@ -6,7 +6,12 @@ import router from './router'
 import VueScroller from 'vue-scroller'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Toast from 'vue-easy-toast'
-
+router.afterEach(route => {
+  if (route.query.token && route.query.uid) {
+    localStorage.setItem('token', route.query.token)
+    localStorage.setItem('uid', route.query.uid)
+  }
+})
 Vue.use(VueScroller)
 Vue.use(VueAwesomeSwiper)
 Vue.use(Toast)
