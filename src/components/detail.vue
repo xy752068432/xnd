@@ -9,7 +9,8 @@
        
     </swiper>
         <!--左上角tag-->
-       <div class="tag" :class="{presale: state2,offsale:state3}" v-show="state1"><p>{{this.txt}}</p></div>
+       <div class="tag" :class="{presale: state2,offsale:state3}" v-show="state1"></div>
+       <div class="tag1" v-show="state1"><p>{{this.txt}}</p></div>
        <!--热卖倒计时-->
        <div class="timeout">
            <div class="time-title"><p>距结束仅剩</p></div>
@@ -92,7 +93,7 @@
             if (data.category === null) {
               this.state1 = false
             } else {
-              this.txt = data.category
+              this.txt = data.category.name
               this.state1 = true
               this.state2 = true
               this.state3 = false
@@ -127,7 +128,6 @@
         position: relative;
     }
     .swiper-wrap .tag{
-        display: table;
         position: absolute;
         top: -.293333rem;
         left: 0.4666rem;
@@ -137,19 +137,28 @@
         background-size: cover;
         z-index: 100;
     }
-    .swiper-wrap .tag p{
+    .swiper-wrap .tag1
+    {
+        display: table;
+        position: absolute;
+        top: -0.15rem;
+        left: 0.6rem;
+        width: 1rem;
+        height: 1rem;
+        z-index:101;
+    }
+    .swiper-wrap .tag1 p{
+        color: white;
         display: table-cell;
         vertical-align: middle;
-        width: 1.1rem;
-        font-size: .3866rem;
+        font-size: 0.3866rem;
         letter-spacing: 0;
     }
     .swiper-wrap .presale{
         background-image: url("../assets/detail/unsale.png");
     }
     .swiper-wrap .offsale{
-        /*商品下架样式*/
-        /*background-image: url("../assets/detail/offsale.png");*/
+        background-image: url("../assets/detail/offsale.png");
     }
     .swiper-wrap .timeout{
         width: 5.1rem;
@@ -316,7 +325,7 @@
     }
     .saleout{
         /*商品下架样式*/
-        /*background-image: url("../assets/detail/saleout.png");*/
+        background-image: url("../assets/detail/saleout.png");
     }
     .addcart-ok{
         position: absolute;

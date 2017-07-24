@@ -25,7 +25,7 @@
   	   
                         </div>
                 			<div class="good" @click.stop="togooddetail(item.goods_info.goods_id)">
-                				<div class="goodlist"><img src="goods.goods_img"></div>
+                				<div class="goodlist"><img :src="item.goods_info.goods_img"></div>
                 				<div class="goodlist goodtxt"><div class="goodtxt1">{{item.goods_info.name}}</div><div class="goodtxt2">{{item.goods_info.goods_desc}}</div></div>
                 				<div class="goodnum">X{{item.goods_info.num}}{{item.goods_info.unit}}</div>
                 				<div class="goodmoney">{{item.goods_info.value}}</div>
