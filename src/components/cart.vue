@@ -335,7 +335,7 @@ export default {
       color: white;
       display: table-cell;
       vertical-align: middle;
-      font-size: 0.2rem;
+      font-size: 0.1rem;
       letter-spacing: 0;
   }
   .icon-logo img{
