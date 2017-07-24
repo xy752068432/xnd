@@ -67,23 +67,29 @@ export default {
     }
   },
   created: function () {
+    this.$router.name = this.$route.name
     if (this.$route.query.addid) {
       this.addid = this.$route.query.addid
     }
-    request.get(this.$route, {
+    request.get(this.$router, {
       goods_car_ids: this.$route.query.goods_car_id,
+      pay_id: 4,
       addr_id: this.addid
     }, function (data) {
-      console.log(data)
-      this.ordercontent = data.rcv_info.msg
-      this.order_info_stime = data.orders_info.send_time
-      this.price_info = data.orders_info.price_info
-      this.good_car_info = data.orders_info.goods_car_info
-      this.totalmoney = data.orders_info.price_info[1].value
-      for (var i = 0; i < this.good_car_info.length; i++) {
-        this.goods_id.push(this.good_car_info[i].goods_id)
+      if (data.code && data.code === 11) {
+        utils.toToast('没有收货地址')
+        this.$router.push({path: '/person/address/add?id1=markadd1'})
+      } else {
+        this.ordercontent = data.rcv_info.msg
+        this.order_info_stime = data.orders_info.send_time
+        this.price_info = data.orders_info.price_info
+        this.good_car_info = data.orders_info.goods_car_info
+        this.totalmoney = data.orders_info.price_info[1].value
+        for (var i = 0; i < this.good_car_info.length; i++) {
+          this.goods_id.push(this.good_car_info[i].goods_id)
+        }
+        this.addid = data.rcv_info.msg.id
       }
-      this.addid = data.rcv_info.msg.id
     }.bind(this))
   },
   methods: {
@@ -91,11 +97,11 @@ export default {
       this.toastDisplay = !this.toastDisplay
     },
     toaddress: function () {
-      this.$router.push({path: '/person/Address?id=markadd&goods_car_id=' + this.$route.query.goods_car_id})
+      this.$router.push({path: '/person/address?id=markadd&goods_car_id=' + this.$route.query.goods_car_id})
     },
     useidnum: function () {
       if (this.idnum !== '') {
-        request.get(this.$route, {
+        request.get(this.$router, {
           goods_car_ids: this.$route.query.goods_car_id,
           rootName: 'coupon',
           code: this.idnum
@@ -119,7 +125,7 @@ export default {
     pay: function () {
       if (this.state === true) {
         this.state = false
-        request.get(this.$route, {
+        request.post(this.$router, {
           goods_car_ids: this.$route.query.goods_car_id,
           rootName: 'pay',
           addr_id: this.addid,

@@ -11,7 +11,7 @@
               <div class="icon">
                 <div class="choose-btn" @click.stop="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
                 <div class="icon-logo" @click.stop="toDetail">
-                  <div class="tag" :class="{presale: !item.state,offsale:item.state}" v-show="item.status_text"><p>{{item.status_text}}</p></div>
+                  <div class="tag" :class="{presale: !item.state,offsale:item.state}" v-show="item.goods_info.status_text"><p>{{item.goods_info.status_text}}</p></div>
                   <img :src="item.goods_info.goods_img">
                 </div>  
               </div>
@@ -31,7 +31,7 @@
         </scroller>    
         </div>
         <div class="toPay">
-          <div class="chooseAll" @click.stop="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
+          <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
           <p class="chooseAll-text">全选</p>
           <div class="pay-sum-wrap">
           <p><span class="pay-sum">合计：</span>&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
@@ -64,9 +64,6 @@ export default {
     VueScroller
   },
   created: function () {
-    if (!localStorage.getItem('id') || !localStorage.getItem('token')) {
-      this.$router.push({path: '/login'})
-    }
     this.$router.name = this.$route.name
   },
   computed: {
@@ -87,7 +84,6 @@ export default {
       request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
         this.currentPage ++
         this.goods = data
-        // console.log(data)
         done()
         utils.toToast('刷新成功')
       }.bind(this))
@@ -97,7 +93,6 @@ export default {
       request.get(this.$router, {page: this.currentPage, limit: this.limit}, function (data) {
         this.currentPage++
         refreshData = data
-        // console.log(data)
         if (refreshData.length < this.limit) {
           this.goods = this.goods.concat(refreshData)
           done(true)
@@ -124,33 +119,39 @@ export default {
       if (typeof item.checked === 'undefined') {
         Vue.set(item, 'checked', true)
         this.good_car_id = this.good_car_id + item.goods_car_id + ','
-        console.log(this.good_car_id)
       } else if (item.checked === false) {
-        item.checked = !item.checked
+        item.checked = true
         this.good_car_id = this.good_car_id + item.goods_car_id + ','
-        console.log(this.good_car_id)
       } else {
         item.checked = !item.checked
+        if (this.selectAll === true) {
+          this.selectAll = false
+        }
         this.good_car_id1 = this.good_car_id.split(',')
-        console.log(this.good_car_id1.length)
         if (this.good_car_id1.length === 2) {
           this.good_car_id = ''
         } else {
           var reg = new RegExp(item.goods_car_id + ',', 'g')
-          this.good_car_id = this.good_car_id.replace(reg, ',')
+          this.good_car_id = this.good_car_id.replace(reg, '')
         }
       }
     },
     //  全选
     chooseAll: function () {
       this.selectAll = !this.selectAll
+      this.good_car_id = ''
       this.goods.forEach((item, index) => {
         if (typeof item.checked === 'undefined') {
           Vue.set(item, 'checked', this.selectAll)
           this.good_car_id = this.good_car_id + item.goods_car_id + ','
-        } else {
-          item.checked = this.selectAll
-          this.good_car_id = ''
+        } else if (item.checked === false) {
+          item.checked = true
+          this.good_car_id = this.good_car_id + item.goods_car_id + ','
+        } else if (item.checked === true) {
+          this.good_car_id = this.good_car_id + item.goods_car_id + ','
+        }
+        if (this.selectAll === false) {
+          item.checked = false
         }
       })
     },
@@ -163,14 +164,14 @@ export default {
           request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else if (item.goods_num > 999) {
           item.goods = 999
-          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
+          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
         }
       } else {
         if (item.goods_num > 1) {
           item.goods_num--
-          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else {
-          request.patch(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+          request.patch(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
             console.log(data)
             if (!data.status) {
               this.refresh()

@@ -28,28 +28,31 @@
       data () {
         return {
           cartAll: 0,
-          state1: null
+          state1: false
         }
       },
       created: function () {
-        request.get(this.$route, {rootName: 'cartAll'}, function (data) {
-          console.log(data.num)
-          this.cartAll = data.num
-        }.bind(this))
-        request.get(this.$route, {goodsId: this.goodsId}, function (data) {
-          if (data.car.can_click === 1) {
-            this.state1 = true
-          } else {
-            this.state1 = false
-          }
-        }.bind(this))
+        this.$router.name = this.$route.name
+        if (localStorage.getItem('id') || localStorage.getItem('token')) {
+          request.get(this.$router, {rootName: 'cartAll'}, function (data) {
+            console.log(data.num)
+            this.cartAll = data.num
+          }.bind(this))
+          request.get(this.$router, {goodsId: this.goodsId}, function (data) {
+            if (data.car.can_click === 1) {
+              this.state1 = true
+            } else {
+              this.state1 = false
+            }
+          }.bind(this))
+        }
       },
       methods: {
         addCart: function () {
-          request.post(this.$route, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
+          request.post(this.$router, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
             if (this.state1 === true) {
               utils.toToast('加入购物车成功')
-              request.get(this.$route, {rootName: 'cartAll'}, function (data) {
+              request.get(this.$router, {rootName: 'cartAll'}, function (data) {
                 console.log(data.num)
                 this.cartAll = data.num
               }.bind(this))
