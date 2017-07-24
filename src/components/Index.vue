@@ -7,7 +7,8 @@
       <ul>
         <li class="goods-item" v-for="(item,index) in goods" @click="toItem(index)">
           <div class="icon">
-            <div class="tag" v-show="goods.status_text"><p>促销<br>热卖</p></div>
+            <div class="tag" v-show="item.category.name"></div>
+            <div class="tag2"><div class="tag1"><span>{{item.category.name}}</span></div></div>
             <div class="sale-time" v-show="item.start_time > currentTime"><p>{{item.start_time | formatTime}}出售</p></div>
             <img :src="item.goods_img" >
           </div>
@@ -113,7 +114,7 @@
     border-bottom: 1px solid #c0d4d5;
   }
   .icon{
-    display: inline-block;
+  
     float: left;
     position: relative;
     width: 59.3%;
@@ -125,7 +126,6 @@
     height: 100%;
   }
   .icon .tag{
-    display: table;
     position: absolute;
     top: -0.133rem;
     left: -0.226rem;
@@ -135,11 +135,26 @@
     background-size: cover;
     color: #fff;
   }
-  .icon .tag p{
-    display: table-cell;
-    vertical-align: middle;
-    font-size: 0.293rem;
+  .tag2
+  {
+    position: absolute;
+    top: 0.1rem;
+    left: 0;
+    margin: 0 auto;
+    display: table;
+    height: 0.8rem;
+    width: 0.8rem;
   }
+  .tag1
+  {
+    display: table-cell;
+    height: 0.8rem;
+    width: 0.8rem;
+    font-size: 0.293rem;
+    color: white;
+    vertical-align: middle;
+  }
+
   .icon .sale-time{
     width: 5.25rem;
     height: 0.533rem;

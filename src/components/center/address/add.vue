@@ -53,7 +53,7 @@ import utils from '../../../common/utils'
 import request from '../../../common/request'
 import bottombar from '../../../components/bottombar'
 export default {
-  name: 'newaddress',
+  name: 'add',
   components: {
     vueArea,
     bottombar
@@ -68,6 +68,9 @@ export default {
       sex: 0,
       state: true
     }
+  },
+  created: function () {
+    this.$router.name = this.$route.name
   },
   methods: {
     areaResult: function (show, result) {
@@ -88,7 +91,11 @@ export default {
             area: this.result.area.code,
             detail: this.detail}, function (data) {
               utils.toToast('保存成功')
-              this.$router.push({path: '/person/address'})
+              if (this.$route.query.id1 === 'markadd1') {
+                this.$router.push({path: '/preorder'})
+              } else {
+                this.$router.push({path: '/person/address'})
+              }
             }.bind(this), function (err) {
               console.log(err)
               this.state = true

@@ -8,10 +8,10 @@ import Index from '@/components/Index'
 import detail from '@/components/detail'
 import center from '@/components/center'
 import cart from '@/components/cart'
-import Address from '@/components/center/Address'
-import add from '@/components/center/Address/add'
+import address from '@/components/center/address'
+import add from '@/components/center/address/add'
 import message from '@/components/center/message/message'
-import update from '@/components/center/Address/update'
+import update from '@/components/center/address/update'
 import order from '@/components/center/order/order'
 import logistic from '@/components/center/order/logisticsdetail'
 import preorder from '@/components/preorder'
@@ -36,11 +36,11 @@ export default new Router({
     },
     {path: '/detail', name: 'detail', component: detail},
     {path: '/person', name: 'person', component: center},
-    {path: '/person/Address', name: 'Address', component: Address},
-    {path: '/person/Address/add', name: 'add', component: add},
+    {path: '/person/address', name: 'address', component: address},
+    {path: '/person/address/add', name: 'add', component: add},
     {path: '/cart', name: 'cart', component: cart},
     {path: '/person/message', name: 'message', component: message},
-    {path: '/person/Address/update', name: 'update', component: update},
+    {path: '/person/address/update', name: 'update', component: update},
     {path: '/person/order/order', name: 'order', component: order},
     {path: '/person/order/logistic', name: 'logistic', component: logistic},
     {

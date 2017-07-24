@@ -83,8 +83,9 @@
       },
       // props: ['goodsId'],
       created: function () {
+        this.$router.name = this.$route.name
         this.goodsId = this.$route.query.goodsId
-        request.get(this.$route, {goodsId: this.goodsId}, function (data) {
+        request.get(this.$router, {goodsId: this.goodsId}, function (data) {
           this.goodsDetail = data.detail
           this.goodsImg = data.goods_imgs
           if (data.exp.text === null) {

@@ -48,7 +48,7 @@ import VueScroller from 'vue-scroller'
 import bottombar from '../../components/bottombar'
 import request from '../../common/request'
 export default {
-  name: 'Address',
+  name: 'address',
   components: {
     bottombar,
     VueScroller
@@ -68,7 +68,7 @@ export default {
   methods: {
     // 跳转编辑地址界面
     toedit: function (addid) {
-      this.$router.push({path: '/person/address/update?addr_id=' + addid})
+      this.$router.push({path: '/person/Address/update?addr_id=' + addid})
     },
     // 设置默认地址
     setDefault: function (addressID) {

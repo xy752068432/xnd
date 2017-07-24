@@ -37,7 +37,7 @@ var urls = {
   add: '/v1/user/{uid}/address',
   update: '/v1/user/{uid}/address/{addr_id}',
   saveedit: '/v1/user/{uid}/address/{addr_id}',
-  Address: '/v1/user/{uid}/address?page={page}&limit={limit}',
+  address: '/v1/user/{uid}/address?page={page}&limit={limit}',
   deladdress: '/v1/user/{uid}/address/{addr_id}',
   setaddress: '/v1/user/{uid}/address/set/{addr_id}',
   Index: '/v1/goods?page={page}',

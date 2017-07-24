@@ -61,7 +61,7 @@
         <div class="licut">
           
         </div>
-        <router-link to="/person/Address">
+        <router-link to="/person/address">
         <div class="list">
             <img id="address" src="../assets/personcenter/address.png"/>
                <span id="address1">收货地址</span>
@@ -102,15 +102,12 @@ export default {
     }
   },
   created: function () {
-    if (!localStorage.getItem('id') || !localStorage.getItem('token')) {
-      this.$router.push({path: '/login'})
-    } else {
-      this.imgurl = localStorage.getItem('headimgurl')
-      request.get(this.$route, {}, function (data) {
-        this.data = data
+    this.$router.name = this.$route.name
+    this.imgurl = localStorage.getItem('headimgurl')
+    request.get(this.$router, {}, function (data) {
+      this.data = data
       // console.log(this.data)
-      }.bind(this))
-    }
+    }.bind(this))
   },
   methods: {
     // 跳转待付款界面
