@@ -8,7 +8,7 @@
         <li class="goods-item" v-for="(item,index) in goods" @click="toItem(index)">
           <div class="icon">
             <div class="tag" v-show="item.category.name"></div>
-            <div class="tag2"><div class="tag1"><span>{{item.category.name}}</span></div></div>
+            <div class="tag2" v-show="item.category.name"><div class="tag1"><span>{{item.category.name}}</span></div></div>
             <div class="sale-time" v-show="item.start_time > currentTime"><p>{{item.start_time | formatTime}}出售</p></div>
             <img :src="item.goods_img" >
           </div>
@@ -150,7 +150,7 @@
     display: table-cell;
     height: 0.8rem;
     width: 0.8rem;
-    font-size: 0.293rem;
+    font-size: 0.38rem;
     color: white;
     vertical-align: middle;
   }

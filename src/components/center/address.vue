@@ -157,7 +157,7 @@ export default {
 	margin-top: 0.96rem;
 	width: 100%;
   background-color: white;
-  z-index: 999;
+  z-index: 299;
 	height: 1.24rem;
 	text-align: left;
   /* border-bottom: #ADADAD solid 0.013333rem; */

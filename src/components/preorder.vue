@@ -73,7 +73,6 @@ export default {
     }
     request.get(this.$router, {
       goods_car_ids: this.$route.query.goods_car_id,
-      pay_id: 4,
       addr_id: this.addid
     }, function (data) {
       if (data.code && data.code === 11) {
@@ -129,6 +128,7 @@ export default {
           goods_car_ids: this.$route.query.goods_car_id,
           rootName: 'pay',
           addr_id: this.addid,
+          pay_id: 4,
           coupon_id: this.coupon
         }, function (data) {
           utils.toToast('支付成功')
@@ -150,6 +150,7 @@ export default {
     }  
     #address{
         z-index: 200;
+        width: 100%;
         background-color: #fff;
         padding: .426667rem .573333rem;
         height: 2.706666rem;

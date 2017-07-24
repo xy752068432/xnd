@@ -10,8 +10,9 @@
             <li class="cart-item-wrap" v-for="(item,index) in goods">
               <div class="icon">
                 <div class="choose-btn" @click.stop="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
-                <div class="icon-logo" @click.stop="toDetail">
-                  <div class="tag" :class="{presale: !item.state,offsale:item.state}" v-show="item.goods_info.status_text"><p>{{item.goods_info.status_text}}</p></div>
+                <div class="icon-logo" @click="toDetail">
+                  <div class="tag" :class="{presale: !item.state,offsale:item.state}" v-show="item.goods_info.status_text"></div>
+                  <div class="tag1" v-show="item.goods_info.status_text"><p>{{item.goods_info.status_text}}</p></div>
                   <img :src="item.goods_info.goods_img">
                 </div>  
               </div>
@@ -116,12 +117,24 @@ export default {
     },
     //  选中购物车商品
     selectItem: function (item) {
+      this.good_car_id1 = this.good_car_id.split(',')
+      if (this.good_car_id1.length === this.goods.length + 1) {
+        this.selectAll = true
+      }
       if (typeof item.checked === 'undefined') {
         Vue.set(item, 'checked', true)
         this.good_car_id = this.good_car_id + item.goods_car_id + ','
+        this.good_car_id1 = this.good_car_id.split(',')
+        if (this.good_car_id1.length === this.goods.length + 1) {
+          this.selectAll = true
+        }
       } else if (item.checked === false) {
         item.checked = true
         this.good_car_id = this.good_car_id + item.goods_car_id + ','
+        this.good_car_id1 = this.good_car_id.split(',')
+        if (this.good_car_id1.length === this.goods.length + 1) {
+          this.selectAll = true
+        }
       } else {
         item.checked = !item.checked
         if (this.selectAll === true) {
@@ -196,8 +209,7 @@ export default {
     maxnum: function (goodcarId) {
       for (var i = 0; i < this.goods.length; i++) {
         if (this.goods[i].goods_car_id === goodcarId) {
-          // console.log(a.test(this.goods[i].goods_num))
-          if ((/\D/g.test(this.goods[i].goods_num)) === true) {
+          if ((/\d/g.test(this.goods[i].goods_num)) === true) {
             if (this.goods[i].goods_num > 999) {
               this.goods[i].goods_num = 999
             } else if (this.goods[i].goods_num === '0') {
@@ -309,11 +321,22 @@ export default {
     background-image: url("../assets/cart/offsale.png");
     background-size: 100% 100%;
   }
-  .icon-logo .tag p{
-    color: #fff;
-    display: table-cell;
-    vertical-align: middle;
-    font-size: .2266rem;
+ .icon-logo .tag1
+    {
+        display: table;
+        position: absolute;
+        top: -0.3rem;
+        left: -0.27rem;
+        width: 1rem;
+        height: 1rem;
+        z-index:101;
+    }
+  .icon-logo .tag1 p{
+      color: white;
+      display: table-cell;
+      vertical-align: middle;
+      font-size: 0.1rem;
+      letter-spacing: 0;
   }
   .icon-logo img{
     width: 100%;
