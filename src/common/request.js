@@ -70,7 +70,7 @@ var urls = {
 } */
 
 var getUrl = function (router, data) {
-  data.uid = localStorage.getItem('id')
+  data.uid = localStorage.getItem('uid')
   var routerName = data.rootName ? data.rootName : router.name
   data.rootName = undefined
   return preFix + urls[routerName].format(data)
@@ -117,7 +117,7 @@ var request = function (method, router, data, successFun, errorFun) {
         if (process.env.NODE_ENV === 'development') {
           router.push({path: '/login'})
         } else {
-          window.location.href = '/api/v1/login3?my_callback=' + window.location.href
+          window.location.href = '/api/v1/login3?my_callback=' + encodeURIComponent(window.location.href)
         }
         return
       }
@@ -127,7 +127,7 @@ var request = function (method, router, data, successFun, errorFun) {
         if (process.env.NODE_ENV === 'development') {
           router.push({path: '/login'})
         } else {
-          window.location.href = '/api/v1/login3?my_callback=' + window.location.href
+          window.location.href = '/api/v1/login3?my_callback=' + encodeURIComponent(window.location.href)
         }
         return
       }
