@@ -13,7 +13,7 @@
             <img :src="item.goods_img" >
           </div>
           <div class="content">
-            <h2 class="name">{{item.title}}</h2>
+            <div class="titlediv"><h2 class="name">{{item.title}}</h2></div>
             <p class="desc">{{item.description}}</p>
             <p class="old-price"><span class="old-attach">&yen;</span>{{item.origin_price}}<span class="old-attach">/{{item.unit}}</span></p>
             <p class="price"><span class="attach">&yen;</span>{{item.price}}<span class="attach">/{{item.unit}}</span></p>
@@ -52,9 +52,6 @@
         }
       },
       created: function () {
-        // localStorage.setItem('token', '$2y$10$D6T6YcogOEBIp/yuyPpNyeIhKk9DexHgirm0VRgwWC9fU6D2TpQhm')
-        // localStorage.setItem('id', '2')
-        // localStorage.setItem('headimgurl', 'http://wx.qlogo.cn/mmopen/VucCD4F16yoj6HKeqjw1NqsIZMCghPrcQIJ2lqhlUcM9ydicydMdAjyQ3Ws5xweuvxJ9oic6x5XicllicxYiaic1wqaS7rhEpTqiafL/0')
         this.$router.name = this.$route.name
         let d = new Date()
         this.currentTime = Math.floor(d.getTime() / 1000)
@@ -178,7 +175,16 @@
     float: left;
     font-size: 0;
   }
+  .content .titlediv{
+    height: 1rem;
+    width: 2.666667rem;
+    margin: 0.133333rem 0 0.266667rem 0； 
+   }
   .content .name{
+     display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
     font-size: 0.44rem;
     line-height: 0.53rem;
     color: #000;

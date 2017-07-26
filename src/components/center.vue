@@ -63,7 +63,7 @@
         </div>
         <router-link to="/person/address">
         <div class="list">
-            <img id="address" src="../assets/personcenter/address.png"/>
+            <img id="addressid" src="../assets/personcenter/address.png"/>
                <span id="address1">收货地址</span>
                <div class="arrow">
                  <img src="../assets/personcenter/arrow.png"/>
@@ -257,7 +257,7 @@ export default {
    height: 0.533333rem;
    margin: 0.533333rem 0 0 0.6rem;
  }
-#address
+#addressid
 {
   width: 0.626667rem;
   height: 0.546667rem;

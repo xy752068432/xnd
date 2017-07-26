@@ -1,22 +1,32 @@
 <template>
-  <div id="order">
+  <div id="orders">
         <div id="address" @click="toaddress">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
-            <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>   
+            <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>
+            
             <div class="address-text">{{ordercontent.fullAddr}}</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow">
         </div>
-        <div class="deliver">
+        <div class="licut">
+       
+            </div> 
+        <div class="deliver1">
             <div class="deliver-title">发货时间</div>
             <div class="deliver-time">
                 <span class="deliver-date">{{order_info_stime[0]}}</span>
                 <span class="deliver-day">{{order_info_stime[1]}}</span>
             </div>
         </div>
+        <div class="licut">
+       
+            </div> 
         <div class="discount" @click="toastShow">
             <div class="discount-title">优惠码</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow" >
         </div>
+        <div class="licut">
+       
+            </div> 
        <div class="order-list">
             <ul>
                 <li class="list-title">订单详情</li>
@@ -24,7 +34,7 @@
                   <span class="list-left">{{item1.name}}</span><span class="list-right">{{item1.value}}</span>
                 </li>
                 <li v-for="item in good_car_info">
-                    <span class=" list-left">{{item.name}}：</span><span class="list-right-item"><span class="amount">{{item.num}}{{item.unit}}</span><span class="price">{{item.value}}</span></span>
+                    <span class="list-left">{{item.name}}：</span><span class="list-right-item"><span class="amount">{{item.num}}{{item.unit}}</span><span class="price">{{item.value}}</span></span>
                 </li> 
             </ul>
         </div>
@@ -103,6 +113,7 @@ export default {
         request.get(this.$router, {
           goods_car_ids: this.$route.query.goods_car_id,
           rootName: 'coupon',
+          agent_id: 1,
           code: this.idnum
         }, function (data) {
           if (data.code === 0) {
@@ -143,21 +154,27 @@ export default {
   }
 }
 </script>
-<style scoped>
-    @import "../common/mixin.css";  
-    #order{
-        margin-top: 0.983333rem;
-    }  
-    #address{
-        z-index: 200;
-        width: 100%;
+<style>
+ @import "../common/mixin.css";
+   #orders
+   {
+     margin-top: 0.983333rem;
+   }
+   #address{
+        margin:0;
+        width: 94%;
         background-color: #fff;
-        padding: .426667rem .573333rem;
+        padding: 0.426667rem 0 0 0.573333rem;
         height: 2.706666rem;
         text-align: left;
         position: relative;
-        border-bottom: .026667rem solid #ecedef; 
         box-sizing: border-box;
+    }
+    .licut
+    {
+       width: 100%;
+       height: 0.04rem;
+       background: url(../assets/licut.png);
     }
     #address div{
         font-size: 0;
@@ -188,19 +205,19 @@ export default {
     }
     #address .right-arrow{
         position: absolute;
-        right: .573333rem;
+        right: 0rem;
         top:1.173333rem;
         width: .2rem;
         height: .333333rem;
     }
-    .deliver, .discount{
+    .deliver1, .discount{
+        width: 100%;
         font-size: 0;
         height: 1.853333rem;
         padding: .373333rem .573333rem;
         box-sizing: border-box;
-        border-bottom: .026667rem solid #ecedef; 
     }
-    .deliver .deliver-title{
+    .deliver1 .deliver-title{
         text-align: left;
         font-size: .413333rem;
         margin-bottom: .28rem;
@@ -210,13 +227,13 @@ export default {
         font-size: .413333rem;
         margin-bottom: .28rem;
     }
-    .deliver .deliver-time{
+    .deliver1 .deliver-time{
         font-size: .413333rem;
     }
-    .deliver .deliver-time .deliver-date{
+    .deliver1 .deliver-time .deliver-date{
         float: left;
     }
-    .deliver .deliver-time .deliver-day{
+    .deliver1.deliver-time .deliver-day{
         float: right;
     }
     .discount{
@@ -231,9 +248,11 @@ export default {
     }
     .order-list{
         padding: .373333rem .573333rem;
+        height: 8.8rem;
         box-sizing: border-box;
         font-size: 0;
         letter-spacing: 0;
+        overflow-y:auto;
     }
     .order-list .list-title{
         text-align: left;
@@ -254,6 +273,7 @@ export default {
         visibility: hidden;
     }
     .order-list li .list-left{
+        text-align: left;
         float: left;
     }
     .order-list li .list-right{

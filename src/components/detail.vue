@@ -209,6 +209,7 @@
     .detail-text .desc{
         font-size: .3866rem;
         color: rgba(0,0,0,0.6);
+        text-align: left;
         margin: .133333rem 0 .426667rem 0;
     }
     .detail-text .attach{

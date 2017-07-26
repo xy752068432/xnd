@@ -205,7 +205,7 @@ textarea
   color: #ADADAD;
 }
 #save
-{ position: fixed;
+{ position: absolute;
   left: 1.733333rem;
   bottom: 2.04rem;
   width: 6.773333rem;

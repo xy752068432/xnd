@@ -1,8 +1,10 @@
 <template>
 <div>
+ 
    <div class="licut">
   	   
    </div>
+
    <div class="content">
     <img id="selected1" v-show="this.actives1" src="../../../../static/order/selected.png">
     <img id="selected2" v-show="this.actives2" src="../../../../static/order/selected.png">
@@ -12,6 +14,9 @@
      	{{this.mes}}
      </div>
      <div v-else="!this.hidshow" class="manymes">
+      <scroller
+      :on-refresh="refresh"
+      :on-infinite="infinite"  ref="my_scroller" style="height:15rem;margin-top:0">
      	<ul>
      		<li v-for="item in items">
      			<div class="detail" @click="tologistic(item.order_info.order_id)">
@@ -60,8 +65,10 @@
                 </div>
      		</li>
      	</ul>
+      </scroller>
      </div>
    </div>
+   
    <bottombar></bottombar>
  </div>
 </template>
@@ -69,49 +76,60 @@
 import bottombar from '../../../components/bottombar'
 import request from '../../../common/request'
 import utils from '../../../common/utils'
+import VueScroller from 'vue-scroller'
+import Vue from 'vue'
 export default {
   name: 'orderchild',
   components: {
-    bottombar
+    bottombar,
+    VueScroller
   },
   watch: {
-    statuss: function (newval, oldval) {
+    status1: function (newval, oldval) {
+      this.currentPage1 = 1
       this.getdatas()
+    },
+    statuss: function (newval, oldval) {
+      this.status1 = this.statuss
     }
   },
-  props: ['statuss'],
+  props: ['statuss', 'currentPage'],
   data: function () {
     return {
       hidshow: true,
-      status: '',
+      status1: '',
       mes: '',
       items: [],
       actives0: null,
       actives1: null,
       actives2: null,
       actives3: null,
-      prevent: true,
-      prevent1: true,
-      prevent2: true
+      currentPage1: '',
+      limit: 4
     }
   },
   created: function () {
-    this.getdatas()
+    this.$router.name = this.$route.name
+    this.currentPage1 = this.currentPage
+    // this.getdatas()
+    if (this.statuss !== '') {
+      this.status1 = this.statuss
+    } else {
+      this.status1 = this.$route.query.status
+    }
   },
   methods: {
     getdatas: function () {
-      if (this.statuss !== '') {
-        this.status = this.statuss
-      } else {
-        this.status = this.$route.query.status
-      }
-      request.get(this.$route, {
-        status: this.status}, function (data) {
+      this.currentPage1 = 1
+      request.get(this.$router, {
+        rootName: 'order',
+        status: this.status1,
+        page: this.currentPage1,
+        limit: this.limit}, function (data) {
           this.actives0 = data.actives[0].actived
           this.actives1 = data.actives[1].actived
           this.actives2 = data.actives[2].actived
           this.actives3 = data.actives[3].actived
-          // console.log(data)
           this.mes = data.msg
           if (data.num === 0) {
             this.hidshow = true
@@ -119,9 +137,59 @@ export default {
             this.hidshow = false
             this.items = data.items
           }
+          if (data.items.length < this.limit) {
+            this.currentPage1 = 1
+          } else {
+            this.currentPage1++
+          }
         }.bind(this))
     },
+    refresh: function (done) {
+      this.currentPage1 = 1
+      request.get(this.$router, {rootName: 'order', status: this.status1, page: this.currentPage1, limit: this.limit}, function (data) {
+        this.actives0 = data.actives[0].actived
+        this.actives1 = data.actives[1].actived
+        this.actives2 = data.actives[2].actived
+        this.actives3 = data.actives[3].actived
+        this.mes = data.msg
+        if (data.num === 0) {
+          this.hidshow = true
+        } else {
+          this.hidshow = false
+          this.items = data.items
+        }
+        this.currentPage1 ++
+        done()
+        utils.toToast('刷新成功')
+      }.bind(this))
+    },
+    infinite: function (done) {
+      if (this.currentPage1 > 1) {
+        var refreshData
+        request.get(this.$router, {rootName: 'order', status: this.status1, page: this.currentPage1, limit: this.limit}, function (data) {
+          refreshData = data.items
+          if (refreshData.length < this.limit) {
+            this.currentPage1 = 1
+            this.items = this.items.concat(refreshData)
+            done(true)
+          } else {
+            this.currentPage1++
+            for (var i = refreshData.length - 1; i >= 0; i--) {
+              this.items.push(refreshData[i])
+            }
+            done()
+          }
+        }.bind(this))
+      } else {
+        done(true)
+      }
+    },
     clicked: function (num, orderid) {
+      for (var i = 0; i < this.items.length; i++) {
+        if (typeof this.items[i].checked === 'undefined') {
+          Vue.set(this.items[i], 'checked', true)
+        }
+      }
       switch (num) {
         case 1:
           this.cancel(orderid)
@@ -144,43 +212,47 @@ export default {
       }
     },
     cancel: function (orderid) {
-      if (this.prevent === true) {
-        this.prevent = false
-        request.put(this.$route, {
-          rootName: 'cancelorder',
-          order_id: orderid}, function (data) {
-            for (var i = this.items.length - 1; i >= 0; i--) {
-              if (this.items[i].order_info.order_id === orderid) {
-                this.items.splice(i, 1)
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
+          this.items[i].checked = false
+          request.put(this.$router, {
+            rootName: 'cancelorder',
+            order_id: orderid}, function (data) {
+              for (var i = this.items.length - 1; i >= 0; i--) {
+                if (this.items[i].order_info.order_id === orderid) {
+                  this.items.splice(i, 1)
+                }
               }
-            }
-            utils.toToast('取消成功')
-          }.bind(this), function (err) {
-            console.log(err)
-            utils.toToast('取消失败')
-            this.prevent = true
-          }.bind(this))
+              utils.toToast('取消成功')
+            }.bind(this), function (err) {
+              console.log(err)
+              utils.toToast('取消失败')
+              this.items[i].checked = true
+            }.bind(this))
+        }
       }
     },
     paynow: function () {
     },
     got: function (orderid) {
-      if (this.prevent2 === true) {
-        this.prevent2 = false
-        request.put(this.$route, {
-          rootName: 'got',
-          order_id: orderid}, function (data) {
-            for (var i = this.items.length - 1; i >= 0; i--) {
-              if (this.items[i].order_info.order_id === orderid) {
-                this.items.splice(i, 1)
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
+          this.items[i].checked = false
+          request.put(this.$router, {
+            rootName: 'got',
+            order_id: orderid}, function (data) {
+              for (var i = this.items.length - 1; i >= 0; i--) {
+                if (this.items[i].order_info.order_id === orderid) {
+                  this.items.splice(i, 1)
+                }
               }
-            }
-            utils.toToast('确认收货成功')
-          }.bind(this), function (err) {
-            console.log(err)
-            utils.toToast('确认收货失败')
-            this.prevent2 = true
-          }.bind(this))
+              utils.toToast('确认收货成功')
+            }.bind(this), function (err) {
+              console.log(err)
+              utils.toToast('确认收货失败')
+              this.items[i].checked = true
+            }.bind(this))
+        }
       }
     },
     logistic: function (orderid) {
@@ -190,25 +262,26 @@ export default {
       window.location.href = 'tel:17508404755'
     },
     delorder: function (orderid) {
-      var prevent = true
-      if (prevent === true) {
-        prevent = false
-        request.patch(this.$route, {
-          rootName: 'delorder',
-          order_id: orderid}, function (data) {
-            console.log(data)
-            // console.log(this.items)
-            for (var i = this.items.length - 1; i >= 0; i--) {
-              if (this.items[i].order_info.order_id === orderid) {
-                this.items.splice(i, 1)
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
+          this.items[i].checked = false
+          request.patch(this.$router, {
+            rootName: 'delorder',
+            order_id: orderid}, function (data) {
+              console.log(data)
+              // console.log(this.items)
+              for (var i = this.items.length - 1; i >= 0; i--) {
+                if (this.items[i].order_info.order_id === orderid) {
+                  this.items.splice(i, 1)
+                }
               }
-            }
-            utils.toToast('删除成功')
-          }.bind(this), function (err) {
-            console.log(err)
-            utils.toToast('删除失败')
-            prevent = true
-          })
+              utils.toToast('删除成功')
+            }.bind(this), function (err) {
+              console.log(err)
+              utils.toToast('删除失败')
+              this.items[i].checked = true
+            })
+        }
       }
     },
     togooddetail: function (goodid) {

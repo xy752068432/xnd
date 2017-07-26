@@ -39,7 +39,7 @@
   	   
         </div>
        <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
-        <div id="save" @click.stop="save">
+        <div id="save1" @click.stop="save">
           <div id="savecontent">
             <span>保存</span>
           </div>
@@ -248,8 +248,8 @@ textarea
 	font-size: 0.4rem;
   color: #ADADAD;
 }
-#save
-{ position: fixed;
+#save1
+{ position: absolute;
   left: 1.733333rem;
   bottom: 2.04rem;
   width: 6.773333rem;
