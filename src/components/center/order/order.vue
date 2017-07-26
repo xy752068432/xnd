@@ -13,7 +13,7 @@
     <li @click="statuss(0)">全部订单</li>
     </ul>
    </div>
-   <orderchild v-if="true" v-bind:statuss='clickstatus'></orderchild>
+   <orderchild v-if="true" v-bind:statuss='clickstatus' v-bind:currentPage='currentPage'></orderchild>
    <bottombar></bottombar>
  </div>
 </template>
@@ -28,11 +28,12 @@ export default {
   },
   data: function () {
     return {
-      clickstatus: ''
+      clickstatus: '',
+      currentPage: 1
     }
   },
   created: function () {
-    this.status = this.$route.query.status
+    this.$router.name = this.$route.name
   },
   methods: {
     statuss: function (data) {

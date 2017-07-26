@@ -22,7 +22,7 @@
     .line-bottom{
     width: 100%;
     height: 0.093333rem;
-    position: fixed;
+    position: absolute;
     bottom: 1.493333rem;
   }
   .line-bottom img{
@@ -32,15 +32,15 @@
   }
   .tab{
     background-color: #fff;
-    display: flex;
+    display: absolute;
     width: 100%;
     height: 1.493333rem;
-    line-height: 1.493333rem;
-    position: fixed;
+    line-height: 1.0rem;
+    position: absolute;
     bottom: 0;
   }
   .tab-item{
-    flex: 1;
+    
     text-align: center;
   }
   .tab-item.home a{
@@ -66,7 +66,8 @@
     font-family: "Microsoft YaHei UI";
     letter-spacing: 0;
     position: relative;
-    top: 15px;
+    display: inline-block;
+    height: 0.3rem;
   }
   .tab-item a{
     display: block;

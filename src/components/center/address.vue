@@ -68,7 +68,7 @@ export default {
   methods: {
     // 跳转编辑地址界面
     toedit: function (addid) {
-      this.$router.push({path: '/person/Address/update?addr_id=' + addid})
+      this.$router.push({path: '/person/address/update?addr_id=' + addid})
     },
     // 设置默认地址
     setDefault: function (addressID) {
@@ -240,7 +240,7 @@ export default {
 	right: 0.573333rem;
 }
 #add2
-{ position: fixed;
+{ position: absolute;
   left: 1.733333rem;
   bottom: 2.04rem;
   width: 6.773333rem;

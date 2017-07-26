@@ -20,7 +20,7 @@
                 <h2 class="name">{{item.goods_info.title}}</h2>
                 <p class="desc">{{item.goods_info.description}}</p>
                 <p class="price-line"><span class="price"><span class="attach">&yen;</span>{{item.goods_info.price}}<span class="attach">/{{item.goods_info.unit}}</span></span><span class="old-price">&yen;{{item.goods_info.origin_price}}/{{item.unit}}</span></p>
-                <p class="deliver-time">预计{{item.goods_info.send_time}}{{item.goods_car_id}}发货</p>
+                <div class="deliver-time"><p>{{item.goods_info.send_time}}{{item.goods_car_id}}</p></div>
               </div>
               <div class="amount">
                 <span class="btn-minus" @click.stop="changeAmount(item,0)"></span>
@@ -32,12 +32,15 @@
         </scroller>    
         </div>
         <div class="toPay">
-          <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
-          <p class="chooseAll-text">全选</p>
-          <div class="pay-sum-wrap">
-          <p><span class="pay-sum">合计：</span>&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
+          <div class="paycontent">
+            <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
+            <div class="chooseAlltxt"><p>全选</p></div>
+            <div class="pay-sum-wrap">
+            <p><span class="pay-sum">合计：</span>&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
+            </div>
+            <div class="toPayBtn" @click="toCheck"></div>
           </div>
-          <div class="toPayBtn" @click="toCheck"></div>
+          
         </div>  
         <bottombar></bottombar>
     </div>    
@@ -117,10 +120,6 @@ export default {
     },
     //  选中购物车商品
     selectItem: function (item) {
-      this.good_car_id1 = this.good_car_id.split(',')
-      if (this.good_car_id1.length === this.goods.length + 1) {
-        this.selectAll = true
-      }
       if (typeof item.checked === 'undefined') {
         Vue.set(item, 'checked', true)
         this.good_car_id = this.good_car_id + item.goods_car_id + ','
@@ -148,6 +147,11 @@ export default {
           this.good_car_id = this.good_car_id.replace(reg, '')
         }
       }
+      this.good_car_id1 = this.good_car_id.split(',')
+      if (this.good_car_id1.length === this.goods.length + 1) {
+        this.selectAll = true
+        // this.good_car_id1.length = 0
+      }
     },
     //  全选
     chooseAll: function () {
@@ -165,6 +169,7 @@ export default {
         }
         if (this.selectAll === false) {
           item.checked = false
+          this.good_car_id = ''
         }
       })
     },
@@ -383,6 +388,14 @@ export default {
     font-size: .293333rem;
   }
   .content .deliver-time{
+    height: 0.4rem;
+    width: 100%;
+  }
+  .content .deliver-time p
+  {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: .25333rem;
   }
   .amount{
@@ -422,7 +435,7 @@ export default {
   }
   .toPay{
     background-color: #fff;
-    position: fixed;
+    position: absolute;
     bottom: 1.58666rem;
     width: 100%;
     height: 1.213333rem;
@@ -430,32 +443,40 @@ export default {
     font-size: 0;
     border-top: 1px solid #ecedef;
   }
-  .chooseAll{
-    float: left;
-    margin-left: 5.73333%;
-    margin-top: .306666rem;
-    width: .586667rem;
-    height: .586667rem;
-    background-size: 100% 100%;
+  .paycontent
+  {
+    position: relative;
+    width: 100%;
+    height: 1.213333rem;
   }
-  .chooseAll.select{
+  .toPay .chooseAll{
+    position: absolute;
+    top: 0.306667rem;
+    left: 0.573333rem;
+    width: 0.586667rem;
+    height: 0.586667rem;
+    background-size: cover;
+  }
+ .toPay .select{
     background-image: url("../assets/cart/choose.png");
   }
-  .chooseAll.unselect{
+ .toPay .unselect{
     background-image: url("../assets/cart/unchoose.png");
   }
-  .chooseAll-text{
-    float: left;
-    margin-left: .053333rem;
-    margin-top: .453333rem;
+  .chooseAlltxt{
+    position: absolute;
+    top: 0.453333rem;
+    left: 1.2rem;
+    width: 1.066667rem;
     font-size: .293333rem;
   }
   .pay-sum-wrap{
-    float: left;
+    position: absolute;
+    left: 2rem;
+    top: 0;
     width: 49.3333%;
   }
   .pay-sum-wrap p{
-    float: left;
     font-size: .346667rem;
     margin-left: 4.53333%;
     margin-top: .453333rem;
