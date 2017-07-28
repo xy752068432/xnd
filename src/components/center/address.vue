@@ -213,8 +213,14 @@ export default {
 .address
 {
 	position: absolute;
+  width: 9.333333rem;
+  height: 0.4rem;
+  text-align: left;
 	top: 1.28rem;
 	left: 0.6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .select
 {

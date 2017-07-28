@@ -84,10 +84,9 @@ export default {
   },
   created: function () {
     this.minurl = location.href
-    var reg = new RegExp(/\/#/, 'g')
-    this.minurl = this.minurl.replace(reg, '')
-    this.minurls = this.minurl.split('?')
+    this.minurls = this.minurl.split('#')
     this.minurl = this.minurls[0]
+    console.log(this.minurl)
     this.$router.name = this.$route.name
     if (this.$route.query.addid) {
       this.addid = this.$route.query.addid
@@ -156,6 +155,8 @@ export default {
           for (var i = 0; i < data.length; i++) {
             this.item1 = data[i] + ','
           }
+          console.log('获取订单字符串成功')
+          console.log(this.minurl)
           request.get(this.$router, {
             url: this.minurl,
             rootName: 'pay'
@@ -179,6 +180,7 @@ export default {
               }, function (data) {
                 console.log(data)
                 this.item2 = data
+                console.log('支付1成功')
                 wx.chooseWXPay({
                   timestamp: this.item2.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
                   nonceStr: this.item2.nonce_str, // 支付签名随机串，不长于 32 位

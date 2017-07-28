@@ -105,16 +105,16 @@ export default {
       this.hidit = !this.hidit
     },
     save: function () {
-      if (this.state === true) {
-        this.state = false
-        if (this.result !== null) {
-          this.citycode = this.result.city.code
-          this.areacode = this.result.area.code
-          this.provincecode = this.result.province.code
-        }
-        if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name)) || !(/^1\d{10}$/.test(this.phone)) || !(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
-          utils.toToast('请填写正确的信息')
-        } else {
+      if (this.result !== null) {
+        this.citycode = this.result.city.code
+        this.areacode = this.result.area.code
+        this.provincecode = this.result.province.code
+      }
+      if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name)) || !(/^1\d{10}$/.test(this.phone)) || !(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
+        utils.toToast('请填写正确的信息')
+      } else {
+        if (this.state === true) {
+          this.state = false
           request.put(this.$route, {
             addr_id: this.addr_id,
             rootName: 'saveedit',
