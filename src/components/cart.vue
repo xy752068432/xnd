@@ -1,6 +1,7 @@
 <template lang="html">
     <div id="cart">
         <!--购物车-->
+        <headerbar></headerbar>
         <div class="cart-item">
         <scroller
           :on-refresh="refresh"
@@ -49,6 +50,7 @@
 import Vue from 'vue'
 import utils from '../common/utils'
 import VueScroller from 'vue-scroller'
+import headerbar from '../components/headerbar'
 import bottombar from '../components/bottombar'
 import request from '../common/request'
 export default {
@@ -65,7 +67,8 @@ export default {
   },
   components: {
     bottombar,
-    VueScroller
+    VueScroller,
+    headerbar
   },
   created: function () {
     this.$router.name = this.$route.name

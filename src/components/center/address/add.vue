@@ -1,5 +1,6 @@
 <template>
     <div id="main">
+    <headerbar></headerbar>
     <router-link to="/person/address">
     	<div id="back2">
            <img class="arrowwh" src="../../../assets/back.png">
@@ -52,11 +53,13 @@ import vueArea from 'vue-area'
 import utils from '../../../common/utils'
 import request from '../../../common/request'
 import bottombar from '../../../components/bottombar'
+import headerbar from '../../../components/headerbar'
 export default {
   name: 'add',
   components: {
     vueArea,
-    bottombar
+    bottombar,
+    headerbar
   },
   data: function () {
     return {

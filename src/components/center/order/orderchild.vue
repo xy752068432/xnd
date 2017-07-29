@@ -115,6 +115,11 @@ export default {
   created: function () {
     this.minurl = location.href
     this.minurls = this.minurl.split('#')
+    // console.log(this.minurl[pos - 1])
+    var pos = this.minurl.indexOf('#')
+    if (this.minurl[pos - 1] !== '?') {
+      location.href = this.minurls[0] + '?#' + this.minurls[1]
+    }
     this.minurl = this.minurls[0]
     console.log(this.minurl)
     this.$router.name = this.$route.name

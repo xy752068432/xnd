@@ -1,5 +1,7 @@
 <template>
+  
   <div id="orders">
+  <headerbar></headerbar>
         <div id="address" @click="toaddress">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
             <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>
@@ -57,11 +59,15 @@
   </div>
 </template>
 <script>
+import headerbar from '../components/headerbar'
 import request from '../common/request'
 import utils from '../common/utils'
 import wx from 'weixin-js-sdk'
 export default {
   name: 'preorder',
+  components: {
+    headerbar
+  },
   data () {
     return {
       toastDisplay: false,
@@ -85,8 +91,15 @@ export default {
   created: function () {
     this.minurl = location.href
     this.minurls = this.minurl.split('#')
-    this.minurl = this.minurls[0]
-    console.log(this.minurl)
+    // console.log(this.minurl[pos - 1])
+    var pos = this.minurl.indexOf('#')
+    if (this.minurl[pos - 1] !== '?') {
+      location.href = this.minurls[0] + '?#' + this.minurls[1]
+    }
+    this.minurls = this.minurl.split('#')
+    this.minurl = this.minurls[0] + '?#' + this.minurls[1]
+   // location.href = this.minurl
+    // console.log(this.minurl)
     this.$router.name = this.$route.name
     if (this.$route.query.addid) {
       this.addid = this.$route.query.addid

@@ -1,5 +1,6 @@
 <template lang="html">
 <div>
+<headerbar></headerbar>
     <router-link to="/person">
 	<div id="back1">
        <img class="arrowwh" src="../../assets/back.png">
@@ -46,12 +47,14 @@
 import utils from '../../common/utils'
 import VueScroller from 'vue-scroller'
 import bottombar from '../../components/bottombar'
+import headerbar from '../../components/headerbar'
 import request from '../../common/request'
 export default {
   name: 'address',
   components: {
     bottombar,
-    VueScroller
+    VueScroller,
+    headerbar
   },
   data: function () {
     return {

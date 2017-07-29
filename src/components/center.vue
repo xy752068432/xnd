@@ -1,7 +1,7 @@
 <template lang="html">
   
       <div class="contents">
-     
+     <headerbar></headerbar>
         <div id="logo2">
           <div id="logo21">
               <img :src="this.imgurl"/>
@@ -92,6 +92,7 @@
 
 <script>
 import bottombar from '../components/bottombar'
+import headerbar from '../components/headerbar'
 import request from '../common/request'
 export default {
   name: 'center',
@@ -131,7 +132,8 @@ export default {
     }
   },
   components: {
-    bottombar
+    bottombar,
+    headerbar
   }
 }
 </script>

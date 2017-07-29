@@ -33,7 +33,7 @@
       },
       created: function () {
         this.$router.name = this.$route.name
-        if (localStorage.getItem('id') || localStorage.getItem('token')) {
+        if (localStorage.getItem('uid') || localStorage.getItem('token')) {
           request.get(this.$router, {rootName: 'cartAll'}, function (data) {
             console.log(data.num)
             this.cartAll = data.num

@@ -17,6 +17,7 @@ import logistic from '@/components/center/order/logisticsdetail'
 import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
+import data from '@/components/manager/data'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -57,6 +58,7 @@ export default new Router({
       component: cart
     },
     {path: '/preorder', name: 'preorder', component: preorder},
-    {path: '/orderDetail', name: 'orderDetail', component: orderDetail}
+    {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
+    {path: '/data', name: 'data', component: data}
   ]
 })
