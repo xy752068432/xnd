@@ -1,5 +1,6 @@
 <template>
     <div id="main">
+    <headerbar></headerbar>
     <router-link to="/person/address">
     	<div id="back2">
            <img class="arrowwh" src="../../../assets/back.png">
@@ -52,11 +53,13 @@ import vueArea from 'vue-area'
 import utils from '../../../common/utils'
 import request from '../../../common/request'
 import bottombar from '../../../components/bottombar'
+import headerbar from '../../../components/headerbar'
 export default {
   name: 'add',
   components: {
     vueArea,
-    bottombar
+    bottombar,
+    headerbar
   },
   data: function () {
     return {
@@ -78,11 +81,11 @@ export default {
       this.result = result
     },
     save () {
-      if (this.state === true) {
-        this.state = false
-        if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name)) || !(/^1\d{10}$/.test(this.phone)) || !(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
-          utils.toToast('请填写正确的信息')
-        } else {
+      if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name)) || !(/^1\d{10}$/.test(this.phone)) || !(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
+        utils.toToast('请填写正确的信息')
+      } else {
+        if (this.state === true) {
+          this.state = false
           request.post(this.$route, {
             name: this.name,
             phone: this.phone,

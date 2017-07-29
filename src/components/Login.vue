@@ -34,7 +34,7 @@
             // 登录成功
             if (data.id) {
               console.log(data)
-              localStorage.setItem('id', data.id)
+              localStorage.setItem('uid', data.id)
               localStorage.setItem('token', data.token)
               localStorage.setItem('headimgurl', data.headimgurl)
               this.$router.push({path: '/'})

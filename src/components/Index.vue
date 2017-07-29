@@ -1,5 +1,6 @@
 <template lang="html">
     <div id="home">
+    <headerbar></headerbar>
       <scroller
         :on-refresh="refresh"
         :on-infinite="infinite"
@@ -31,15 +32,16 @@
     import utils from '../common/utils'
     import VueScroller from 'vue-scroller'
     import bottombar from '../components/bottombar'
+    import headerbar from '../components/headerbar'
     import Toast from 'vue-easy-toast'
     import request from '@/common/request'
-
     export default{
       name: 'home',
       components: {
         VueScroller,
         bottombar,
-        Toast
+        Toast,
+        headerbar
       },
       // goods => 商品列表 currentPage => 当前分页
       data: function () {
@@ -48,7 +50,10 @@
           goodsId: 0,
           currentTime: 0,
           currentPage: 1,
-          limit: 8
+          limit: 8,
+          item1: [],
+          minurl1: '',
+          minurls1: []
         }
       },
       created: function () {
