@@ -18,6 +18,9 @@ import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
 import data from '@/components/manager/data'
+import checkorder from '@/components/manager/checkorder'
+import agent from '@/components/manager/agent'
+import coupon from '@/components/manager/coupon'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -59,6 +62,9 @@ export default new Router({
     },
     {path: '/preorder', name: 'preorder', component: preorder},
     {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
-    {path: '/data', name: 'data', component: data}
+    {path: '/data', name: 'data', component: data},
+    {path: '/checkorder', name: '/checkorder', component: checkorder},
+    {path: '/agent', name: '/agent', component: agent},
+    {path: '/coupon', name: '/coupon', component: coupon}
   ]
 })

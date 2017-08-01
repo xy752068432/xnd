@@ -107,7 +107,9 @@ export default {
     this.imgurl = localStorage.getItem('headimgurl')
     request.get(this.$router, {}, function (data) {
       this.data = data
-      // console.log(this.data)
+    }.bind(this))
+    request.get(this.$router, {rootName: 'UserInfo'}, function (data) {
+      this.imgurl = data.headimgurl
     }.bind(this))
   },
   methods: {

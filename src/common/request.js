@@ -49,7 +49,7 @@ var urls = {
   coupon:'/v1/user/{uid}/coupon?goods_car_ids={goods_car_ids}&code={code}&agent_id={agent_id}',
   createorder:'/v1/user/{uid}/order',
   pay: '/v1/js_api_params?url={url}',
-  paying: '/v1/user/{uid}/order/combine?pay_id={pay_id}&order_ids={order_ids}',
+  paying: '/v1/user/{uid}/order/unifiedorder?pay_id={pay_id}&order_ids={order_ids}',
   orderDetail:'/v1/user/{uid}/order/order_id={order_id}',
   order:'/v1/user/{uid}/order?status={status}&page={page}&limit={limit}',
   cancelorder:'/v1/user/{uid}/order/{order_id}/cancel',
