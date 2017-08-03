@@ -34,7 +34,8 @@ var preFix = '/api'
 var urls = {
   c_time: '/v1/agent/1/order?search={agent_id}&start_time={start_time}&end_time={end_time}&page={page}',
   c_order: '/v1/agent/1/order/{order_id}?search={agent_id}',
-  trade: '/v1/agent/1/order/trade?search={search}&start_time={start_time}&end_time={end_time}'
+  trade: '/v1/agent/1/order/trade?search={search}&start_time={start_time}&end_time={end_time}',
+  agent: '/v1/agent'
 }
 
 /*
@@ -49,7 +50,7 @@ var urls = {
 } */
 
 var getUrl = function (router, data) {
-  data.agent = localStorage.getItem('agent')
+  data.agent = localStorage.getItem('agent_id')
   var routerName = data.rootName ? data.rootName : router.name
   data.rootName = undefined
   return preFix + urls[routerName].format(data)
@@ -88,14 +89,16 @@ var mrequest = function (method, router, data, successFun, errorFun) {
   })
   .catch(function (error) {
     console.log('失败')
-    console.log(error)
+    if ((/timeout/g.test(error))) {
+      errorFun(error)   
+    }
     if (error.response) {
       // 特殊情况统一处理
 
       if (error.response.status === 404) {
         // 越权访问
         if (process.env.NODE_ENV === 'development') {
-          router.push({path: '/login'})
+          router.push({path: '/manager/login'})
         } else {
           window.location.href = '/api/v1/login3?my_callback=' + encodeURIComponent(window.location.href)
         }
@@ -105,7 +108,7 @@ var mrequest = function (method, router, data, successFun, errorFun) {
         error.response.data.code === 3) {
         // 未登录或者登录已经过期
         if (process.env.NODE_ENV === 'development') {
-          router.push({path: '/login'})
+          router.push({path: '/manager/login'})
         } else {
           window.location.href = '/api/v1/login3?my_callback=' + encodeURIComponent(window.location.href)
         }

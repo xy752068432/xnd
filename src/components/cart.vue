@@ -185,14 +185,14 @@ export default {
           request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else if (item.goods_num > 999) {
           item.goods = 999
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
         }
       } else {
         if (item.goods_num > 1) {
           item.goods_num--
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else {
-          request.patch(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+          request.patch(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
             console.log(data)
             if (!data.status) {
               this.refresh()

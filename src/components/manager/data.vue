@@ -8,8 +8,7 @@
       	  <img class="m_licut" src="../../assets/m_data/c_link/licut.png">
       	  <div class="c_time c_ed" @click="toggle(1)"></div>
       	  <select id="s_agent" v-model="agent_id">
-      	  	<option>1</option>
-      	  	<option>2</option>
+      	  	<option v-for="item in agent_ids">{{item.id}}</option>
       	  </select>
         </div>
         <datachild v-bind:agent="agent_id"></datachild>
@@ -20,6 +19,7 @@
 import managerheader from '../../components/manager/managerheader'
 import managerleft from '../../components/manager/managerleft'
 import datachild from '../../components/manager/datachild'
+import mrequest from '../../common/mrequest'
 export default {
   name: 'data',
   components: {
@@ -27,9 +27,17 @@ export default {
     managerleft,
     datachild
   },
+  created: function () {
+    mrequest.get(this.$router, {
+      rootName: 'agent'
+    }, function (data) {
+      this.agent_ids = data
+    }.bind(this))
+  },
   data: function () {
     return {
-      agent_id: ''
+      agent_id: '',
+      agent_ids: []
     }
   }
 }
@@ -106,11 +114,5 @@ export default {
 	top: 28px;
 	left:490px;
 	font-size: 18px;
-}
-#charts
-{
-	margin-top: 100px;
-	margin-left: 30px;
-	float: left;
 }
 </style>

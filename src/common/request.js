@@ -57,8 +57,7 @@ var urls = {
   cartAll: '/v1/user/{uid}/goods_car/all',
   delorder:'/v1/user/{uid}/order/{order_id}',
   logistic:'/v1/user/{uid}/order/{order_id}/logistics',
-  person:'/v1/user/{uid}/order/count',
-  c_time:'/v1/agent/{1}/order?search={agent_id}&start_time={start_time}&end_time={end_time}'
+  person:'/v1/user/{uid}/order/count'
 }
 
 /*
@@ -112,6 +111,9 @@ var request = function (method, router, data, successFun, errorFun) {
   })
   .catch(function (error) {
     console.log('失败')
+    if ((/timeout/g.test(error))) {
+      errorFun(error)   
+    }
     if (error.response) {
       // 特殊情况统一处理
 

@@ -83,8 +83,9 @@ export default {
     }
   },
   created: function () {
+    this.$router.name = this.$route.name
     this.addr_id = this.$route.query.addr_id
-    request.get(this.$route, {
+    request.get(this.$router, {
       addr_id: this.addr_id}, function (data) {
         console.log(data)
         this.name = data.msg.name
@@ -118,7 +119,7 @@ export default {
       } else {
         if (this.state === true) {
           this.state = false
-          request.put(this.$route, {
+          request.put(this.$router, {
             addr_id: this.addr_id,
             rootName: 'saveedit',
             name: this.name,

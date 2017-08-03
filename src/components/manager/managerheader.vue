@@ -5,13 +5,20 @@
        	  <img src="../../assets/m_login/search.png">
        	  <img src="../../assets/m_login/set.png">
        	  <img src="../../assets/m_login/ref.png">
-       	  <img src="../../assets/m_login/out.png">
+       	  <img src="../../assets/m_login/out.png" @click="loginout">
        </div>
 	</div>
 </template>
 <script>
 export default {
-  name: 'managerheader'
+  name: 'managerheader',
+  methods: {
+    loginout: function () {
+      if (this.$route.fullPath !== '/manager/login') {
+        this.$router.push({path: '/manager/login'})
+      }
+    }
+  }
 }
 </script>
 <style>

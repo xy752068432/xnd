@@ -62,9 +62,9 @@ export default new Router({
     },
     {path: '/preorder', name: 'preorder', component: preorder},
     {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
-    {path: '/data', name: 'data', component: data},
-    {path: '/checkorder', name: '/checkorder', component: checkorder},
-    {path: '/agent', name: '/agent', component: agent},
-    {path: '/coupon', name: '/coupon', component: coupon}
+    {path: '/manager/data', name: 'data', component: data},
+    {path: '/manager/checkorder', name: '/checkorder', component: checkorder},
+    {path: '/manager/agent', name: '/agent', component: agent},
+    {path: '/manager/coupon', name: '/coupon', component: coupon}
   ]
 })

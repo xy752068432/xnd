@@ -1,21 +1,21 @@
 <template>
     <div id="btn_div">
           <div class="btn_toggle checkorder">
-             <router-link to='/checkorder'></router-link>
+             <router-link to='/manager/checkorder'></router-link>
           </div>
           <div class="btn_toggle data" >
-             <router-link to='/data'></router-link>
+             <router-link to='/manager/data'></router-link>
           </div>
           <div class="btn_toggle agent">
-             <router-link to='/agent'></router-link>
+             <router-link to='/manager/agent'></router-link>
           </div>
           <div class="btn_toggle coupon">
-             <router-link to='/coupon'></router-link>
+             <router-link to='/manager/coupon'></router-link>
           </div>
           <div id="bgi">
             
           </div>
-        </div>  
+    </div>  
 </template>
 <script>
 export default {

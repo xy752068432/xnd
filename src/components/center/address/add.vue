@@ -86,7 +86,7 @@ export default {
       } else {
         if (this.state === true) {
           this.state = false
-          request.post(this.$route, {
+          request.post(this.$router, {
             name: this.name,
             phone: this.phone,
             province: this.result.province.code,
