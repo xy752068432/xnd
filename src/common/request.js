@@ -55,7 +55,10 @@ var urls = {
   cartAll: '/v1/user/{uid}/goods_car/all',
   delorder:'/v1/user/{uid}/order/{order_id}',
   logistic:'/v1/user/{uid}/order/{order_id}/logistics',
-  person:'/v1/user/{uid}/order/count'
+  person:'/v1/user/{uid}/order/count',
+  agentLogin:'/v1/agent/login',
+  agent:'/v1/agent',
+  coupon:'/v1/agent/{uid}/coupon?limit={limit}&page={page}'
 }
 
 /*

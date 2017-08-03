@@ -12,12 +12,11 @@
                 <div class="img-wrap"><img src="../assets/detail/cart.png"><div class="cart-amount" v-show="cartAll>0"><p class="cart-amount-num">{{cartAll}}</p></div></div>
                 <p class="btn-title">购物车</p>
             </div>
-            </router-link> 
-            <div class="btn-addCart" @click.stop="addCart" :class="this.state1 ? 'onsale' : 'saleout'">
-                
+            </router-link>
+            <div class="btn-addCart" @click="addCart" :class="goodsExp.can_click ? 'onsale' : 'saleout'">
             </div>
-        </div>     
-  </div>     
+        </div>
+  </div>
 </template>
 <script>
     import utils from '../common/utils'
@@ -118,7 +117,7 @@
         background-size: cover;
         top: -.08rem;
         right: -.213333rem
-        
+
     }
     .cart-amount .cart-amount-num{
         display: table-cell;

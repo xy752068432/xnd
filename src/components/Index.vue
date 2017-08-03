@@ -3,7 +3,8 @@
       <scroller
         :on-refresh="refresh"
         :on-infinite="infinite"
-        ref="my_scroller" style="height:15rem;margin-top: 1rem"> 
+        ref="my_scroller" style="height:15rem;margin-top: 1rem">
+
       <ul>
         <li class="goods-item" v-for="(item,index) in goods" @click="toItem(index)">
           <div class="icon">
@@ -21,11 +22,12 @@
           </div>
         </li>
       </ul>
-      </scroller>      
+      </scroller>
       <bottombar></bottombar>
       <!--回到顶部-->
       <div class="toTop" @click="toTop"></div>
-    </div> 
+    </div>
+      <!--<router-view :goodsId="goodsId"></router-view>-->
 </template>
 <script>
     import utils from '../common/utils'
@@ -111,7 +113,7 @@
     border-bottom: 1px solid #c0d4d5;
   }
   .icon{
-  
+
     float: left;
     position: relative;
     width: 59.3%;
@@ -178,7 +180,7 @@
   .content .titlediv{
     height: 1rem;
     width: 2.666667rem;
-    margin: 0.133333rem 0 0.266667rem 0； 
+    margin: 0.133333rem 0 0.266667rem 0；
    }
   .content .name{
      display: -webkit-box;

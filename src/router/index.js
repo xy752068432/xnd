@@ -17,6 +17,9 @@ import logistic from '@/components/center/order/logisticsdetail'
 import preorder from '@/components/preorder'
 import orderDetail from '@/components/orderDetail'
 import addcart from '@/components/addcart'
+import agentLogin from '@/components/admin/login'
+import agent from '@/components/admin/agent'
+import coupon from '@/components/admin/coupon'
 Vue.use(Router)
 
 const UserHome = { template: '<div>Home</div>' }
@@ -34,7 +37,7 @@ export default new Router({
         {path: 'info', name: 'UserInfo', component: UserInfo}
       ]
     },
-    {path: '/detail', name: 'detail', component: detail},
+    {path: '/detail?', name: 'detail', component: detail},
     {path: '/person', name: 'person', component: center},
     {path: '/person/address', name: 'address', component: address},
     {path: '/person/address/add', name: 'add', component: add},
@@ -57,6 +60,11 @@ export default new Router({
       component: cart
     },
     {path: '/preorder', name: 'preorder', component: preorder},
-    {path: '/orderDetail', name: 'orderDetail', component: orderDetail}
+    {path: '/orderDetail', name: 'orderDetail', component: orderDetail},
+    {path: '/order', name: 'order', component: order},
+    {path: '/admin/login', name: 'agentLogin', component: agentLogin},
+    {path: '/admin/login', name: 'agentLogin', component: agentLogin},
+    {path: '/admin/agent', name: 'agent', component: agent},
+    {path: '/admin/coupon', name: 'coupon', component: coupon}
   ]
 })

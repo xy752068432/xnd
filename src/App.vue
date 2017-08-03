@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <headerbar></headerbar>
+    <!-- <headerbar></headerbar> -->
     <router-view></router-view>
     <!--<div class="line-bottom">
       <img src="./assets/line-bottom.png">
