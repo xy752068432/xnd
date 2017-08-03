@@ -5,13 +5,13 @@
     <div>
       <div class="radio-horizontal">
         <div class="radio">
-          <button type="button" v-if="show1" @focus="toggle1"><img src="./../../assets/admin/checked.png"></button>
-          <button type="button" v-if="!show1" @focus="toggle1"><img src="./../../assets/admin/unchecked.png"></button>
+          <button type="button" v-if="show1" @focus="toggle1"><img src="./../../assets/m_data/c_link/c_ed.png"></button>
+          <button type="button" v-if="!show1" @focus="toggle1"><img src="./../../assets/m_data/c_link/c_ing.png"></button>
           <label class="control-label">查看优惠券</label>
         </div>
         <div class="radio">
-          <button type="button" v-if="show2" @focus="toggle2"><img src="./../../assets/admin/checked.png"></button>
-          <button type="button" v-if="!show2" @focus="toggle2"><img src="./../../assets/admin/unchecked.png"></button>
+          <button type="button" v-if="show2" @focus="toggle2"><img src="./../../assets/m_data/c_link/c_ed.png"></button>
+          <button type="button" v-if="!show2" @focus="toggle2"><img src="./../../assets/m_data/c_link/c_ing.png"></button>
           <label class="control-label">新增优惠券</label>
         </div>
       </div>
@@ -79,7 +79,7 @@ export default {
   }
   .split {
     height: 1px;
-    background: url('./../../assets/admin/thin-border.png') 100% 100%;
+    background: url('./../../assets/m_data/c_link/licut.png') 100% 100%;
   }
   .radio-horizontal .radio button {
     display: inline-block;

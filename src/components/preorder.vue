@@ -1,17 +1,17 @@
 <template>
-  
+
   <div id="orders">
   <headerbar></headerbar>
         <div id="address" @click="toaddress">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
             <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>
-            
+
             <div class="address-text">{{ordercontent.fullAddr}}</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow">
         </div>
         <div class="licut">
-       
-            </div> 
+
+            </div>
         <div class="deliver1">
             <div class="deliver-title">发货时间</div>
             <div class="deliver-time">
@@ -20,15 +20,15 @@
             </div>
         </div>
         <div class="licut">
-       
-            </div> 
+
+            </div>
         <div class="discount" @click="toastShow">
             <div class="discount-title">优惠码</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow" >
         </div>
         <div class="licut">
-       
-            </div> 
+
+            </div>
        <div class="order-list">
             <ul>
                 <li class="list-title">订单详情</li>
@@ -37,7 +37,7 @@
                 </li>
                 <li v-for="item in good_car_info">
                     <span class="list-left">{{item.name}}：</span><span class="list-right-item"><span class="amount">{{item.num}}{{item.unit}}</span><span class="price">{{item.value}}</span></span>
-                </li> 
+                </li>
             </ul>
         </div>
         <div class="toCheck">
@@ -52,9 +52,9 @@
                     <div class="discount-toast-confirm">
                         <div class="btn" @click="toastShow">取消</div>
                         <div class="btn" @click.stop="useidnum">确认</div>
-                    </div>    
+                    </div>
                 </div>
-            </div>    
+            </div>
         </transition>
   </div>
 </template>
@@ -80,10 +80,25 @@ export default {
       addid: '',
       coupon_id: '',
       state: true,
-      item: []
+      item: [],
+      minurl: '',
+      minurls: [],
+      item1: '',
+      item2: []
     }
   },
   created: function () {
+    this.minurl = location.href
+    this.minurls = this.minurl.split('#')
+    // console.log(this.minurl[pos - 1])
+    var pos = this.minurl.indexOf('#')
+    if (this.minurl[pos - 1] !== '?') {
+      location.href = this.minurls[0] + '?#' + this.minurls[1]
+    }
+    this.minurls = this.minurl.split('#')
+    this.minurl = this.minurls[0] + '?#' + this.minurls[1]
+   // location.href = this.minurl
+    // console.log(this.minurl)
     this.$router.name = this.$route.name
     if (this.$route.query.addid) {
       this.addid = this.$route.query.addid
@@ -257,7 +272,7 @@ export default {
         text-align: left;
         font-size: .413333rem;
         margin-bottom: .28rem;
-    }    
+    }
     .discount .discount-title{
         text-align: left;
         font-size: .413333rem;
@@ -335,7 +350,7 @@ export default {
         width: 100%;
         height: 1.533333rem;
         padding: 0 .573333rem;
-        border-top: .026667rem solid #ecedef; 
+        border-top: .026667rem solid #ecedef;
         box-sizing: border-box;
         font-size: 0;
         background-color: #fff;
@@ -351,7 +366,7 @@ export default {
         width: 3.08rem;
         height: .746667rem;
         background-image:url("../assets/cart/toCheck.png");
-        background-size: 100% 100%; 
+        background-size: 100% 100%;
     }
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s

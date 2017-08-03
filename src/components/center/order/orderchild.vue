@@ -1,8 +1,8 @@
 <template>
 <div>
- 
+
    <div class="licut">
-  	   
+
    </div>
 
    <div class="content">
@@ -23,11 +23,11 @@
      				<div class="didangid"><span>订单号</span><span>：</span><span>{{item.order_info.order_num}}</span></div>
      				<div><span>下单时间</span><span>：</span><span>{{item.order_info.created_at}}</span></div>
      			</div>
-     			
+
                 <div class="gooddetail">
-                	
+
                 		    <div class="licut">
-  	   
+
                         </div>
                 			<div class="good" @click.stop="togooddetail(item.goods_info.goods_id)">
                 				<div class="goodlist"><img :src="item.goods_info.goods_img"></div>
@@ -36,39 +36,39 @@
                 				<div class="goodmoney">{{item.goods_info.value}}</div>
                 				<img class="togooddetail" src="../../../assets/personcenter/arrow.png">
                 			</div>
-                	
+
                 </div>
                 <div class="fine" v-for="price in item.price_info"><div><span>{{price.text}}</span></div><div class="finemoney">{{price.value}}</div>
                  <div class="licut">
-  	   
+
                  </div>
                 </div>
-                
+
                 <div class="goodtotal">
                    <div class="totalnum"><span class="totaltxt">{{item.summary.goods_count}}</span></div>
                    <div class="totalmoney"><span class="totaltxt">{{item.summary.price_count}}</span><span class="totaltxt1">{{item.summary.send_price_count}}</span></div>
                 </div>
                  <div class="licut">
-  	   
+
                 </div>
                 <div class="buttons">
-                  <img @click.stop="clicked(button.click,item.order_info.order_id)" class="buttonsimg" v-for="button in item.other_info.buttons" v-if="button.state" :src="button.img_url" > 
+                  <img @click.stop="clicked(button.click,item.order_info.order_id)" class="buttonsimg" v-for="button in item.other_info.buttons" v-if="button.state" :src="button.img_url" >
                 </div>
-                   
+
                     <div class="givetime" v-for="texts in item.other_info.texts" v-if="texts.state">
                 	   <div class="timetxt"><span>{{texts.name}}</span></div>
                 	   <div class="timenum"><span>{{texts.value}}</span></div>
                     </div>
-                
+
                 <div class="bigcut">
-  	   
+
                 </div>
      		</li>
      	</ul>
       </scroller>
      </div>
    </div>
-   
+
    <bottombar></bottombar>
  </div>
 </template>
@@ -375,7 +375,7 @@ export default {
 #dingdanlist
 {
   padding-left: 1.366667rem;
-    padding-top:0.426667rem; 
+    padding-top:0.426667rem;
 }
 #dingdanlist li
 {
@@ -433,7 +433,7 @@ ul .right
 }
 .mes
 {
-	padding-top:3.346667rem; 
+	padding-top:3.346667rem;
 	height:1.333333rem;
 	width:5.333333rem;
 	margin: 0 auto;
@@ -624,7 +624,7 @@ ul .right
   text-align: right;
 }
 .buttonsimg
-{ 
+{
   width: 2.173333rem;
   height: 0.626667rem;
   padding-right: 0.573333rem;

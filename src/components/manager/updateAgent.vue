@@ -42,8 +42,8 @@
       </tr>
       <tr>
         <td colspan="2">
-          <button type="button" class="btn" @click="update"><img src="./../../assets/admin/update.png"></button>
-          <button type="button" class="btn" @click="remove"><img src="./../../assets/admin/delete.png"></button>
+          <button type="button" class="btn" @click="update"><img src="./../../assets/m_data/c_link/update.png"></button>
+          <button type="button" class="btn" @click="remove"><img src="./../../assets/m_data/c_link/delete.png"></button>
         </td>
       </tr>
     </tbody>

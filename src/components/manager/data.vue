@@ -59,7 +59,7 @@ export default {
 }
 .orderfather .m_licut
 {
-    min-width:1169px; 
+    min-width:1169px;
     height: 1px;
 }
 .botton1
@@ -68,7 +68,7 @@ export default {
 }
 .botton2
 {
-	margin-left: 93px; 
+	margin-left: 93px;
 }
 .c_time,.c_order
 {
@@ -79,7 +79,7 @@ export default {
 }
 .c_time
 {
-	left: 73px;	
+	left: 73px;
 }
 .c_ed
 {
@@ -91,7 +91,7 @@ export default {
 }
 .c_order
 {
-    left: 261px;    
+    left: 261px;
 }
 #order_data
 {
