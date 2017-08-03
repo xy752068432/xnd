@@ -1,30 +1,33 @@
 <template>
-  <div class="container">
-    <mynav></mynav>
+	<div>
+    <managerheader></managerheader>
+    <managerleft></managerleft>
+    <div>
       <div class="radio-horizontal">
-            <div class="radio">
-               <button type="button" v-if="show1" @focus="toggle1"><img src="./../../assets/admin/checked.png"></button>
-               <button type="button" v-if="!show1" @focus="toggle1"><img src="./../../assets/admin/unchecked.png"></button>
-              <label class="control-label">查看优惠券</label>
-            </div>
-            <div class="radio">
-                <button type="button" v-if="show2" @focus="toggle2"><img src="./../../assets/admin/checked.png"></button>
-                <button type="button" v-if="!show2" @focus="toggle2"><img src="./../../assets/admin/unchecked.png"></button>
-              <label class="control-label">新增优惠券</label>
-            </div>
+        <div class="radio">
+          <button type="button" v-if="show1" @focus="toggle1"><img src="./../../assets/admin/checked.png"></button>
+          <button type="button" v-if="!show1" @focus="toggle1"><img src="./../../assets/admin/unchecked.png"></button>
+          <label class="control-label">查看优惠券</label>
         </div>
+        <div class="radio">
+          <button type="button" v-if="show2" @focus="toggle2"><img src="./../../assets/admin/checked.png"></button>
+          <button type="button" v-if="!show2" @focus="toggle2"><img src="./../../assets/admin/unchecked.png"></button>
+          <label class="control-label">新增优惠券</label>
+        </div>
+      </div>
       <div class="split"></div>
       <search v-if="show1"></search>
       <add v-if="show2"></add>
-  </div>
+    </div>
+	</div>
 </template>
-
 <script>
-import mynav from './nav'
+import managerheader from '../../components/manager/managerheader'
+import managerleft from '../../components/manager/managerleft'
 import search from './searchCoupon'
 import add from './addCoupon'
 export default {
-  name: 'coupon',
+  name: 'data',
   data () {
     return {
       show1: true,
@@ -32,7 +35,8 @@ export default {
     }
   },
   components: {
-    mynav,
+    managerheader,
+    managerleft,
     search,
     add
   },
@@ -48,9 +52,8 @@ export default {
   }
 }
 </script>
-
 <style>
-.radio-horizontal {
+  .radio-horizontal {
     position: relative;
     height: 80px;
     line-height: 80px;
@@ -66,7 +69,6 @@ export default {
     font-size: 18px;
     color: #000;
     text-align: right;
-    vertical-align: middle;
   }
   .radio-horizontal .radio:first-child {
     margin-left: 73px;

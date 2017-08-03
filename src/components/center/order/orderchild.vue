@@ -105,10 +105,22 @@ export default {
       actives2: null,
       actives3: null,
       currentPage1: '',
-      limit: 4
+      limit: 4,
+      minurl: '',
+      minurls: [],
+      item2: []
     }
   },
   created: function () {
+    this.minurl = location.href
+    this.minurls = this.minurl.split('#')
+    // console.log(this.minurl[pos - 1])
+    var pos = this.minurl.indexOf('#')
+    if (this.minurl[pos - 1] !== '?') {
+      location.href = this.minurls[0] + '?#' + this.minurls[1]
+    }
+    this.minurl = this.minurls[0]
+    console.log(this.minurl)
     this.$router.name = this.$route.name
     this.currentPage1 = this.currentPage
     // this.getdatas()
@@ -232,7 +244,50 @@ export default {
         }
       }
     },
-    paynow: function () {
+    paynow: function (orderid) {
+      for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
+          this.items[i].checked = false
+          request.get(this.$router, {
+            order_ids: orderid + ',',
+            pay_id: 4,
+            rootName: 'paying'
+          }, function (data) {
+            // console.log(data)
+            this.item2 = data
+            // function onBridgeReady () {
+            //   WeixinJSBridge.invoke(
+            //     'getBrandWCPayRequest', {
+            //       'appId': this.item2.appid,     // 公众号名称，由商户传入
+            //       'timeStamp': this.item2.timestamp,         // 时间戳，自1970年以来的秒数
+            //       'nonceStr': this.item2.nonce_str, // 随机串
+            //       'package': 'prepay_id=' + this.item2.prepay_id,
+            //       'signType': 'MD5',         // 微信签名方式
+            //       'paySign': this.item2.paySign // 微信签名
+            //     },
+            //     function (res) {
+            //       if (res.err_msg === 'get_brand_wcpay_request:ok') {
+            //         utils.toToast('支付成功')
+            //         this.$router.push({path: '/person/order/order?status=2'})
+            //       } else {
+            //         utils.toToast('支付失败')
+            //         this.items[i].checked = true
+            //       }    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠
+            //     })
+            // }
+            // if (typeof WeixinJSBridge === 'undefined') {
+            //   if (document.addEventListener) {
+            //     document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
+            //   } else if (document.attachEvent) {
+            //     document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
+            //     document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
+            //   }
+            // } else {
+            //   onBridgeReady()
+            // }
+          }.bind(this))
+        }
+      }
     },
     got: function (orderid) {
       for (var i = 0; i < this.items.length; i++) {

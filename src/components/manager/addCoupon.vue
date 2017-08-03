@@ -3,7 +3,13 @@
     <div class="hint">{{ hintText }}</div>
     <div class="form-group">
       <label class="control-label">商品</label>
-      <input type="text"  class="form-control" name="goods_id" v-model="goods_id">
+      <select  class="form-control" name="goods_id" v-model="goods_id">
+        <option v-for="item in items" :value="item.id">{{ item.title + '(' + item.id + ')' }}</option>
+      </select>
+      <div style="width:30px;height:30px;display:table-cell;font-size:14px;vertical-align:bottom">
+        <button type="button" @click="pre" style="width:100%;height:15px;line-height:15px;padding:0;">&and;</button>
+        <button type="button" @click="next" style="width:100%;height:15px;line-height:15px;padding:0;">&or;</button>
+      </div>
     </div>
     <div class="form-group">
       <label class="control-label">价格</label>
@@ -22,13 +28,13 @@
       <input type="text" class="form-control" name="all_times" v-model="all_times">
     </div>
     <div class="form-group">
-      <button type="button" class="btn" @click="submit"><img src="./../../assets/admin/submit.png"></button>
+      <button type="button" class="btn" @click="submit1"><img src="./../../assets/m_login/submit.png"></button>
     </div>
   </div>
 </template>
 
 <script>
-import request from './../../common/request'
+import request from './../../common/mrequest'
 export default {
   name: 'addCoupon',
   data () {
@@ -38,12 +44,19 @@ export default {
       expired_day: '',
       start_time: '',
       all_times: '',
-      hintText: 'ssssssssssssss',
-      isSubmit: false
+      hintText: '',
+      isSubmit: false,
+      limit: 2,
+      items: [],
+      curpage: 1,
+      isend: false
     }
   },
+  created () {
+    this.getData()
+  },
   methods: {
-    submit () {
+    submit1 () {
       if (this.isSubmit) {
         return
       }
@@ -53,7 +66,7 @@ export default {
       }
       this.isSubmit = true
       var mydata = {
-        'rootName': 'agent',
+        rootName: 'addcoupon',
         goods_id: this.goods_id,
         price: this.price,
         expired_day: this.expired_day,
@@ -77,12 +90,26 @@ export default {
         console.log(error)
       }.bind(this))
     },
+    next () {
+      if (!this.isend) {
+        this.curpage++
+        this.getData()
+      } else {
+        alert('这是最后一页,不可再往下翻')
+      }
+    },
+    pre () {
+      if (this.curpage - 1 > 0) {
+        this.curpage = this.curpage - 1
+        this.getData()
+      } else {
+        alert('这是第一页,不可再往前翻')
+      }
+    },
     validate () {
       var isIllege = false
-      if (/^\d+$/.test(this.username) === false) {
+      if (/^\d+$/.test(this.goods_id) === false) {
         this.hintText = '商品id必须为整数'
-      } else if (typeof this.price !== 'number') {
-        this.hintText = '价格必须为数字'
       } else if (/^\d+$/.test(this.expired_day) === false) {
         this.hintText = '有效时间必须为整数'
       } else if (/^\d+$/.test(this.all_times) === false) {
@@ -92,6 +119,24 @@ export default {
         this.hintText = ''
       }
       return isIllege
+    },
+    getData () {
+      var data = {
+        rootName: 'goods',
+        limit: this.limit,
+        page: this.curpage
+      }
+      request.get(this.route, data, function (data) {
+        this.items = data
+        if (data.length < this.limit) {
+          this.isend = true
+        } else {
+          this.isend = false
+        }
+        // console.log(data)
+      }.bind(this), function (error) {
+        console.log(error)
+      })
     }
   }
 }
@@ -99,12 +144,18 @@ export default {
 </script>
 
 <style>
+  div.form {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .form-horizontal {
     position: relative;
-    margin-top: 150px;
+    margin-top: 50px;
   }
   .form-horizontal .form-group {
     display: table;
+    width: 360px;
   }
   .form-group {
     margin-bottom: 60px;
@@ -118,7 +169,6 @@ export default {
     width: 245px;
     height: 30px;
     font-size: 16px;
-    vertical-align: middle;
     padding-left: 5px;
     border-radius: 2px;
   }
@@ -127,7 +177,6 @@ export default {
     font-size: 18px;
     color: #000;
     text-align: right;
-    vertical-align: middle;
     padding-right: 5px;
   }
   .btn {

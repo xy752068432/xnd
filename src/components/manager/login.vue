@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <mynav></mynav>
+      <managerheader></managerheader>
       <div class="login">
         <div class="img-container">
           <div class="top-img"></div>
@@ -21,22 +21,20 @@
             </div>
           </div>
           <div class="submit">
-              <button type="submit" @click="login"><img src="./../../assets/admin/login.png" /></button>
+              <button type="submit" @click="login"><img src="./../../assets/m_login/login.png" /></button>
           </div>
         </div>
       </div>
-
     </div>
 </template>
 
 <script>
-  import request from '../../common/request'
-  import mynav from './nav'
+  import request from '../../common/mrequest'
+  import managerheader from './managerheader'
   export default {
-    name: 'adminlogin',
-    props: [],
+    name: 'agentLogin',
     components: {
-      mynav
+      managerheader
     },
     data () {
       return {
@@ -68,8 +66,8 @@
         // console.log(this.$route)
         request.post(this.route, postdata, function (data) {
           if (!data.hasOwnProperty('code')) {
-            this.$router.push({path: './coupon'})
-            localStorage.setItem('uid', data['id'])
+            this.$router.push({path: '/manager/checkorder'})
+            localStorage.setItem('agent', data['id'])
             localStorage.setItem('token', data['token'])
           } else {
             this.hintText = data['msg']
@@ -111,7 +109,7 @@
   height: 164px;
   margin-left: auto;
   margin-right: auto;
-  background-image: url('./../../assets/admin/xingxiang.png');
+  background-image: url('./../../assets/m_login/xingxiang.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   margin-bottom: 12px;
@@ -123,7 +121,7 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 76px;
-  background-image: url('./../../assets/admin/text.png');
+  background-image: url('./../../assets/m_login/text.png');
  }
  .form-horizontal {
   position: relative;

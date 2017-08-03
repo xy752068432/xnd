@@ -1,48 +1,49 @@
 <template>
-  <table class="form form-horizontal">
+    <table class="form form-horizontal">
     <div class="hint">{{ hintText }}</div>
     <tbody>
       <tr>
         <td>
           <label class="control-label">账户名</label>
-          <input type="text" name="username" v-model="username" placeholder="请输入用户名">
+          <input type="text" name="username" v-model="username" placeholder="请输入用户名" class="form-control">
         </td>
         <td>
           <label class="control-label">密码</label>
-          <input type="password" name="passwd" v-model="passwd" placeholder="请输入密码">
+          <input type="password" name="passwd" v-model="passwd" placeholder="请输入密码" class="form-control">
         </td>
       </tr>
       <tr>
         <td>
           <label class="control-label">姓名</label>
-          <input type="text" name="name" v-model="name" placeholder="姓名">
+          <input type="text" name="name" v-model="name" placeholder="姓名" class="form-control">
         </td>
         <td>
           <label class="control-label">确认密码</label>
-          <input type="password" name="confirmPasswd" v-model="confirmPasswd" placeholder="请再次输入密码">
+          <input type="password" name="confirmPasswd" v-model="confirmPasswd" placeholder="请再次输入密码" class="form-control">
         </td>
       </tr>
       <tr>
         <td>
           <label class="control-label">手机号</label>
-          <input type="text" name="phone" v-model="phone" placeholder="手机号">
+          <input type="text" name="phone" v-model="phone" placeholder="手机号" class="form-control">
         </td>
       </tr>
       <tr>
         <td>
           <label class="control-label">身份证号</label>
-          <input type="text" name="idNum" v-model="idNum" placeholder="身份证号">
+          <input type="text" name="idNum" v-model="idNum" placeholder="身份证号" class="form-control">
         </td>
       </tr>
       <tr>
         <td>
           <label class="control-label">地址</label>
-          <input type="text" name="addr" v-model="addr" placeholder="地址">
+          <input type="text" name="addr" v-model="addr" placeholder="地址" class="form-control">
         </td>
       </tr>
       <tr>
         <td colspan="2">
-          <button type="button" class="btn" @click="submit"><img src="./../../assets/admin/submit.png"></button>
+          <button type="button" class="btn" @click="update"><img src="./../../assets/admin/update.png"></button>
+          <button type="button" class="btn" @click="remove"><img src="./../../assets/admin/delete.png"></button>
         </td>
       </tr>
     </tbody>
@@ -50,9 +51,9 @@
 </template>
 
 <script>
-import request from './../../common/request'
+import request from './../../common/mrequest'
 export default {
-  name: 'addAgent',
+  name: 'updateAgent',
   data () {
     return {
       username: '',
@@ -67,7 +68,7 @@ export default {
     }
   },
   methods: {
-    submit () {
+    update () {
       if (this.isSubmit) {
         return
       }
@@ -86,11 +87,11 @@ export default {
         id_num: this.idNum,
         address: this.addr
       }
-      request.post(this.route, mydata, function (data) {
-        if (data.hasOwnProperty('code') && data.code !== 0) {
+      request.put(this.route, mydata, function (data) {
+        if (!data.hasOwnProperty('code') || data.code !== 0) {
           this.hintText = data.msg
         } else {
-          alert('添加成功')
+          alert('更新信息成功成功')
           this.username = ''
           this.passwd = ''
           this.confirmPasswd = ''
@@ -126,39 +127,58 @@ export default {
         this.hintText = ''
       }
       return isIllege
+    },
+    remove () {
+
     }
   }
 }
 </script>
 
 <style>
-  .form-horizontal {
-    margin-top: 4px;
-    margin-left: 275px;
+  table.form {
+    border-collapse: separate;
+    border-spacing: 160px 45px;
   }
-  .form-horizontal input {
+  .form-horizontal {
+    position: relative;
+    margin-top: 50px;
+  }
+  .form-horizontal .form-group {
+    display: table;
+  }
+  .form-group {
+    margin-bottom: 60px;
+  }
+  .form-horizontal .form-group label,
+  .form-horizontal .form-group input {
+    display: table-cell;
+  }
+  .form-control {
     border: 1px solid #666;
     width: 245px;
     height: 30px;
     font-size: 16px;
-    vertical-align: middle;
     padding-left: 5px;
     border-radius: 2px;
   }
-  table.form {
-    position: relative;
-    border-collapse: separate;
-    border-spacing: 65px 113px;
+  .control-label {
+    width: 100px;
+    font-size: 18px;
+    color: #000;
+    text-align: right;
+    padding-right: 5px;
   }
-  table.form .btn {
+  .btn {
     float: right;
     background: #fff;
     outline: none;
     border: none;
+    cursor: pointer;
   }
   .hint {
     position: absolute;
-    top: 50px;
+    top: -50px;
     left: 0;
     width: 100%;
     font-size: 16px;

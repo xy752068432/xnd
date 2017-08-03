@@ -1,5 +1,6 @@
 <template>
   <div id="detail">
+  <headerbar></headerbar>
     <div class="swiper-wrap">  
     <swiper :options="swiperOption"  ref="mySwiper" class="swiper">  
        <!-- 这部分放你要渲染的那些内容 -->  
@@ -46,6 +47,7 @@
 </template>
 <script>
     import { swiper, swiperSlide } from 'vue-awesome-swiper'
+    import headerbar from '../components/headerbar'
     import Toast from 'vue-easy-toast'
     import request from '@/common/request'
     import addcart from '../components/addcart'
@@ -55,7 +57,8 @@
         swiper,
         swiperSlide,
         Toast,
-        addcart
+        addcart,
+        headerbar
       },
       data () {
         return {

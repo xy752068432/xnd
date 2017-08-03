@@ -1,5 +1,6 @@
 <template>
 <div>
+<headerbar></headerbar>
     <div id="toggle">
     <router-link to="/person">
     <div id="back">
@@ -19,12 +20,14 @@
 </template>
 <script>
 import bottombar from '../../../components/bottombar'
+import headerbar from '../../../components/headerbar'
 import orderchild from '../../../components/center/order/orderchild'
 export default {
   name: 'order',
   components: {
     bottombar,
-    orderchild
+    orderchild,
+    headerbar
   },
   data: function () {
     return {

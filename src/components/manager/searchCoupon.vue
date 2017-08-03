@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <table class="table">
       <tbody>
         <tr>
@@ -44,13 +44,13 @@
 </template>
 
 <script>
-import request from './../../common/request'
+import request from './../../common/mrequest'
 export default {
   name: 'searchCoupon',
   data () {
     return {
       items: [],
-      limit: 1,
+      limit: 10,
       page: 0,
       jpage: '',
       totel: 1,
@@ -105,7 +105,13 @@ export default {
 </script>
 
 <style>
+.content {
+  float:left;
+  width: 1100px;
+  margin-left: 50px;
+}
 .table {
+  width: 100%;
   border-collapse: collapse;
   box-sizing: border-box;
 }
@@ -133,6 +139,8 @@ footer.page {
   color: #000;
   margin-top: 80px;
   font-family: '微软雅黑';
+  float: right;
+
 }
 footer.page:after {
   display: table;

@@ -1,5 +1,7 @@
 <template>
+  
   <div id="orders">
+  <headerbar></headerbar>
         <div id="address" @click="toaddress">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
             <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>
@@ -57,10 +59,14 @@
   </div>
 </template>
 <script>
+import headerbar from '../components/headerbar'
 import request from '../common/request'
 import utils from '../common/utils'
 export default {
   name: 'preorder',
+  components: {
+    headerbar
+  },
   data () {
     return {
       toastDisplay: false,
@@ -73,7 +79,8 @@ export default {
       goods_id: [],
       addid: '',
       coupon_id: '',
-      state: true
+      state: true,
+      item: []
     }
   },
   created: function () {
@@ -137,17 +144,46 @@ export default {
         this.state = false
         request.post(this.$router, {
           goods_car_ids: this.$route.query.goods_car_id,
-          rootName: 'pay',
+          rootName: 'createorder',
           addr_id: this.addid,
           pay_id: 4,
           coupon_id: this.coupon
         }, function (data) {
-          utils.toToast('支付成功')
-          this.$router.push({path: '/person/order/order?status=2'})
+          this.item = data
+          // function onBridgeReady () {
+          //   WeixinJSBridge.invoke(
+          //     'getBrandWCPayRequest', {
+          //       'appId': this.item.appid,     // 公众号名称，由商户传入
+          //       'timeStamp': this.item.timestamp,         // 时间戳，自1970年以来的秒数
+          //       'nonceStr': this.item.nonce_str, // 随机串
+          //       'package': 'prepay_id=' + this.item.prepay_id,
+          //       'signType': 'MD5',         // 微信签名方式
+          //       'paySign': this.item.paySign // 微信签名
+          //     },
+          //     function (res) {
+          //       if (res.err_msg === 'get_brand_wcpay_request:ok') {
+          //         utils.toToast('支付成功')
+          //         this.$router.push({path: '/person/order/order?status=2'})
+          //       } else {
+          //         utils.toToast('支付失败')
+          //         this.$router.push({path: '/person/order/order?status=1'})
+          //       }    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠
+          //     })
+          // }
+          // if (typeof WeixinJSBridge === 'undefined') {
+          //   if (document.addEventListener) {
+          //     document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
+          //   } else if (document.attachEvent) {
+          //     document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
+          //     document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
+          //   }
+          // } else {
+          //   onBridgeReady()
+          // }
         }.bind(this), function (err) {
           console.log(err)
           this.state = true
-          utils.toToast('支付失败')
+          utils.toToast('创建订单失败')
         }.bind(this))
       }
     }
@@ -273,6 +309,10 @@ export default {
         visibility: hidden;
     }
     .order-list li .list-left{
+        width: 3.333333rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         text-align: left;
         float: left;
     }

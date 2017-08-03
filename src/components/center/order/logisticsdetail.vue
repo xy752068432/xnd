@@ -1,5 +1,6 @@
 <template>
 <div>
+ <headerbar></headerbar>
 	<div id="back1" @click="back">
        <img class="arrowwh" src="../../../assets/back.png">
        <span>物流详情</span>
@@ -70,11 +71,13 @@
 </template>
 <script>
 import bottombar from '../../../components/bottombar'
+import headerbar from '../../../components/headerbar'
 import request from '../../../common/request'
 export default {
   name: 'logisticsdetail',
   components: {
-    bottombar
+    bottombar,
+    headerbar
   },
   data () {
     return {

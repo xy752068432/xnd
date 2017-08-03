@@ -1,21 +1,6 @@
 <template>
   <div id="app">
-    <!-- <headerbar></headerbar> -->
     <router-view></router-view>
-    <!--<div class="line-bottom">
-      <img src="./assets/line-bottom.png">
-    </div>
-    <div class="tab">
-      <div class="tab-item home">
-        <router-link to='/'><p>首页</p></router-link>
-      </div>
-      <div class="tab-item cart">
-        <router-link to='/cart'><p>购物车</p></router-link>
-      </div>
-      <div class="tab-item info">
-        <router-link to='/person'><p>个人中心</p></router-link>
-      </div>
-    </div>-->
   </div>
 </template>
 
