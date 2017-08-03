@@ -1,32 +1,38 @@
 <template>
-	<div id="data">
+	<div class="data">
 	  <managerheader></managerheader>
 	  <div class="m_content">
 	  	<managerleft></managerleft>
-        <div id="orderfather">
+        <div class="orderfather">
       	  <span class="botton1">按时间查询</span> <span class="botton2">按订单查询</span>
       	  <img class="m_licut" src="../../assets/m_data/c_link/licut.png">
       	  <div class="c_time" @click="toggle(1)" :class="state1?'c_ed' : 'c_ing'"></div>
       	  <div class="c_order" @click="toggle(2)" :class="!state1? 'c_ed' : 'c_ing'"></div>
+      	  <select id="s_agent" v-model="agent_id">
+      	  	<option>1</option>
+      	  	<option>2</option>
+      	  </select>
         </div>
-        <div>
-        	
-        </div>
+        <cochild v-bind:agent="agent_id" v-bind:state="state"></cochild>
 	  </div>
     </div>
 </template>
 <script>
 import managerheader from '../../components/manager/managerheader'
 import managerleft from '../../components/manager/managerleft'
+import cochild from '../../components/manager/cochild'
 export default {
   name: 'data',
   components: {
     managerheader,
-    managerleft
+    managerleft,
+    cochild
   },
   data: function () {
     return {
-      state1: true
+      state1: true,
+      agent_id: '',
+      state: ''
     }
   },
   methods: {
@@ -34,11 +40,13 @@ export default {
       if (num === 1) {
         if (this.state1 === false) {
           this.state1 = true
+          this.state = 1
         }
       }
       if (num === 2) {
         if (this.state1 === true) {
           this.state1 = false
+          this.state = 2
         }
       }
     }
@@ -46,7 +54,7 @@ export default {
 }
 </script>
 <style>
-#data
+.data
 {
 	text-align: left;
 }
@@ -54,7 +62,7 @@ export default {
 {
 	min-width: 1366px;
 }
-#orderfather
+.orderfather
 {
 	height: 84px;
 	width: 1169px;
@@ -62,13 +70,13 @@ export default {
 	float: left;
 	position: relative;
 }
-#orderfather span
+.orderfather span
 {
 	margin-top: 34px;
 	display: inline-block;
 	height: 37px;
 }
-#orderfather .m_licut
+.orderfather .m_licut
 {
     min-width:1169px; 
     height: 1px;
@@ -107,10 +115,15 @@ export default {
 #order_data
 {
 	min-width: 1169px;
-	height: 800px;
+	min-height: 800px;
 }
-#charts
+#s_agent
 {
-	float: left;
+	width: 75px;
+	height: 28px;
+	position: absolute;
+	top: 28px;
+	left:490px;
+	font-size: 18px;
 }
 </style>
