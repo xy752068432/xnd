@@ -91,7 +91,7 @@ var request = function (method, router, data, successFun, errorFun) {
     method: method,
     url: getUrl(router,data),
     data: data,
-    timeout: 5000,
+    timeout: 50000,
     headers: {
       'Authorization': localStorage.getItem('token')
     }
