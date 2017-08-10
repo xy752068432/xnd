@@ -25,14 +25,14 @@
               </div>
               <div class="amount">
                 <span class="btn-minus" @click.stop="changeAmount(item,0)"></span>
-                <input class="amount-num" type="number"  v-model="item.goods_num" @keyup="maxnum(item.goods_car_id)" @blur="changenumfast(item.goods_car_id)"></input>
+                <input class="amount-num" type="number"  v-model="item.goods_num" @keyup="maxnum(item.goods_car_id)" @blur="changenumfast(item.goods_car_id)" @focus="hidits"></input>
                 <span class="btn-plus" @click.stop="changeAmount(item,1)"></span>
               </div>      
             </li>
           </ul>
         </scroller>    
         </div>
-        <div class="toPay">
+        <div class="toPay" v-show="hidit">
           <div class="paycontent">
             <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
             <div class="chooseAlltxt"><p>全选</p></div>
@@ -43,7 +43,7 @@
           </div>
           
         </div>  
-        <bottombar></bottombar>
+        <bottombar v-show="hidit"></bottombar>
     </div>    
 </template>
 <script>
@@ -62,7 +62,8 @@ export default {
       good_car_id: '',
       good_car_id1: [],
       currentPage: 1,
-      limit: 8
+      limit: 8,
+      hidit: true
     }
   },
   components: {
@@ -185,16 +186,17 @@ export default {
           request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else if (item.goods_num > 999) {
           item.goods = 999
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: 999})
         }
       } else {
         if (item.goods_num > 1) {
           item.goods_num--
-          request.put(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
+          request.put(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id, goods_num: item.goods_num})
         } else {
-          request.patch(this.$route, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
+          request.patch(this.$router, {rootName: 'updateCart', goods_car_id: item.goods_car_id}, (data) => {
             console.log(data)
             if (!data.status) {
+              utils.toToast('删除成功')
               this.refresh()
             }
           })
@@ -203,6 +205,7 @@ export default {
     },
     changenumfast: function (goodcarid) {
       // console.log(this.goods.length)
+      this.hidit = true
       for (var i = 0; i < this.goods.length; i++) {
         if (this.goods[i].goods_car_id === goodcarid) {
           if (this.goods[i].goods_num > 0 && this.goods[i].goods_num < 1000) {
@@ -228,6 +231,9 @@ export default {
           }
         }
       }
+    },
+    hidits: function () {
+      this.hidit = false
     }
   }
 }

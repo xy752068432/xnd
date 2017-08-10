@@ -49,10 +49,6 @@ export default {
       this.show1 = false
       this.show2 = true
     }
-    // autoWidth (event) {
-    //   var el = event.target
-    //   el.width = document.body.clickWidth -
-    // }
   }
 }
 </script>

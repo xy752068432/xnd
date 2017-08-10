@@ -12,7 +12,6 @@
        	  <input type="text" id="c_order1" name="" v-model="data3">
        	  <input id="check2" type="button" name="" @click="getdata1" value="查询" />
        </div>
-
        <table v-show="gotdate">
        	  <tr>
        	  	<th id="th1">交易时间</th>
@@ -42,7 +41,6 @@
        	     <input type="text" @keyup="pagenum" name="" v-model="apage"/>
        	     <span class="to" @click="toapage">跳转</span>
          </div>
-
        </div>
 	</div>
 </template>
@@ -66,7 +64,8 @@ export default {
       apage: '',
       page: 1,
       state1: true,
-      maxpage: ''
+      maxpage: '',
+      nowtime: ''
     }
   },
   watch: {
@@ -85,13 +84,26 @@ export default {
   },
   props: ['agent', 'state'],
   created: function () {
-    // localStorage.setItem('agent', '1')
-    // localStorage.setItem('token', '$2y$10$7o6zFDzEyxnJpHQ5U2MvFuFPI1Zz5CqKHFdyEakFH3.et1WITA1CG')
+    var time = new Date()
+    var y = time.getFullYear()
+    var m = time.getMonth() + 1
+    var d = time.getDate()
+    var h = time.getHours()
+    var mm = time.getMinutes()
+    m = m + ''
+    d = d + ''
+    if (m.length === 1) {
+      m = '0' + m
+    }
+    if (d.length === 1) {
+      d = '0' + d
+    }
+    this.nowtime = y + '-' + m + '-' + d + 'T' + h + ':' + mm
   },
   methods: {
     getdata: function () {
       var refreshData
-      if (this.date1 !== '' && this.date2 !== '' && this.agent !== '') {
+      if (this.date1 !== '' && this.date2 !== '' && this.agent !== '' && this.date1 < this.date2 && this.date2 < this.nowtime) {
         if (this.state1 === true) {
           this.state1 = false
           var reg = new RegExp('T', 'g')
@@ -125,6 +137,8 @@ export default {
             this.state1 = true
           }.bind(this))
         }
+      } else {
+        utils.toToast('请输入正确的日期,或填写完整信息')
       }
     },
     addpage: function () {
@@ -177,6 +191,7 @@ export default {
             end_time: date2,
             page: this.page
           }, function (data) {
+            this.count = this.page
             this.state1 = true
             this.data1 = data.items
           }.bind(this), function (err) {

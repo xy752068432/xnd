@@ -12,13 +12,13 @@
         </div>
         <div id="content">
             <div class="addlist">
-                <label>收货人</label><input type="text" @keyup="isname" name="" v-model="name" />
+                <label>收货人</label><input type="text" @blur="showit" @focus="hidit" @keyup="isname" name="" v-model="name" />
             </div>
            <div class="licut">
        
             </div>
             <div class="addlist">
-               <label>联系电话</label><input type="text" @keyup="isphone" name="" v-model="phone"/>
+               <label>联系电话</label><input type="text" @blur="showit" @focus="hidit" @keyup="isphone" name="" v-model="phone"/>
             </div>
            <div class="licut">
        
@@ -32,19 +32,19 @@
        
            </div>
            <div id="txtarea">
-            <textarea placeholder="请填写详细地址，如街道、楼牌号等" @keyup="isdetail" v-model="detail"></textarea>
+            <textarea @blur="showit" @focus="hidit" placeholder="请填写详细地址，如街道、楼牌号等" @keyup="isdetail" v-model="detail"></textarea>
            </div>
            <div class="licut">
        
            </div>
            <vue-area :props-show="show" :props-result="result" v-on:result="areaResult"></vue-area>
-           <div id="save" @click.stop="save">
-             <div id="savecontent">
+           <div id="save" @click.stop="save" v-show="hidshow">
+             <div id="savecontent" >
                 <span>保存</span>
              </div>
           </div>
         </div>
-       <bottombar></bottombar> 
+       <bottombar v-show="hidshow"></bottombar> 
     </div>
 	
 </template>
@@ -69,7 +69,8 @@ export default {
       phone: '',
       detail: '',
       sex: 0,
-      state: true
+      state: true,
+      hidshow: true
     }
   },
   created: function () {
@@ -86,7 +87,7 @@ export default {
       } else {
         if (this.state === true) {
           this.state = false
-          request.post(this.$route, {
+          request.post(this.$router, {
             name: this.name,
             phone: this.phone,
             province: this.result.province.code,
@@ -121,6 +122,12 @@ export default {
       if (!(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
         utils.toToast('请输入正确的详细地址')
       }
+    },
+    showit: function () {
+      this.hidshow = true
+    },
+    hidit: function () {
+      this.hidshow = false
     }
   }
 }

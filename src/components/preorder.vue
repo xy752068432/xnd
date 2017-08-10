@@ -80,25 +80,10 @@ export default {
       addid: '',
       coupon_id: '',
       state: true,
-      item: [],
-      minurl: '',
-      minurls: [],
-      item1: '',
-      item2: []
+      item: []
     }
   },
   created: function () {
-    this.minurl = location.href
-    this.minurls = this.minurl.split('#')
-    // console.log(this.minurl[pos - 1])
-    var pos = this.minurl.indexOf('#')
-    if (this.minurl[pos - 1] !== '?') {
-      location.href = this.minurls[0] + '?#' + this.minurls[1]
-    }
-    this.minurls = this.minurl.split('#')
-    this.minurl = this.minurls[0] + '?#' + this.minurls[1]
-   // location.href = this.minurl
-    // console.log(this.minurl)
     this.$router.name = this.$route.name
     if (this.$route.query.addid) {
       this.addid = this.$route.query.addid

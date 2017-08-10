@@ -1,16 +1,15 @@
 <template>
-	<div class="data">
+	<div class="data1">
 	  <managerheader></managerheader>
-	  <div class="m_content">
+	  <div class="m_content1">
 	  	<managerleft></managerleft>
-        <div class="orderfather">
-      	  <span class="botton1">按时间查询</span> <span class="botton2">按订单查询</span>
-      	  <img class="m_licut" src="../../assets/m_data/c_link/licut.png">
-      	  <div class="c_time" @click="toggle(1)" :class="state1?'c_ed' : 'c_ing'"></div>
-      	  <div class="c_order" @click="toggle(2)" :class="!state1? 'c_ed' : 'c_ing'"></div>
-      	  <select id="s_agent" v-model="agent_id">
-      	  	<option>1</option>
-      	  	<option>2</option>
+        <div class="orderfather1">
+      	  <span class="botton11">按时间查询</span> <span class="botton21">按订单查询</span>
+      	  <img class="m_licut11" src="../../assets/m_data/c_link/licut.png">
+      	  <div class="c_time1" @click="toggle(1)" :class="state1?'c_ed1' : 'c_ing1'"></div>
+      	  <div class="c_order1" @click="toggle(2)" :class="!state1? 'c_ed1' : 'c_ing1'"></div>
+      	  <select id="s_agent1" v-model="agent_id">
+      	  	<option v-for="item in agent_ids">{{item.id}}</option>
       	  </select>
         </div>
         <cochild v-bind:agent="agent_id" v-bind:state="state"></cochild>
@@ -21,6 +20,7 @@
 import managerheader from '../../components/manager/managerheader'
 import managerleft from '../../components/manager/managerleft'
 import cochild from '../../components/manager/cochild'
+import mrequest from '../../common/mrequest'
 export default {
   name: 'data',
   components: {
@@ -32,8 +32,16 @@ export default {
     return {
       state1: true,
       agent_id: '',
-      state: ''
+      state: '',
+      agent_ids: []
     }
+  },
+  created: function () {
+    mrequest.get(this.$router, {
+      rootName: 'agent'
+    }, function (data) {
+      this.agent_ids = data
+    }.bind(this))
   },
   methods: {
     toggle: function (num) {
@@ -54,76 +62,74 @@ export default {
 }
 </script>
 <style>
-.data
+.data1
 {
 	text-align: left;
 }
-.m_content
+.m_content1
 {
 	min-width: 1366px;
 }
-.orderfather
+.orderfather1
 {
 	height: 84px;
-	width: 1169px;
 	font-size: 18px;
-	float: left;
 	position: relative;
 }
-.orderfather span
+.orderfather1 span
 {
 	margin-top: 34px;
 	display: inline-block;
 	height: 37px;
 }
-.orderfather .m_licut
+.orderfather1 .m_licut
 {
-    min-width:1169px; 
+    min-width:1169px;
     height: 1px;
 }
-.botton1
+.botton11
 {
 	margin-left: 102px;
 }
-.botton2
+.botton21
 {
-	margin-left: 93px; 
+	margin-left: 93px;
 }
-.c_time,.c_order
+.c_time1,.c_order1
 {
 	position: absolute;
 	top: 33px;
 	width: 21px;
 	height: 21px;
 }
-.c_time
+.c_time1
 {
-	left: 73px;	
+	left: 261px;
 }
-.c_ed
+.c_ed1
 {
 	background-image: url(../../assets/m_data/c_link/c_ed.png);
 }
-.c_ing
+.c_ing1
 {
 	background-image: url(../../assets/m_data/c_link/c_ing.png);
 }
-.c_order
+.c_order1
 {
-    left: 261px;    
+    left: 450px;
 }
-#order_data
+#order_data1
 {
 	min-width: 1169px;
 	min-height: 800px;
 }
-#s_agent
+#s_agent1
 {
 	width: 75px;
 	height: 28px;
 	position: absolute;
 	top: 28px;
-	left:490px;
+	left:710px;
 	font-size: 18px;
 }
 </style>

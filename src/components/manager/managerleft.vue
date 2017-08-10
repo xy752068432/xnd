@@ -1,21 +1,20 @@
 <template>
     <div id="btn_div">
-          <div class="btn_toggle checkorder">
-             <router-link to='/manager/checkorder'></router-link>
-          </div>
-          <div class="btn_toggle data" >
-             <router-link to='/manager/data'></router-link>
-          </div>
-          <div class="btn_toggle agent">
-             <router-link to='/manager/agent'></router-link>
-          </div>
-          <div class="btn_toggle coupon">
-             <router-link to='/manager/coupon'></router-link>
-          </div>
-          <div id="bgi">
-
-          </div>
-        </div>
+      <div class="btn_toggle checkorder">
+         <router-link to='/manager/checkorder'></router-link>
+      </div>
+      <div class="btn_toggle data" >
+         <router-link to='/manager/data'></router-link>
+      </div>
+      <div class="btn_toggle agent">
+         <router-link to='/manager/agent'></router-link>
+      </div>
+      <div class="btn_toggle coupon">
+         <router-link to='/manager/coupon'></router-link>
+      </div>
+      <div id="bgi">
+      </div>
+    </div>
 </template>
 <script>
 export default {
@@ -27,7 +26,7 @@ export default {
 {
   text-align: left;
   width: 192px;
- float: left;
+  float: left;
 }
 .btn_toggle
 {

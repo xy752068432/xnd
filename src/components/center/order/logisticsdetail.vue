@@ -93,7 +93,8 @@ export default {
   },
 
   created: function () {
-    request.get(this.$route, {
+    this.$router.name = this.$route.name
+    request.get(this.$router, {
       order_id: this.$route.query.order_id}, function (data) {
         this.data = data
         this.order_num = data.order_info.order_num
