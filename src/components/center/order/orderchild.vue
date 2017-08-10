@@ -16,7 +16,7 @@
      <div v-else="!this.hidshow" class="manymes">
       <scroller
       :on-refresh="refresh"
-      :on-infinite="infinite"  ref="my_scroller" style="height:15rem;margin-top:0">
+      :on-infinite="infinite" class="scroller"  ref="my_scroller" :class="mergewillpay ? 'scroller1' : 'scroller2'">
      	<ul>
      		<li v-for="item in items">
      			<div class="detail" @click="tologistic(item.order_info.order_id)">
@@ -29,25 +29,26 @@
                 		    <div class="licut">
   	   
                         </div>
-                			<div class="good" @click.stop="togooddetail(item.goods_info.goods_id)">
+                        <div v-show="hidchoose" class="chooseit" @click="selectItem(item)" :class="item.checked1 ? 'choose' : 'unchoose'"></div>
+                			<div class="good" :class="mergewillpay ? 'good1' : 'good2'" @click.stop="togooddetail(item.goods_info.goods_id)">
                 				<div class="goodlist"><img :src="item.goods_info.goods_img"></div>
                 				<div class="goodlist goodtxt"><div class="goodtxt1">{{item.goods_info.name}}</div><div class="goodtxt2">{{item.goods_info.goods_desc}}</div></div>
-                				<div class="goodnum">X{{item.goods_info.num}}{{item.goods_info.unit}}</div>
+                				<div class="goodnum" :class="mergewillpay ? 'goodnum1' : 'goodnum2'">X{{item.goods_info.num}}({{item.goods_info.unit}})</div>
                 				<div class="goodmoney">{{item.goods_info.value}}</div>
                 				<img class="togooddetail" src="../../../assets/personcenter/arrow.png">
                 			</div>
                 	
                 </div>
-                <div class="fine" v-for="price in item.price_info"><div><span>{{price.text}}</span></div><div class="finemoney">{{price.value}}</div>
-                 <div class="licut">
-  	   
-                 </div>
+                <div class="fine" :class="mergewillpay ? 'fine1' : 'fine2'" v-for="price in item.price_info"><div class="finetxt">{{price.text}}</div><div class="finemoney">{{price.value}}</div>
+                 
                 </div>
-                
-                <div class="goodtotal">
+                <div class="licut">
+       
+                 </div>
+                <!-- <div class="goodtotal">
                    <div class="totalnum"><span class="totaltxt">{{item.summary.goods_count}}</span></div>
                    <div class="totalmoney"><span class="totaltxt">{{item.summary.price_count}}</span><span class="totaltxt1">{{item.summary.send_price_count}}</span></div>
-                </div>
+                </div> -->
                  <div class="licut">
   	   
                 </div>
@@ -67,8 +68,27 @@
      	</ul>
       </scroller>
      </div>
+
    </div>
-   
+   <transition name="fade2">
+      <div id="noaddt2" v-show="noaddtoast2">
+        <img src="../../../assets/got.png">
+      </div>    
+    </transition>
+    <div id="mergecontent" v-show="mergewillpay" ref="a">
+      <div class="bigcut">
+       
+                </div>
+      <div id="mergetxt">
+        <span id="mergenum">共{{totalNum}}件商品</span>
+        <span id="mergemoney">合计：&yen;{{totalMoney}}</span><span>(含运费￥0.00)</span>
+      </div>
+      <div class="licut">
+       </div>
+      <div id="mergeimg" @click="mergepay">
+        <img src="../../../assets/merge.png">
+      </div>
+    </div>
    <bottombar></bottombar>
  </div>
 </template>
@@ -108,7 +128,14 @@ export default {
       limit: 4,
       minurl: '',
       minurls: [],
-      item2: []
+      item2: [],
+      item3: [],
+      noaddtoast2: false,
+      orderids: '',
+      orderids1: [],
+      mestate: true,
+      mergewillpay: null,
+      hidchoose: null
     }
   },
   created: function () {
@@ -120,7 +147,7 @@ export default {
       location.href = this.minurls[0] + '?#' + this.minurls[1]
     }
     this.minurl = this.minurls[0]
-    console.log(this.minurl)
+    // console.log(this.minurl)
     this.$router.name = this.$route.name
     this.currentPage1 = this.currentPage
     // this.getdatas()
@@ -128,6 +155,29 @@ export default {
       this.status1 = this.statuss
     } else {
       this.status1 = this.$route.query.status
+    }
+  },
+  computed: {
+    //  计算总金额
+    totalMoney: function () {
+      var total = 0
+      this.items.forEach(function (item, index) {
+        if (item.checked1) {
+          var value = item.goods_info.value.split('￥')
+          var val = value[1]
+          total += parseInt(item.goods_info.num) * val
+        }
+      })
+      return total.toFixed(2)
+    },
+    totalNum: function () {
+      var total = 0
+      this.items.forEach(function (item, index) {
+        if (item.checked1) {
+          total += item.goods_info.num
+        }
+      })
+      return total
     }
   },
   methods: {
@@ -145,8 +195,17 @@ export default {
           this.mes = data.msg
           if (data.num === 0) {
             this.hidshow = true
+            this.mergewillpay = false
+            this.hidchoose = false
           } else {
             this.hidshow = false
+            if (this.status1 === 1 || this.status1 === '1') {
+              this.mergewillpay = true
+              this.hidchoose = true
+            } else {
+              this.mergewillpay = false
+              this.hidchoose = false
+            }
             this.items = data.items
           }
           if (data.items.length < this.limit) {
@@ -166,9 +225,18 @@ export default {
         this.mes = data.msg
         if (data.num === 0) {
           this.hidshow = true
+          this.mergewillpay = false
+          this.hidchoose = false
         } else {
           this.hidshow = false
           this.items = data.items
+          if (this.status1 === 1 || this.status1 === '1') {
+            this.mergewillpay = true
+            this.hidchoose = true
+          } else {
+            this.mergewillpay = false
+            this.hidchoose = false
+          }
         }
         this.currentPage1 ++
         done()
@@ -226,6 +294,7 @@ export default {
     cancel: function (orderid) {
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
+          console.log(this.items[i].checked)
           this.items[i].checked = false
           request.put(this.$router, {
             rootName: 'cancelorder',
@@ -235,16 +304,26 @@ export default {
                   this.items.splice(i, 1)
                 }
               }
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
               utils.toToast('取消成功')
             }.bind(this), function (err) {
               console.log(err)
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
               utils.toToast('取消失败')
-              this.items[i].checked = true
-            }.bind(this))
+            })
         }
       }
     },
     paynow: function (orderid) {
+      var that = this
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
           this.items[i].checked = false
@@ -254,42 +333,47 @@ export default {
             rootName: 'paying'
           }, function (data) {
             // console.log(data)
-            this.item2 = data
-            // function onBridgeReady () {
-            //   WeixinJSBridge.invoke(
-            //     'getBrandWCPayRequest', {
-            //       'appId': this.item2.appid,     // 公众号名称，由商户传入
-            //       'timeStamp': this.item2.timestamp,         // 时间戳，自1970年以来的秒数
-            //       'nonceStr': this.item2.nonce_str, // 随机串
-            //       'package': 'prepay_id=' + this.item2.prepay_id,
-            //       'signType': 'MD5',         // 微信签名方式
-            //       'paySign': this.item2.paySign // 微信签名
-            //     },
-            //     function (res) {
-            //       if (res.err_msg === 'get_brand_wcpay_request:ok') {
-            //         utils.toToast('支付成功')
-            //         this.$router.push({path: '/person/order/order?status=2'})
-            //       } else {
-            //         utils.toToast('支付失败')
-            //         this.items[i].checked = true
-            //       }    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠
-            //     })
-            // }
-            // if (typeof WeixinJSBridge === 'undefined') {
-            //   if (document.addEventListener) {
-            //     document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
-            //   } else if (document.attachEvent) {
-            //     document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
-            //     document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
-            //   }
-            // } else {
-            //   onBridgeReady()
-            // }
+            that.item2 = data
+            if (typeof window.WeixinJSBridge === 'undefined') {
+              if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
+              } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
+                document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
+              }
+            } else {
+              this.onBridgeReady(that.item2)
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
+            }
           }.bind(this))
         }
       }
     },
+    onBridgeReady: function (obj) {
+      window.WeixinJSBridge.invoke(
+          'getBrandWCPayRequest', {
+            'appId': obj.appid,     // 公众号名称，由商户传入
+            'timeStamp': obj.timestamp,         // 时间戳，自1970年以来的秒数
+            'nonceStr': obj.nonce_str, // 随机串
+            'package': 'prepay_id=' + obj.prepay_id,
+            'signType': 'MD5',         // 微信签名方式
+            'paySign': obj.paySign // 微信签名
+          },
+        function (res) {
+          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+            utils.toToast('支付成功')
+            this.$router.push({path: '/person/order/order?status=2'})
+          } else {
+            utils.toToast('支付失败')
+          }    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠
+        }.bind(this))
+    },
     got: function (orderid) {
+      var that = this
       for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].order_info.order_id === orderid && this.items[i].checked === true) {
           this.items[i].checked = false
@@ -301,11 +385,24 @@ export default {
                   this.items.splice(i, 1)
                 }
               }
-              utils.toToast('确认收货成功')
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
+              // utils.toToast('确认收货成功')
+              this.noaddtoast2 = true
+              setTimeout(function () {
+                that.noaddtoast2 = false
+              }, 1000)
             }.bind(this), function (err) {
               console.log(err)
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
               utils.toToast('确认收货失败')
-              this.items[i].checked = true
             }.bind(this))
         }
       }
@@ -330,11 +427,20 @@ export default {
                   this.items.splice(i, 1)
                 }
               }
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
               utils.toToast('删除成功')
             }.bind(this), function (err) {
               console.log(err)
+              for (var j = 0; j < this.items.length; j++) {
+                if (this.items[j].order_info.order_id === orderid) {
+                  this.items[j].checked = true
+                }
+              }
               utils.toToast('删除失败')
-              this.items[i].checked = true
             })
         }
       }
@@ -344,6 +450,51 @@ export default {
     },
     tologistic: function (orderid) {
       this.$router.push({path: '/person/order/logistic?order_id=' + orderid})
+    },
+    //  选中购物车商品
+    selectItem: function (item) {
+      if (typeof item.checked1 === 'undefined') {
+        Vue.set(item, 'checked1', true)
+        this.orderids = this.orderids + item.order_info.order_id + ','
+      } else if (item.checked1 === false) {
+        item.checked1 = true
+        this.orderids = this.orderids + item.order_info.order_id + ','
+      } else {
+        item.checked1 = !item.checked1
+        this.orderids1 = this.orderids.split(',')
+        if (this.orderids1.length === 2) {
+          this.orderids = ''
+        } else {
+          var reg = new RegExp(item.order_info.order_id + ',', 'g')
+          this.orderids = this.orderids.replace(reg, '')
+        }
+      }
+      // console.log(this.orderids)
+    },
+    mergepay: function () {
+      var that = this
+      if (this.mestate === true && this.orderids) {
+        this.mestate = false
+        request.get(this.$router, {
+          order_ids: this.orderids,
+          pay_id: 4,
+          rootName: 'paying'
+        }, function (data) {
+          // console.log(data)
+          that.item3 = data
+          if (typeof window.WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
+              document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
+            }
+          } else {
+            this.onBridgeReady(that.item3)
+            this.mestate = true
+          }
+        }.bind(this))
+      }
     }
   }
 }
@@ -352,6 +503,19 @@ export default {
 *{
 	padding: 0;
 	margin: 0;
+}
+.scroller
+{
+  padding-top:0.05rem;
+  margin-top:0.05rem;
+}
+.scroller1
+{
+  height:11rem;
+}
+.scroller2
+{
+  height:15rem;
 }
 #toggle
 {
@@ -441,8 +605,10 @@ ul .right
 }
 .manymes
 {
-    width:100%;
+  width:100%;
 	height: 13.9rem;
+  padding-top: 0.04rem;
+  margin-top: 0.04rem;
 	overflow-y: auto;
 }
 .detail
@@ -467,10 +633,17 @@ ul .right
 }
 .good
 {
-	  margin-left: 0.573333rem;
     padding-top: 0.253333rem;
     height: 1.266667rem;
     position: relative;
+}
+.good1
+{
+    margin-left: 1.38rem;
+}
+.good2
+{
+  margin-left: 0.573333rem;
 }
 .good .goodlist
 {
@@ -491,6 +664,7 @@ ul .right
 }
 .goodtxt1
 {
+  padding-top: 0.066667rem;
 	height: 0.413333rem;
     font-size: 0.413333rem;
 }
@@ -511,7 +685,14 @@ ul .right
 	font-size: 0.36rem;
 	position: absolute;
 	bottom: 0.586667rem;
-	right:3.893333rem;
+}
+.goodnum1
+{
+  right:3.0rem;
+}
+.goodnum2
+{
+  right:3.8rem;
 }
 .goodmoney
 {
@@ -530,19 +711,36 @@ ul .right
 }
 .fine
 {
-	width: 93%;
 	height:0.586667rem;
-	margin-top: 0.16rem;
-	padding-left: 0.573333rem;
+	padding-top: 0.16rem;
 	font-size: 0.32rem;
+}
+.fine1
+{
+  width: 86%;
+  padding-left: 1.38rem;
+}
+.fine2
+{
+  width: 95%;
+  padding-left: 0.573333rem;
+}
+.fine2 .finemoney
+{
+  margin-left: 7rem;
 }
 .fine div
 {
 	float: left;
 }
-.finemoney
+.finetxt
 {
-	margin-left: 6.7666rem;
+  padding-top: 0.16px;
+  height: 0.4rem;
+}
+.fine1 .finemoney
+{
+	margin-left: 6.2rem;
 }
 .goodtotal
 {
@@ -628,5 +826,84 @@ ul .right
   width: 2.173333rem;
   height: 0.626667rem;
   padding-right: 0.573333rem;
+}
+.fade2-enter-active, .fade2-leave-active {
+  transition: opacity .5s
+}
+.fade2-enter, .fade2-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
+#noaddt2
+{
+  position: absolute;
+  top: 23%;
+  left: 25.733%;
+}
+#noaddt2 img
+{
+  width: 4.853333rem;
+  height: 3.12rem;
+}
+.gooddetail
+{
+  position: relative;
+}
+.choose{
+  background-image: url("../../../assets/cart/choose.png");
+}
+.unchoose{
+  background-image: url("../../../assets/cart/unchoose.png");
+}
+.chooseit
+{
+  position: absolute;
+  top: 35%;
+  left: 0.573333rem;
+  width: 0.533333rem;
+  height: 0.533333rem;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  z-index:999;
+}
+#mergecontent
+{
+  position: fixed;
+  bottom: 1.58666rem;
+  font-size: 0.4rem;
+  background-color: white; 
+  width: 100%;
+}
+#mergetxt
+{
+  width: 100%;
+  height: 0.813333rem;
+}
+#mergetxt span
+{
+  padding-top: 0.213333rem;
+  display: inline-block;
+}
+#mergenum
+{
+  width: 25%;
+}
+#mergemoney
+{
+  width: 40%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#mergeimg
+{
+  height: 0.986667rem;
+}
+#mergecontent img
+{
+  width: 2.24rem;
+  height: 0.64rem;
+  float: right;
+  margin-right: 0.573333rem;
+  padding-top: 0.173333rem;
 }
 </style>

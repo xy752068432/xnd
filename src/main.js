@@ -6,7 +6,7 @@ import router from './router'
 import VueScroller from 'vue-scroller'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Toast from 'vue-easy-toast'
-import echarts from 'echarts'
+// import echarts from 'echarts'
 
 router.beforeEach((to, from, next) => {
   if (to.query.uid && to.query.token) {
@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
 Vue.use(VueScroller)
 Vue.use(VueAwesomeSwiper)
 Vue.use(Toast)
-Vue.prototype.$echarts = echarts
+// Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

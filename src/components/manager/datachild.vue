@@ -36,8 +36,6 @@ export default {
   props: ['agent'],
   created: function () {
     this.$router.name = this.$route.name
-    localStorage.setItem('agent_id', '1')
-    localStorage.setItem('token', '$2y$10$7o6zFDzEyxnJpHQ5U2MvFuFPI1Zz5CqKHFdyEakFH3.et1WITA1CG')
     var time = new Date()
     var y = time.getFullYear()
     var m = time.getMonth() + 1

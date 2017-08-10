@@ -14,7 +14,7 @@
             <img :src="item.goods_img" >
           </div>
           <div class="content">
-            <div class="titlediv"><h2 class="name">{{item.title}}</h2></div>
+            <div class="titlediv"><h2 class="indexname">{{item.title}}</h2></div>
             <p class="desc">{{item.description}}</p>
             <p class="old-price"><span class="old-attach">&yen;</span>{{item.origin_price}}<span class="old-attach">/{{item.unit}}</span></p>
             <p class="price"><span class="attach">&yen;</span>{{item.price}}<span class="attach">/{{item.unit}}</span></p>
@@ -137,7 +137,7 @@
     background-size: cover;
     color: #fff;
   }
-  .tag2
+  .icon .tag2
   {
     position: absolute;
     top: 0.1rem;
@@ -147,7 +147,7 @@
     height: 0.8rem;
     width: 0.8rem;
   }
-  .tag1
+  .icon .tag1
   {
     display: table-cell;
     height: 0.8rem;
@@ -181,36 +181,43 @@
     font-size: 0;
   }
   .content .titlediv{
-    height: 1rem;
+    display: table;
+    height: 1.2rem;
     width: 2.666667rem;
     margin: 0.133333rem 0 0.266667rem 0； 
    }
-  .content .name{
-     display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+  .content .indexname{
+
+    display: table-cell;
+    vertical-align:middle;
+    /*-webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;*/
     overflow: hidden;
     font-size: 0.44rem;
-    line-height: 0.53rem;
+    line-height: 0.62rem;
     color: #000;
-    margin-bottom: 0.2rem;
   }
   .content .desc{
     font-size: 0.226rem;
     color: rgba(0,0,0,0.6);
-    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .old-price{
     text-decoration: line-through;
-    font-size: 0.24rem;
+    font-size: 0.306667rem;
     color: rgba(0,0,0,0.6);
-    margin-bottom: 0.16rem;
+    padding-top: 0.373333rem;
+  }
+  .old-price .old-attach
+  {
+    font-size: 0.1rem;
   }
   .price{
-    font-size: 0.386rem;
+    padding-top: 0.133333rem;
+    font-size: 0.386667rem;
     font-weight: bold;
     color: #32ab42;
   }

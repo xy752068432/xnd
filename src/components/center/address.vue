@@ -19,10 +19,10 @@
     		<div class="addressdetail">
     			<div class="name f1"><span>{{item.msg.name}}</span></div> <div class="tel f1"><span>{{item.msg.phone}}</span></div>
     			<div class="address">{{item.msg.fullAddr}}</div>
-          <img class="select" v-show="!item.msg.status" @click="setDefault(item.msg.id)" src="../../assets/personaddress1/noselect.png"  />
-    			<img class="select" v-show="item.msg.status" @click="setDefault(item.msg.id)" src="../../assets/personaddress1/selected.png"  />
+          <img class="select" v-show="!item.msg.status" @click.stop="setDefault(item.msg.id)" src="../../assets/personaddress1/noselect.png"  />
+    			<img class="select" v-show="item.msg.status" @click.stop="setDefault(item.msg.id)" src="../../assets/personaddress1/selected.png"  />
                 <img  @click="toedit(item.msg.id)" class="edit"  src="../../assets/personaddress1/edit.png" />
-                <img class="delete" @click="deletes(item.msg.id)" src="../../assets/personaddress1/delete.png" />
+                <img class="delete" @click.stop="deletes(item.msg.id)" src="../../assets/personaddress1/delete.png" />
     		</div>
     		<div class="licut">
   	   
@@ -62,7 +62,8 @@ export default {
       data: [],
       mark: false,
       currentPage: 1,
-      limit: 8
+      limit: 8,
+      state: true
     }
   },
   created () {
@@ -71,7 +72,11 @@ export default {
   methods: {
     // 跳转编辑地址界面
     toedit: function (addid) {
-      this.$router.push({path: '/person/address/update?addr_id=' + addid})
+      if (!this.$route.query.goods_car_id) {
+        this.$router.push({path: '/person/address/update?addr_id=' + addid})
+      } else {
+        this.$router.push({path: '/person/address/update?addr_id=' + addid + '&goods_car_id1=' + this.$route.query.goods_car_id})
+      }
     },
     // 设置默认地址
     setDefault: function (addressID) {
@@ -93,28 +98,26 @@ export default {
     },
     // 删除收货地址
     deletes: function (addressid) {
-      request.patch(this.$router, {
-        rootName: 'deladdress',
-        addr_id: addressid}, function (data) {
-          for (var i = 0; i < this.addressList.length; i++) {
-            if (this.addressList[i].msg.id === addressid) {
-              this.addressList.splice(i, 1)
+      if (!this.$route.query.goods_car_id && this.state === true) {
+        request.patch(this.$router, {
+          rootName: 'deladdress',
+          addr_id: addressid}, function (data) {
+            for (var i = 0; i < this.addressList.length; i++) {
+              if (this.addressList[i].msg.id === addressid) {
+                this.addressList.splice(i, 1)
+              }
             }
-          }
-          utils.toToast('删除成功')
-        }.bind(this), function (err) {
-          console.log(err)
-          utils.toToast('删除失败')
-        })
+            utils.toToast('删除成功')
+          }.bind(this), function (err) {
+            console.log(err)
+            utils.toToast('删除失败')
+          })
+      }
     },
     // 选择收货地址
     selectadd: function (addressId) {
-      if (this.$route.query.id === 'markadd') {
-        for (var i = 0; i < this.addressList.length; i++) {
-          if (this.addressList[i].msg.id === addressId) {
-            this.$router.push({path: '/preorder?addid=' + addressId + '&goods_car_id=' + this.$route.query.goods_car_id})
-          }
-        }
+      if (this.$route.query.goods_car_id) {
+        this.$router.push({path: '/preorder?addid=' + addressId + '&goods_car_id=' + this.$route.query.goods_car_id})
       }
     },
     refresh: function (done) {
@@ -203,7 +206,7 @@ export default {
 .name
 {
 	font-size: 0.48rem;
-	margin: 0.48rem 0.533333rem 0.32rem 0.48rem;
+	margin: 0.48rem 0.533333rem 0 0.48rem;
 }
 .tel,.address
 {
@@ -219,7 +222,8 @@ export default {
   width: 9.333333rem;
   height: 0.4rem;
   text-align: left;
-	top: 1.28rem;
+  padding-top: 0.133333rem;
+	top: 1.146667rem;
 	left: 0.6rem;
   white-space: nowrap;
   overflow: hidden;
@@ -253,11 +257,12 @@ export default {
   left: 1.733333rem;
   bottom: 2.04rem;
   width: 6.773333rem;
-  height: 1.12rem;
+  height: 1.1rem;
   font-size: 0.4rem;
   background-color: white;
   border:#ADADAD solid 0.013333rem;
   color: #ADADAD;
+  border-radius: 6px;
 }
 #add2content
 {

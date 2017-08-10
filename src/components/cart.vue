@@ -13,15 +13,15 @@
                 <div class="choose-btn" @click.stop="selectItem(item)" :class="item.checked ? 'choose' : 'unchoose'"></div>
                 <div class="icon-logo" @click="toDetail">
                   <div class="tag" :class="{presale: !item.state,offsale:item.state}" v-show="item.goods_info.status_text"></div>
-                  <div class="tag1" v-show="item.goods_info.status_text"><p>{{item.goods_info.status_text}}</p></div>
+                  <div class="tag12" v-show="item.goods_info.status_text"><div class="tag22">{{item.goods_info.status_text}}</div></div>
                   <img :src="item.goods_info.goods_img">
                 </div>  
               </div>
-              <div class="content" @click="toDetail(item)">
+              <div class="contentcar" @click="toDetail(item)">
                 <h2 class="name">{{item.goods_info.title}}</h2>
                 <p class="desc">{{item.goods_info.description}}</p>
                 <p class="price-line"><span class="price"><span class="attach">&yen;</span>{{item.goods_info.price}}<span class="attach">/{{item.goods_info.unit}}</span></span><span class="old-price">&yen;{{item.goods_info.origin_price}}/{{item.unit}}</span></p>
-                <div class="deliver-time"><p>{{item.goods_info.send_time}}{{item.goods_car_id}}</p></div>
+                <p class="deliver-time">{{item.goods_info.send_time}}</p>
               </div>
               <div class="amount">
                 <span class="btn-minus" @click.stop="changeAmount(item,0)"></span>
@@ -32,18 +32,18 @@
           </ul>
         </scroller>    
         </div>
-        <div class="toPay" v-show="hidit">
+        <div class="toPay">
           <div class="paycontent">
             <div class="chooseAll" @click="chooseAll" :class="selectAll ? 'select' : 'unselect'"></div>
             <div class="chooseAlltxt"><p>全选</p></div>
             <div class="pay-sum-wrap">
-            <p><span class="pay-sum">合计：</span>&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
+            <p><span class="pay-sum">合计：</span class="paynum">&yen;{{totalMoney}}<span class="deliver">(不含运费)</span></p>
             </div>
             <div class="toPayBtn" @click="toCheck"></div>
           </div>
           
         </div>  
-        <bottombar v-show="hidit"></bottombar>
+        <bottombar></bottombar>
     </div>    
 </template>
 <script>
@@ -63,7 +63,8 @@ export default {
       good_car_id1: [],
       currentPage: 1,
       limit: 8,
-      hidit: true
+      screenHeight: '',
+      screenHeight1: ''
     }
   },
   components: {
@@ -71,8 +72,26 @@ export default {
     VueScroller,
     headerbar
   },
+  watch: {
+    screenHeight: function (newval, oldval) {
+      if (newval < this.screenHeight1) {
+        this.hidit = false
+      } else {
+        this.hidit = true
+      }
+    }
+  },
   created: function () {
     this.$router.name = this.$route.name
+  },
+  mounted: function () {
+    this.screenHeight1 = document.documentElement.clientHeight
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        that.screenHeight = document.documentElement.clientHeight
+      })()
+    }
   },
   computed: {
     //  计算总金额
@@ -205,7 +224,6 @@ export default {
     },
     changenumfast: function (goodcarid) {
       // console.log(this.goods.length)
-      this.hidit = true
       for (var i = 0; i < this.goods.length; i++) {
         if (this.goods[i].goods_car_id === goodcarid) {
           if (this.goods[i].goods_num > 0 && this.goods[i].goods_num < 1000) {
@@ -299,7 +317,6 @@ export default {
     margin-top: .746667rem;
     margin-right: 9.11%;
     background-size: 100% 100%;
-    
     background-repeat: no-repeat
   }
   .icon .choose{
@@ -335,28 +352,31 @@ export default {
     background-image: url("../assets/cart/offsale.png");
     background-size: 100% 100%;
   }
- .icon-logo .tag1
+ .icon-logo .tag12
     {
         display: table;
         position: absolute;
-        top: -0.3rem;
-        left: -0.27rem;
-        width: 1rem;
-        height: 1rem;
+        top: -0.2rem;
+        left: -0.15rem;
+        width: 0.8rem;
+        height: 0.8rem;
+        text-align: center;
         z-index:101;
     }
-  .icon-logo .tag1 p{
+  .icon-logo .tag12 .tag22{
       color: white;
       display: table-cell;
       vertical-align: middle;
-      font-size: 0.1rem;
+      height: 0.8rem;
+      width: 0.8rem;
+      font-size: 0.226667rem;
       letter-spacing: 0;
   }
   .icon-logo img{
     width: 100%;
     height: 100%;
   }
-  .content{
+  .contentcar{
     display: inline-block;
     float: left;
     height: 100%;
@@ -366,44 +386,55 @@ export default {
     font-size: 0;
     border-right: .026667rem solid #32ab42;
   }
-  .content .name{
+  .contentcar .name{
+    padding-top: 0.093333rem;
     font-size: .493333rem;
-    margin-bottom: .16rem;
+    display: inline-block;
+    width: 100%;
+   /* margin-bottom: 0.16rem;*/
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .content .desc{
+  .contentcar .desc{
     font-size: .28rem;
+    padding-top: 0.145rem;
+    display: inline-block;
+    width: 100%;
     color: rgba(0,0,0,0.6);
-    margin-bottom: .293333rem;
+    /*margin-bottom: .293333rem;*/
+    height: 0.32rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .content .price-line{
-    margin-bottom: .106667rem
+  .contentcar .price-line{
+    display: inline-block;
+    width: 100%;
+    height: 0.373333rem;
+    padding-top: 0.27rem;
+    /*margin-bottom: .106667rem*/
   }
-  .content .price{
+  .contentcar .price{
     font-size: .36rem;
     font-weight: bold;
     color: #32ab42;
   }
-  .content .old-price{
+  .contentcar .old-price{
     font-size: .28px;
     text-decoration: line-through;
   }
-  .content .price .attach{
+  .contentcar .price .attach{
     font-size: .293333rem;
   }
-  .content .deliver-time{
-    height: 0.4rem;
-    width: 100%;
-  }
-  .content .deliver-time p
+  .contentcar .deliver-time
   {
+    display: inline-block;
     white-space: nowrap;
+    padding-top: 0.13rem;
     overflow: hidden;
+    height: 0.32rem;
+    width: 100%;
     text-overflow: ellipsis;
     font-size: .25333rem;
   }
@@ -426,7 +457,7 @@ export default {
     margin-right: .026667rem;
     margin-top: .07rem;
     outline: none;
-    text-align: center
+    text-align: center;
   }
   .btn-minus{
     display: block;
@@ -444,7 +475,7 @@ export default {
   }
   .toPay{
     background-color: #fff;
-    position: absolute;
+    position: fixed;
     bottom: 1.58666rem;
     width: 100%;
     height: 1.213333rem;
@@ -477,27 +508,33 @@ export default {
     top: 0.453333rem;
     left: 1.2rem;
     width: 1.066667rem;
-    font-size: .293333rem;
+    font-size: .4rem;
   }
   .pay-sum-wrap{
     position: absolute;
     left: 2rem;
     top: 0;
     width: 49.3333%;
+    height: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .pay-sum-wrap p{
     font-size: .346667rem;
     margin-left: 4.53333%;
-    margin-top: .453333rem;
+    padding-top: .453333rem;
+    font-size: 0.38rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .pay-sum-wrap .pay-sum{
+    font-size: 0.39rem;
     font-weight: bold;
   }
   .pay-sum-wrap .deliver{
-    font-size: .28rem;
+    font-size: .3rem;
   }
   .toPayBtn{
     float: right;

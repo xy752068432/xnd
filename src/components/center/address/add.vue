@@ -12,13 +12,13 @@
         </div>
         <div id="content">
             <div class="addlist">
-                <label>收货人</label><input type="text" @blur="showit" @focus="hidit" @keyup="isname" name="" v-model="name" />
+                <label>收货人</label><input type="text"  name="" v-model="name" />
             </div>
            <div class="licut">
        
             </div>
             <div class="addlist">
-               <label>联系电话</label><input type="text" @blur="showit" @focus="hidit" @keyup="isphone" name="" v-model="phone"/>
+               <label>联系电话</label><input type="text"  @keyup="isphone" name="" v-model="phone"/>
             </div>
            <div class="licut">
        
@@ -32,7 +32,7 @@
        
            </div>
            <div id="txtarea">
-            <textarea @blur="showit" @focus="hidit" placeholder="请填写详细地址，如街道、楼牌号等" @keyup="isdetail" v-model="detail"></textarea>
+            <textarea id="ta" placeholder="请填写详细地址，如街道、楼牌号等" @focus="fontcolor" v-model="detail"></textarea>
            </div>
            <div class="licut">
        
@@ -70,11 +70,35 @@ export default {
       detail: '',
       sex: 0,
       state: true,
-      hidshow: true
+      hidshow: true,
+      screenHeight: '',
+      screenHeight1: ''
+    }
+  },
+  watch: {
+    screenHeight: function (newval, oldval) {
+      if (newval < this.screenHeight1) {
+        this.hidshow = false
+      } else {
+        this.hidshow = true
+      }
     }
   },
   created: function () {
     this.$router.name = this.$route.name
+    if (this.detail.length > 0) {
+      document.getElementById('ta').style.color = 'black'
+    }
+    // offsetTop
+  },
+  mounted: function () {
+    this.screenHeight1 = document.documentElement.clientHeight
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        that.screenHeight = document.documentElement.clientHeight
+      })()
+    }
   },
   methods: {
     areaResult: function (show, result) {
@@ -82,8 +106,8 @@ export default {
       this.result = result
     },
     save () {
-      if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name)) || !(/^1\d{10}$/.test(this.phone)) || !(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
-        utils.toToast('请填写正确的信息')
+      if (!(/^1\d{10}$/.test(this.phone))) {
+        utils.toToast('请填写正确的手机号')
       } else {
         if (this.state === true) {
           this.state = false
@@ -96,7 +120,7 @@ export default {
             detail: this.detail}, function (data) {
               utils.toToast('保存成功')
               if (this.$route.query.id1 === 'markadd1') {
-                this.$router.push({path: '/preorder'})
+                this.$router.push({path: '/preorder?goods_car_id=' + this.$route.query.goods_car_id})
               } else {
                 this.$router.push({path: '/person/address'})
               }
@@ -108,26 +132,21 @@ export default {
         }
       }
     },
-    isname: function () {
-      if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name))) {
-        utils.toToast('请输入汉字或字母')
-      }
-    },
     isphone: function () {
-      if (!(/^1\d{10}$/.test(this.phone))) {
-        utils.toToast('请输入正确的手机号')
+      if (!(/\d/.test(this.phone))) {
+        utils.toToast('请输入数字')
+      }
+      if (this.phone.length === 1) {
+        if (this.phone !== '1') {
+          utils.toToast('请输入1开头手机号')
+        }
+      }
+      if (this.phone.length > 11) {
+        utils.toToast('超出11位')
       }
     },
-    isdetail: function () {
-      if (!(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
-        utils.toToast('请输入正确的详细地址')
-      }
-    },
-    showit: function () {
-      this.hidshow = true
-    },
-    hidit: function () {
-      this.hidshow = false
+    fontcolor: function () {
+      document.getElementById('ta').style.color = 'black'
     }
   }
 }
@@ -150,6 +169,10 @@ export default {
 {
 	width: 0.2rem;
 	height: 0.333333rem;
+}
+input
+{
+  outline: none;
 }
 #back2 span
 {
@@ -191,7 +214,8 @@ export default {
 #makeoveradd
 {
 	position: absolute;
-	top: 0.413333rem;
+	padding-top: 0.133333rem;
+  top: 0.3rem;
 	right: 1.586667rem;
 }
 #toarrow
@@ -208,22 +232,26 @@ export default {
 textarea
 {
   margin-left: 0.013333rem;
-	width: 88%;
+	width: 89%;
 	height: 1.746667rem;
 	padding: 0.413333rem 0.533333rem 0.413333rem 0.533333rem;
 	font-size: 0.4rem;
+  border:none;
+  outline: none;
   color: #ADADAD;
 }
 #save
-{ position: absolute;
+{ 
+  position: absolute;
   left: 1.733333rem;
   bottom: 2.04rem;
   width: 6.773333rem;
-  height: 1.12rem;
+  height: 1.1rem;
   font-size: 0.4rem;
   background-color: white;
   border:green solid 0.013333rem;
   color: green;
+  border-radius: 6px;
 }
 #savecontent
 {
