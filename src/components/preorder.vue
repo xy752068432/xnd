@@ -174,8 +174,8 @@ export default {
           rootName: 'createorder',
           addr_id: this.addid,
           pay_id: 4,
-          agent_id: 1,
-          coupon_id: this.coupon
+          coupon_id: this.coupon,
+          from_agent_id: sessionStorage.getItem('from_agent_id')
         }, function (data) {
           this.item = data
           if (typeof window.WeixinJSBridge === 'undefined') {

@@ -54,6 +54,7 @@
 import request from './../../common/mrequest'
 export default {
   name: 'updateAgent',
+  props: ['agentId'],
   data () {
     return {
       username: '',
@@ -67,6 +68,21 @@ export default {
       isSubmit: false
     }
   },
+  created () {
+    var data = {
+      rootName: 'sub_agent_update',
+      'sub_agent_id': this.agentId
+    }
+    request.get(this.route, data, function (data) {
+      this.username = data.username
+      this.name = data.name
+      this.phone = data.phone
+      this.idNum = data.id_num
+      this.addr = data.address
+    }.bind(this), function () {
+
+    })
+  },
   methods: {
     update () {
       if (this.isSubmit) {
@@ -78,7 +94,8 @@ export default {
       }
       this.isSubmit = true
       var mydata = {
-        'rootName': 'agent',
+        rootName: 'sub_agent_update',
+        sub_agent_id: this.agentId,
         username: this.username,
         passwd: this.passwd,
         confirm: this.confirmPasswd,

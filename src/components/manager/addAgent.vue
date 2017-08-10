@@ -53,6 +53,7 @@
 import request from './../../common/mrequest'
 export default {
   name: 'addAgent',
+  props: ['agentId'],
   data () {
     return {
       username: '',
@@ -77,7 +78,8 @@ export default {
       }
       this.isSubmit = true
       var mydata = {
-        'rootName': 'agent',
+        rootName: 'sub_agent_update',
+        sub_agent_id: this.agentId,
         username: this.username,
         passwd: this.passwd,
         confirm: this.confirmPasswd,
@@ -86,7 +88,7 @@ export default {
         id_num: this.idNum,
         address: this.addr
       }
-      request.post(this.route, mydata, function (data) {
+      request.put(this.route, mydata, function (data) {
         if (data.hasOwnProperty('code') && data.code !== 0) {
           this.hintText = data.msg
         } else {

@@ -22,6 +22,14 @@ router.beforeEach((to, from, next) => {
     } else {
       localStorage.setItem('token', tokens)
     }
+    if (to.query.hasOwnProperty('from_agent_id')) {
+      var fromAgentIds = to.query.from_agent_id
+      if (fromAgentIds instanceof Array) {
+        sessionStorage.setItem('from_agent_id', fromAgentIds[fromAgentIds.length - 1])
+      } else {
+        sessionStorage.setItem('from_agent_id', fromAgentIds)
+      }
+    }
   }
   next()
 })
@@ -30,7 +38,7 @@ Vue.use(VueScroller)
 Vue.use(VueAwesomeSwiper)
 Vue.use(Toast)
 // Vue.prototype.$echarts = echarts
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

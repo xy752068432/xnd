@@ -75,6 +75,7 @@ var urls = {
 
 var getUrl = function (router, data) {
   data.uid = localStorage.getItem('uid')
+  data.from_agent_id = sessionStorage.getItem('from_agent_id')
   var routerName = data.rootName ? data.rootName : router.name
   data.rootName = undefined
   return preFix + urls[routerName].format(data)

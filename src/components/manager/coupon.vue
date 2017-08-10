@@ -2,22 +2,15 @@
 	<div>
     <managerheader></managerheader>
     <managerleft></managerleft>
-    <div>
+    <div style="margin-left:192px;">
       <div class="radio-horizontal">
         <div class="radio">
-          <button type="button" v-if="show1" @focus="toggle1"><img src="./../../assets/m_data/c_link/c_ed.png"></button>
-          <button type="button" v-if="!show1" @focus="toggle1"><img src="./../../assets/m_data/c_link/c_ing.png"></button>
+          <button type="button"><img src="./../../assets/m_data/c_link/c_ed.png"></button>
           <label class="control-label">查看优惠券</label>
-        </div>
-        <div class="radio">
-          <button type="button" v-if="show2" @focus="toggle2"><img src="./../../assets/m_data/c_link/c_ed.png"></button>
-          <button type="button" v-if="!show2" @focus="toggle2"><img src="./../../assets/m_data/c_link/c_ing.png"></button>
-          <label class="control-label">新增优惠券</label>
         </div>
       </div>
       <div class="split"></div>
-      <search v-if="show1"></search>
-      <add v-if="show2"></add>
+      <search></search>
     </div>
 	</div>
 </template>
@@ -25,30 +18,14 @@
 import managerheader from '../../components/manager/managerheader'
 import managerleft from '../../components/manager/managerleft'
 import search from './searchCoupon'
-import add from './addCoupon'
 export default {
   name: 'data',
-  data () {
-    return {
-      show1: true,
-      show2: false
-    }
-  },
   components: {
     managerheader,
     managerleft,
-    search,
-    add
+    search
   },
   methods: {
-    toggle1 () {
-      this.show1 = true
-      this.show2 = false
-    },
-    toggle2 () {
-      this.show1 = false
-      this.show2 = true
-    }
   }
 }
 </script>

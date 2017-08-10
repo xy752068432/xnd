@@ -141,7 +141,7 @@
  .form-horizontal .input-area {
   float: left;
  }
-  .control-label {
+  .login .control-label {
   width: 44px;
   padding-right: 9px;
   font-size: 22px;

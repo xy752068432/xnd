@@ -27,54 +27,35 @@
         </tr>
       </tbody>
     </table>
-    <footer class="page">
-      <div class="left">
-        <a href="javascript:void(0)" class="previous" @click="previous"></a>
-        <span class="current">{{ page + 1 }}</span>/
-        <span class="totel">{{ totel }}</span>
-        <a href="javascript:void(0)" class="next" @click="next"></a>
-        <a href="javascript:void(0)" class="end" @click="end">尾页</a>
-      </div>
-      <div class="right">
-        <input type="text" name="page" class="form-control" v-model="jpage">
-        <a href="javascript:void(0)" class="jump" @click="jump">跳转</a>
-      </div>
-    </footer>
+    <footerview :page="page" :jpage="jpage" :totel="totel" :limit="limit" v-on:pagnation="pagnation"></footerview>
   </div>
 </template>
 
 <script>
 import request from './../../common/mrequest'
+import footerview from './tableFoot'
 export default {
   name: 'searchCoupon',
   data () {
     return {
       items: [],
-      limit: 10,
+      limit: 2,
       page: 0,
       jpage: '',
       totel: 1,
       has: true
     }
   },
+  components: {
+    footerview
+  },
   created () {
     this.getData()
   },
   methods: {
-    next () {
-      this.page = (this.page + 1) % this.totel
-      this.getData()
-    },
-    end () {
-      this.page = this.totel - 1
-      this.getData()
-    },
-    jump () {
-      this.page = ((this.jpage - 1) % this.totel + this.totel) % this.totel
-      this.getData()
-    },
-    previous () {
-      this.page = (this.page - 1 + this.totel) % this.totel
+    pagnation (limit, page) {
+      this.limit = limit
+      this.page = page
       this.getData()
     },
     getData () {
@@ -92,9 +73,9 @@ export default {
           this.items = []
           this.has = false
         } else {
-          console.log('success')
           this.items = data.items
           this.totel = data.pages
+          this.has = true
         }
       }.bind(this), function (error) {
         alert(error)
