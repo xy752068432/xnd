@@ -58,8 +58,6 @@ var urls = {
   delorder:'/v1/user/{uid}/order/{order_id}',
   logistic:'/v1/user/{uid}/order/{order_id}/logistics',
   person:'/v1/user/{uid}/order/count',
-
-  c_time:'/v1/agent/{1}/order?search={agent_id}&start_time={start_time}&end_time={end_time}'
 }
 
 /*
@@ -115,7 +113,7 @@ var request = function (method, router, data, successFun, errorFun) {
   .catch(function (error) {
     console.log('失败')
     if ((/timeout/g.test(error))) {
-      errorFun(error)   
+      errorFun(error)
     }
     if (error.response) {
       // 特殊情况统一处理

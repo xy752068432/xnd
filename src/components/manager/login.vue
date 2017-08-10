@@ -66,9 +66,9 @@
         // console.log(this.$route)
         request.post(this.route, postdata, function (data) {
           if (!data.hasOwnProperty('code')) {
-            this.$router.push({path: '/manager/checkorder'})
-            localStorage.setItem('agent', data['id'])
+            localStorage.setItem('agent_id', data['id'])
             localStorage.setItem('token', data['token'])
+            this.$router.push({path: '/manager/checkorder'})
           } else {
             this.hintText = data['msg']
             this.passwd = ''

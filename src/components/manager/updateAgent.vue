@@ -1,6 +1,6 @@
 <template>
     <table class="form form-horizontal">
-    <div class="hint">{{ hintText }}</div>
+      <div class="hint">{{ hintText }}</div>
     <tbody>
       <tr>
         <td>
@@ -71,8 +71,9 @@ export default {
   created () {
     var data = {
       rootName: 'sub_agent_update',
-      'sub_agent_id': this.agentId
+      sub_agent_id: this.agentId
     }
+    console.log(this.agentId)
     request.get(this.route, data, function (data) {
       this.username = data.username
       this.name = data.name
@@ -108,7 +109,7 @@ export default {
         if (!data.hasOwnProperty('code') || data.code !== 0) {
           this.hintText = data.msg
         } else {
-          alert('更新信息成功成功')
+          alert('更新信息成功')
           this.username = ''
           this.passwd = ''
           this.confirmPasswd = ''
@@ -118,7 +119,7 @@ export default {
           this.addr = ''
         }
         this.isSubmit = false
-        console.log('111')
+        this.$router.push({path: '/manager/agent'})
       }.bind(this), function (error) {
         this.isSubmit = false
         console.log(error)
@@ -146,7 +147,30 @@ export default {
       return isIllege
     },
     remove () {
-
+      var mydata = {
+        rootName: 'sub_agent_update',
+        sub_agent_id: this.agentId
+      }
+      request.delete(this.route, mydata, function (data) {
+        if (!data.hasOwnProperty('code') || data.code !== 0) {
+          this.hintText = data.msg
+        } else {
+          alert('删除成功')
+          this.username = ''
+          this.passwd = ''
+          this.confirmPasswd = ''
+          this.name = ''
+          this.phone = ''
+          this.idNum = ''
+          this.addr = ''
+        }
+        this.isSubmit = false
+        this.$router.push({path: '/manager/agent'})
+      }.bind(this), function (error) {
+        this.isSubmit = false
+        console.log(error)
+        console.log('fail')
+      }.bind(this))
     }
   }
 }
@@ -195,10 +219,10 @@ export default {
   }
   .hint {
     position: absolute;
-    top: -50px;
+    top: 0;
     left: 0;
     width: 100%;
-    font-size: 16px;
+    font-size: 20px;
     color: red;
     text-align: center;
   }

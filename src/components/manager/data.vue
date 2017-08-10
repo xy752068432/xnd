@@ -8,7 +8,8 @@
       	  <img class="m_licut" src="../../assets/m_data/c_link/licut.png">
       	  <div class="c_time c_ed" @click="toggle(1)"></div>
       	  <select id="s_agent" v-model="agent_id">
-      	  	<option v-for="item in agent_ids">{{item.id}}</option>
+            <option :value="own">{{ own }} (自己)</option>
+      	  	<option v-for="item in agent_ids" :value="item.agent_id">{{item.agent_id}} ({{ item.nickname}})</option>
       	  </select>
         </div>
         <datachild v-bind:agent="agent_id"></datachild>
@@ -28,16 +29,19 @@ export default {
     datachild
   },
   created: function () {
+    this.own = localStorage.getItem('agent_id')
     mrequest.get(this.$router, {
-      rootName: 'agent'
+      rootName: 'agent',
+      status: 1
     }, function (data) {
-      this.agent_ids = data
+      this.agent_ids = data.items
     }.bind(this))
   },
   data: function () {
     return {
       agent_id: '',
-      agent_ids: []
+      agent_ids: [],
+      own: ''
     }
   }
 }

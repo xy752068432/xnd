@@ -32,14 +32,13 @@ var preFix = '/api'
  * @value {Object}
  */
 var urls = {
-  goods: '/v1/goods?page={page}&limit={limit}',
   agentLogin:'/v1/agent/login',
-  agent:'/v1/agent',
+  agent:'/v1/agent/{agent_id}/sub_agent?status={status}',
   sub_agent_update:'/v1/agent/{agent_id}/sub_agent/{sub_agent_id}',
   agentlist:'/v1/agent/{agent_id}/sub_agent?status={status}&limit={limit}&page={page}',
   coupon:'/v1/agent/{agent_id}/coupon?limit={limit}&page={page}',
-  c_time: '/v1/agent/{agent_id}/order?search={agent_id}&start_time={start_time}&end_time={end_time}&page={page}',
-  c_order: '/v1/agent/{agent_id}/order/{order_id}?search={agent_id}',
+  c_time: '/v1/agent/{agent_id}/order?search={search}&start_time={start_time}&end_time={end_time}&page={page}',
+  c_order: '/v1/agent/{agent_id}/order/{order_id}?search={search}',
   trade: '/v1/agent/{agent_id}/order/trade?search={search}&start_time={start_time}&end_time={end_time}',
 }
 
@@ -55,7 +54,7 @@ var urls = {
 } */
 
 var getUrl = function (router, data) {
-  data.agent = localStorage.getItem('agent_id')
+  data.agent_id = localStorage.getItem('agent_id')
   var routerName = data.rootName ? data.rootName : router.name
   data.rootName = undefined
   return preFix + urls[routerName].format(data)

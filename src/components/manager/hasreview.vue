@@ -47,7 +47,7 @@ export default {
       var index = el.getAttribute('index')
       var tableObj = document.getElementById('agentlist')
       var row = tableObj.rows[index]
-      var agentId = row.cells[2].innerText
+      var agentId = row.cells[6].innerText
       this.$emit('update', agentId)
     }
   }

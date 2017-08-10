@@ -12,6 +12,8 @@ router.beforeEach((to, from, next) => {
   if (to.query.uid && to.query.token) {
     var uids = to.query.uid
     var tokens = to.query.token
+    console.log(to)
+    // to.url = to.url + sessionStorage.getItem('from_agent_id')
     if (uids instanceof Array) {
       localStorage.setItem('uid', uids[uids.length - 1])
     } else {
@@ -22,13 +24,13 @@ router.beforeEach((to, from, next) => {
     } else {
       localStorage.setItem('token', tokens)
     }
-    if (to.query.hasOwnProperty('from_agent_id')) {
-      var fromAgentIds = to.query.from_agent_id
-      if (fromAgentIds instanceof Array) {
-        sessionStorage.setItem('from_agent_id', fromAgentIds[fromAgentIds.length - 1])
-      } else {
-        sessionStorage.setItem('from_agent_id', fromAgentIds)
-      }
+  }
+  if (to.query.hasOwnProperty('from_agent_id')) {
+    var fromAgentIds = to.query.from_agent_id
+    if (fromAgentIds instanceof Array) {
+      sessionStorage.setItem('from_agent_id', fromAgentIds[fromAgentIds.length - 1])
+    } else {
+      sessionStorage.setItem('from_agent_id', fromAgentIds)
     }
   }
   next()

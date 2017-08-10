@@ -111,7 +111,7 @@ export default {
           var date2 = this.date2.replace(reg, ' ')
           mrequest.get(this.$router, {
             rootName: 'c_time',
-            agent_id: this.agent,
+            search: this.agent,
             start_time: date1,
             end_time: date2,
             page: 1
@@ -151,7 +151,7 @@ export default {
           var date2 = this.date2.replace(reg, ' ')
           mrequest.get(this.$router, {
             rootName: 'c_time',
-            agent_id: this.agent,
+            search: this.agent,
             start_time: date1,
             end_time: date2,
             page: this.page
@@ -187,7 +187,7 @@ export default {
             var date2 = this.date2.replace(reg, ' ')
             mrequest.get(this.$router, {
               rootName: 'c_time',
-              agent_id: this.agent,
+              search: this.agent,
               start_time: date1,
               end_time: date2,
               page: this.page
@@ -218,7 +218,7 @@ export default {
             var date2 = this.date2.replace(reg, ' ')
             mrequest.get(this.$router, {
               rootName: 'c_time',
-              agent_id: this.agent,
+              search: this.agent,
               start_time: date1,
               end_time: date2,
               page: this.apage
@@ -253,7 +253,7 @@ export default {
           var date2 = this.date2.replace(reg, ' ')
           mrequest.get(this.$router, {
             rootName: 'c_time',
-            agent_id: this.agent,
+            search: this.agent,
             start_time: date1,
             end_time: date2,
             page: this.maxpage
@@ -274,7 +274,7 @@ export default {
           this.state1 = false
           mrequest.get(this.$router, {
             rootName: 'c_order',
-            agent_id: this.agent,
+            search: this.agent,
             order_id: this.data3
           }, function (data) {
             this.state1 = true

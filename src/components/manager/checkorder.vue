@@ -9,7 +9,8 @@
       	  <div class="c_time1" @click="toggle(1)" :class="state1?'c_ed1' : 'c_ing1'"></div>
       	  <div class="c_order1" @click="toggle(2)" :class="!state1? 'c_ed1' : 'c_ing1'"></div>
       	  <select id="s_agent1" v-model="agent_id">
-      	  	<option v-for="item in agent_ids">{{item.id}}</option>
+            <option :value="own" selected>{{ own }} (自己)</option>
+      	  	<option v-for="item in agent_ids" :value="item.agent_id">{{item.agent_id}}({{ item.nickname }})</option>
       	  </select>
         </div>
         <cochild v-bind:agent="agent_id" v-bind:state="state"></cochild>
@@ -33,16 +34,17 @@ export default {
       state1: true,
       agent_id: '',
       state: '',
-      agent_ids: []
+      agent_ids: [],
+      own: ''
     }
   },
   created: function () {
-    localStorage.setItem('agent_id', '2')
-    localStorage.setItem('token', '$2y$10$6qpApqBLlXb1f980HPw.eOaxo7ZBIcnlUKA9NFsZ2vIxaF5Cf1g7C')
+    this.own = localStorage.getItem('agent_id')
     mrequest.get(this.$router, {
-      rootName: 'agent'
+      rootName: 'agent',
+      status: 1
     }, function (data) {
-      this.agent_ids = data
+      this.agent_ids = data.items
     }.bind(this))
   },
   methods: {
@@ -127,7 +129,7 @@ export default {
 }
 #s_agent1
 {
-	width: 75px;
+	width: 130px;
 	height: 28px;
 	position: absolute;
 	top: 28px;
