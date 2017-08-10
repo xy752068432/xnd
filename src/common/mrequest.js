@@ -3,21 +3,21 @@
  */
 import axios from 'axios'
 
-String.prototype.format = function (args1) {
+String.prototype.format = function (args) {
   var result = this
   if (arguments.length > 0) {
-    if (arguments.length === 1 && typeof (args1) === 'object') {
-      for (var key in args1) {
-        if (args1[key] !== undefined) {
-          var mreg = new RegExp('({' + key + '})', 'g')
-          result = result.replace(mreg, args1[key])
+    if (arguments.length === 1 && typeof (args) === 'object') {
+      for (var key in args) {
+        if (args[key] !== undefined) {
+          var reg = new RegExp('({' + key + '})', 'g')
+          result = result.replace(reg, args[key])
         }
       }
     } else {
       for (var i = 0; i < arguments.length; i++) {
         if (arguments[i] !== undefined) {
-          var mreg = new RegExp('({)' + i + '(})', 'g')
-          result = result.replace(mreg, arguments[i])
+          var reg = new RegExp('({)' + i + '(})', 'g')
+          result = result.replace(reg, arguments[i])
         }
       }
     }
@@ -37,9 +37,9 @@ var urls = {
   agent:'/v1/agent',
   addcoupon:'/v1/agent/{agent_id}/coupon',
   coupon:'/v1/agent/{agent_id}/coupon?limit={limit}&page={page}',
-  c_time: '/v1/agent/1/order?search={agent_id}&start_time={start_time}&end_time={end_time}&page={page}',
-  c_order: '/v1/agent/1/order/{order_id}?search={agent_id}',
-  trade: '/v1/agent/1/order/trade?search={search}&start_time={start_time}&end_time={end_time}'
+  c_time: '/v1/agent/{agent_id}/order?search={agent_id}&start_time={start_time}&end_time={end_time}&page={page}',
+  c_order: '/v1/agent/{agent_id}/order/{order_id}?search={agent_id}',
+  trade: '/v1/agent/{agent_id}/order/trade?search={search}&start_time={start_time}&end_time={end_time}',
 }
 
 /*

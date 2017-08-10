@@ -1,23 +1,21 @@
 <template>
     <div>
     <headerbar></headerbar>
-      <router-link to="/person/address">
-    	  <div id="back2">
+    	  <div id="back2" @click="back">
            <img class="arrowwh" src="../../../assets/back.png">
            <span>我的地址</span>
         </div>
-      </router-link>
         <div class="licut">
   	   
         </div>
         <div class="addlist">
-        	<label>收货人</label><input type="text" @keyup="isname" @blur="showit" @focus="hidit1" name="" v-model="name" />
+        	<label>收货人</label><input type="text" name="" v-model="name" />
         </div>
         <div class="licut">
   	   
         </div>
         <div class="addlist">
-        	<label>联系电话</label><input type="text" @keyup="isphone" @blur="showit" @focus="hidit1" name="" v-model="phone"/>
+        	<label>联系电话</label><input type="text" @keyup="isphone" name="" v-model="phone"/>
         </div>
         <div class="licut">
   	   
@@ -34,7 +32,7 @@
   	   
         </div>
         <div id="txtarea">
-        	<textarea placeholder="请填写详细地址，如街道、楼牌号等" @blur="showit" @focus="hidit1" @keyup="isdetail" v-model="detail"></textarea>
+        	<textarea id="ta" @focus="fontcolor" placeholder="请填写详细地址，如街道、楼牌号等" v-model="detail"></textarea>
         </div>
         <div class="licut">
   	   
@@ -80,7 +78,18 @@ export default {
       citycode: '',
       provincecode: '',
       state: true,
-      hidshow: true
+      hidshow: true,
+      screenHeight: '',
+      screenHeight1: ''
+    }
+  },
+  watch: {
+    screenHeight: function (newval, oldval) {
+      if (newval < this.screenHeight1) {
+        this.hidshow = false
+      } else {
+        this.hidshow = true
+      }
     }
   },
   created: function () {
@@ -88,7 +97,7 @@ export default {
     this.addr_id = this.$route.query.addr_id
     request.get(this.$router, {
       addr_id: this.addr_id}, function (data) {
-        console.log(data)
+        // console.log(data)
         this.name = data.msg.name
         this.phone = data.msg.phone
         this.detail = data.msg.location
@@ -98,7 +107,20 @@ export default {
         this.areacode = data.msg.area_id
         this.citycode = data.msg.city_id
         this.provincecode = data.msg.province_id
+        console.log(document.getElementById('ta').value.length)
+        if (document.getElementById('ta').value.length === 0) {
+          document.getElementById('ta').style.color = 'black'
+        }
       }.bind(this))
+  },
+  mounted: function () {
+    this.screenHeight1 = document.documentElement.clientHeight
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        that.screenHeight = document.documentElement.clientHeight
+      })()
+    }
   },
   methods: {
     areaResult: function (show, result) {
@@ -115,8 +137,8 @@ export default {
         this.areacode = this.result.area.code
         this.provincecode = this.result.province.code
       }
-      if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name)) || !(/^1\d{10}$/.test(this.phone)) || !(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
-        utils.toToast('请填写正确的信息')
+      if (!(/^1\d{10}$/.test(this.phone))) {
+        utils.toToast('请填写正确的手机号')
       } else {
         if (this.state === true) {
           this.state = false
@@ -130,7 +152,12 @@ export default {
             area: this.areacode,
             detail: this.detail}, function (data) {
               utils.toToast('保存成功')
-              this.$router.push({path: '/person/address'})
+              this.state = true
+              if (this.$route.query.goods_car_id1) {
+                this.$router.push({path: '/person/address?addr_id=' + this.$route.query.addr_id + '&goods_car_id=' + this.$route.query.goods_car_id1})
+              } else {
+                this.$router.push({path: '/person/address'})
+              }
             }.bind(this), function (err) {
               console.log(err)
               this.state = true
@@ -139,26 +166,20 @@ export default {
         }
       }
     },
-    isname: function () {
-      if (!(/^[a-zA-Z\u4e00-\u9fa5]+$/.test(this.name))) {
-        utils.toToast('请输入汉字或字母')
-      }
-    },
     isphone: function () {
       if (!(/^1\d{10}$/.test(this.phone))) {
         utils.toToast('请输入正确的手机号')
       }
     },
-    isdetail: function () {
-      if (!(/^[\u0391-\uFFE5\d]+$/.test(this.detail))) {
-        utils.toToast('请输入正确的详细地址')
+    back: function () {
+      if (this.$route.query.goods_car_id1) {
+        this.$router.push({path: '/person/address?addr_id=' + this.$route.query.addr_id + '&goods_car_id=' + this.$route.query.goods_car_id1})
+      } else {
+        this.$router.push({path: '/person/address'})
       }
     },
-    showit: function () {
-      this.hidshow = true
-    },
-    hidit1: function () {
-      this.hidshow = false
+    fontcolor: function () {
+      document.getElementById('ta').style.color = 'black'
     }
   }
 }
@@ -214,11 +235,6 @@ export default {
 	top: 0.2rem;
 	left: 2.546667rem;
 }
-#txtarea
-{
-	width: 100%;
-	height: 2.573333rem;
-}
 #makeoveradd
 {
 	position: absolute;
@@ -233,7 +249,8 @@ export default {
 {
   position: absolute;
   text-align: right;
-  top: 0.413333rem;
+  padding-top: 0.133333rem;
+  top: 0.3rem;
   right: 1.586667rem;
    width: 5.333333rem;
   overflow-x: hidden;
@@ -250,13 +267,19 @@ export default {
   height: 2.573333rem;
   width: 100%;
 }
+input
+{
+  outline: none;
+}
 textarea
 {
   margin-left: 0.013333rem;
-	width: 88%;
+	width: 89%;
 	height: 1.746667rem;
 	padding: 0.413333rem 0.533333rem 0.413333rem 0.533333rem;
 	font-size: 0.4rem;
+  border-style: none;
+  outline: none;
   color: #ADADAD;
 }
 #save1
@@ -264,11 +287,12 @@ textarea
   left: 1.733333rem;
   bottom: 2.04rem;
   width: 6.773333rem;
-  height: 1.12rem;
+  height: 1.1rem;
   font-size: 0.4rem;
   background-color: white;
   border:green solid 0.013333rem;
   color: green;
+  border-radius: 6px;
 }
 #savecontent
 {

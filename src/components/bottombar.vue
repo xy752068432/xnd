@@ -19,11 +19,14 @@
 <script>
 </script>
 <style scoped>
-    .line-bottom{
+#bottombar
+{
+  position: fixed;
+  bottom: 0;
+}
+  .line-bottom{
     width: 100%;
     height: 0.093333rem;
-    position: absolute;
-    bottom: 1.493333rem;
   }
   .line-bottom img{
     width: 100%;
@@ -36,11 +39,8 @@
     width: 100%;
     height: 1.493333rem;
     line-height: 1.0rem;
-    position: absolute;
-    bottom: 0;
   }
   .tab-item{
-    
     text-align: center;
   }
   .tab-item.home a{
@@ -75,7 +75,18 @@
     text-decoration: none;
     background-repeat: no-repeat;
     background-position: center 0.17333rem;
-    background-size: .666667rem .666667rem;
+  }
+  .home a
+  {
+    background-size: 0.68rem 0.68rem;
+  }
+  .cart a
+  {
+    background-size: 0.706667rem 0.653333rem;
+  }
+  .info a
+  {
+    background-size: 0.613333rem 0.586667rem;
   }
   .tab-item a.router-link-exact-active{
     color: #32ab42;

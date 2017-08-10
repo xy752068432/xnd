@@ -1,5 +1,6 @@
 <template>
   <div class="addcart">
+    <div id="added">
         <div class="btn-bar-wrap">
             <router-link to='/'>
             <div class="btn-home btn">
@@ -16,6 +17,13 @@
             <div class="btn-addCart" @click="addCart" :class="goodsExp.can_click ? 'onsale' : 'saleout'">
             </div>
         </div>
+        <transition name="fade3">
+            <div id="noaddt3" v-show="noaddtoast3">
+                <img src="../assets/detail/added.png">
+            </div>
+        </transition>
+    </div>
+
   </div>
 </template>
 <script>
@@ -27,35 +35,46 @@
       data () {
         return {
           cartAll: 0,
-          state1: false
+          state1: false,
+          noaddtoast3: false
         }
       },
       created: function () {
         this.$router.name = this.$route.name
         if (localStorage.getItem('uid') || localStorage.getItem('token')) {
           request.get(this.$router, {rootName: 'cartAll'}, function (data) {
-            console.log(data.num)
-            this.cartAll = data.num
-          }.bind(this))
-          request.get(this.$router, {goodsId: this.goodsId}, function (data) {
-            if (data.car.can_click === 1) {
-              this.state1 = true
+            if (data.num < 100) {
+              this.cartAll = data.num
             } else {
-              this.state1 = false
+              this.cartAll = 99
             }
           }.bind(this))
         }
+        request.get(this.$router, {goodsId: this.goodsId}, function (data) {
+          if (data.car.can_click === 1) {
+            this.state1 = true
+          } else {
+            this.state1 = false
+          }
+        }.bind(this))
       },
       methods: {
         addCart: function () {
+          var that = this
           request.post(this.$router, {rootName: 'addCart', goods_id: this.goodsId, goods_num: 1}, function (data) {
-            if (this.state1 === true) {
-              utils.toToast('加入购物车成功')
+            if (this.state1 === true && data.code !== 8) {
+              // utils.toToast('加入购物车成功')
+              that.noaddtoast3 = true
+              setTimeout(function () {
+                that.noaddtoast3 = false
+              }, 1000)
               request.get(this.$router, {rootName: 'cartAll'}, function (data) {
-                console.log(data.num)
+                // console.log(data.num)
                 this.cartAll = data.num
               }.bind(this))
               // this.cartAll++
+            } else {
+              utils.toToast('商品未开售或者已下架')
             }
           }.bind(this))
         }
@@ -140,6 +159,23 @@
     .saleout{
         /*商品下架或未开售样式*/
         background-image: url("../assets/detail/saleout.png");
+    }
+    .fade3-enter-active, .fade3-leave-active {
+      transition: opacity .5s
+    }
+    .fade3-enter, .fade3-leave-to /* .fade-leave-active in <2.1.8 */ {
+      opacity: 0
+    }
+    #noaddt3
+    {
+      position: absolute;
+      top: -530%;
+      left: 25.733%;
+    }
+    #noaddt3 img
+    {
+      width: 4.853333rem;
+      height: 3.12rem;
     }
 </style>
 

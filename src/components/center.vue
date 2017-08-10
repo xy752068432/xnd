@@ -7,15 +7,15 @@
               <img :src="this.imgurl"/>
           </div>
         
-          <div id="meslogo">
+          <!-- <div id="meslogo">
             <img id="meslogo1" src="../assets/personcenter/meslogo.png"/>
             <div id="mes">
                 <img src="../assets/personcenter/mes.png"/>
             </div>
-          </div>
+          </div> -->
           
           <div id="mestxt">
-            <p>BUG MAKER</p>
+            <p>{{this.nickname}}</p>
           </div>
         </div>
         <div class="licut">
@@ -26,22 +26,19 @@
                <div id="willpay1" class="willpay will wills" @click="towillpay">
                  <img class="willimg" id="willpay" src="../assets/personcenter/willpay.png"/>
                  <p>待付款</p>
-                 <div class="willmes" v-show="this.data.WAIT_PAY"><img src="../assets/personcenter/willmes.png"></div>
-                 <div class="willmestxt" v-show="this.data.WAIT_PAY"><p>{{this.data.WAIT_PAY
+                 <div class="willmes" v-show="this.data.WAIT_PAY"><p>{{this.data.WAIT_PAY
                 }}</p></div>
                </div>
                <div class="willout will wills" @click="towillgive">
                  <img class="willimg" id="willout" src="../assets/personcenter/willout.png">
                  <p>待发货</p>
-                 <div class="willmes" v-show="this.data.WAIT_SEND"><img src="../assets/personcenter/willmes.png"/></div>
-                 <div class="willmestxt" v-show="this.data.WAIT_SEND"><p>{{this.data.WAIT_SEND
+                 <div class="willmes" v-show="this.data.WAIT_SEND"><p>{{this.data.WAIT_SEND
                 }}</p></div>
                </div>
                <div class="wills" id="willget1" @click="towillget">
                  <img class="willimg" id="willget" src="../assets/personcenter/willget.png"/>
                  <p>待收货</p>
-                 <div class="willmes" v-show="this.data.WAIT_RECV"><img  src="../assets/personcenter/willmes.png"/></div>
-                 <div class="willmestxt" v-show="this.data.WAIT_RECV"><p>{{this.data.WAIT_RECV
+                 <div class="willmes" v-show="this.data.WAIT_RECV"><p>{{this.data.WAIT_RECV
                 }}</p></div>
                </div>
             </div>
@@ -98,17 +95,18 @@ export default {
   name: 'center',
   data () {
     return {
-      data: '',
-      imgurl: ''
+      data: [],
+      imgurl: '',
+      nickname: ''
     }
   },
   created: function () {
     this.$router.name = this.$route.name
-    this.imgurl = localStorage.getItem('headimgurl')
     request.get(this.$router, {}, function (data) {
       this.data = data
     }.bind(this))
     request.get(this.$router, {rootName: 'UserInfo'}, function (data) {
+      this.nickname = data.nickname
       this.imgurl = data.headimgurl
     }.bind(this))
   },
@@ -229,19 +227,31 @@ export default {
   width: 0.6rem;
   height: 0.586667rem;
 }
-.willmes img
+.willmes
 {
-  width: 0.466667rem;
-  height: 0.466667rem;
+  display: table;
+  width: 0.4666rem;
+  height: 0.4666rem;
+  background-image: url(../assets/personcenter/willmes.png);
+  background-size: cover;
   position: absolute;
   top: 0.4rem;
   right: -0.025rem;
+  text-align: center;
+}
+.willmes p
+{
+  display: table-cell;
+  vertical-align: middle;
+  color: white;
+  letter-spacing: 0;
+  font-size: 0.3rem;
 }
 .willmestxt 
 {
   position: absolute;
-  top: 0.4777rem;
-  left: 0.673333rem;
+  top: 0.49999rem;
+  left: 0.679999rem;
   color: white;
   font-size: 0.3rem;
   width: 0.466667rem;
@@ -282,7 +292,7 @@ export default {
 .arrow
 {
   position: absolute;
-  right: 1rem;
+  right: 0.573333rem;
   top: 0.6rem;
 }
 .arrow img

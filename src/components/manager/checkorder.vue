@@ -37,6 +37,8 @@ export default {
     }
   },
   created: function () {
+    localStorage.setItem('agent_id', '2')
+    localStorage.setItem('token', '$2y$10$6qpApqBLlXb1f980HPw.eOaxo7ZBIcnlUKA9NFsZ2vIxaF5Cf1g7C')
     mrequest.get(this.$router, {
       rootName: 'agent'
     }, function (data) {

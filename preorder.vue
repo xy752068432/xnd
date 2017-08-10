@@ -1,17 +1,17 @@
 <template>
-
+  
   <div id="orders">
   <headerbar></headerbar>
         <div id="address" @click="toaddress">
             <div class="address-title"><img src="../assets/cart/address.png"><span>收货地址</span></div>
             <div class="address-name">{{ordercontent.name}}<span class="address-tel">{{ordercontent.phone}}</span></div>
-
+            
             <div class="address-text">{{ordercontent.fullAddr}}</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow">
         </div>
         <div class="licut">
-
-            </div>
+       
+            </div> 
         <div class="deliver1">
             <div class="deliver-title">发货时间</div>
             <div class="deliver-time">
@@ -20,17 +20,15 @@
             </div>
         </div>
         <div class="licut">
-
-            </div>
+       
+            </div> 
         <div class="discount" @click="toastShow">
             <div class="discount-title">优惠码</div>
-            <div class="coupontxt" v-show="this.txtsh">请输入可使用的优惠码</div>
-            <div class="coupontxt" v-show="!this.txtsh">{{coupond}}</div>
             <img src="../assets/cart/right-arrow.png" class="right-arrow" >
         </div>
         <div class="licut">
-
-            </div>
+       
+            </div> 
        <div class="order-list">
             <ul>
                 <li class="list-title">订单详情</li>
@@ -39,12 +37,12 @@
                 </li>
                 <li v-for="item in good_car_info">
                     <span class="list-left">{{item.name}}：</span><span class="list-right-item"><span class="amount">{{item.num}}{{item.unit}}</span><span class="price">{{item.value}}</span></span>
-                </li>
+                </li> 
             </ul>
         </div>
         <div class="toCheck">
             <span class="check-all-money">合计：{{totalmoney}}</span>
-            <span class="check-btn" id="cbtn" @click.stop="pay"><img src="../assets/cart/toCheck.png"></span>
+            <span class="check-btn" @click.stop="pay"></span>
         </div>
         <!--优惠码输入弹窗-->
         <transition name="fade">
@@ -52,16 +50,11 @@
                 <div class="discount-toast" v-show="toastDisplay">
                     <input type="text" placeholder="请输入优惠码" v-model="idnum">
                     <div class="discount-toast-confirm">
-                        <div class="btn" @click="toastShow" id="btn1">取消</div>
+                        <div class="btn" @click="toastShow">取消</div>
                         <div class="btn" @click.stop="useidnum">确认</div>
-                    </div>
+                    </div>    
                 </div>
-            </div>
-        </transition>
-        <transition name="fade1">
-            <div id="noaddt" v-show="noaddtoast">
-                <img src="../assets/noadd.png">
-            </div>
+            </div>    
         </transition>
   </div>
 </template>
@@ -69,6 +62,7 @@
 import headerbar from '../components/headerbar'
 import request from '../common/request'
 import utils from '../common/utils'
+import wx from 'weixin-js-sdk'
 export default {
   name: 'preorder',
   components: {
@@ -90,14 +84,11 @@ export default {
       item: [],
       minurl: '',
       minurls: [],
-      noaddtoast: false,
-      coupontxt: '',
-      txtsh: true,
-      coupond: ''
+      item1: '',
+      item2: []
     }
   },
   created: function () {
-    var that = this
     this.minurl = location.href
     this.minurls = this.minurl.split('#')
     // console.log(this.minurl[pos - 1])
@@ -105,6 +96,10 @@ export default {
     if (this.minurl[pos - 1] !== '?') {
       location.href = this.minurls[0] + '?#' + this.minurls[1]
     }
+    this.minurls = this.minurl.split('#')
+    this.minurl = this.minurls[0] + '?#' + this.minurls[1]
+   // location.href = this.minurl
+    // console.log(this.minurl)
     this.$router.name = this.$route.name
     if (this.$route.query.addid) {
       this.addid = this.$route.query.addid
@@ -113,19 +108,15 @@ export default {
       goods_car_ids: this.$route.query.goods_car_id,
       addr_id: this.addid
     }, function (data) {
-      if (data.code && data.code === 37) {
-        // utils.toToast('没有收货地址')
-        this.noaddtoast = true
-        setTimeout(function () {
-          that.$router.push({path: '/person/address/add?id1=markadd1&goods_car_id=' + that.$route.query.goods_car_id})
-        }, 500)
+      if (data.code && data.code === 11) {
+        utils.toToast('没有收货地址')
+        this.$router.push({path: '/person/address/add?id1=markadd1'})
       } else {
         this.ordercontent = data.rcv_info.msg
         this.order_info_stime = data.orders_info.send_time
         this.price_info = data.orders_info.price_info
         this.good_car_info = data.orders_info.goods_car_info
         this.totalmoney = data.orders_info.price_info[1].value
-        this.coupontxt = data.orders_info.coupon
         for (var i = 0; i < this.good_car_info.length; i++) {
           this.goods_id.push(this.good_car_info[i].goods_id)
         }
@@ -153,8 +144,6 @@ export default {
             this.toastDisplay = !this.toastDisplay
             this.idnum = ''
             this.coupon = data.msg.id
-            this.coupond = data.msg.coupon_text
-            this.txtsh = false
             utils.toToast('使用成功')
           } else {
             this.idnum = ''
@@ -174,47 +163,67 @@ export default {
           rootName: 'createorder',
           addr_id: this.addid,
           pay_id: 4,
-          agent_id: 1,
           coupon_id: this.coupon
         }, function (data) {
-          this.item = data
-          if (typeof window.WeixinJSBridge === 'undefined') {
-            if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
-            } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
-              document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
-            }
-          } else {
-            this.onBridgeReady()
-            this.state = true
+          for (var i = 0; i < data.length; i++) {
+            this.item1 = data[i] + ','
           }
+          console.log('获取订单字符串成功')
+          console.log(this.minurl)
+          request.get(this.$router, {
+            url: this.minurl,
+            rootName: 'pay'
+          }, function (data) {
+            this.item = data
+            console.log(data)
+            wx.config({
+              debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+              appId: this.item.appid, // 必填，公众号的唯一标识
+              timestamp: this.item.timestamp, // 必填，生成签名的时间戳
+              nonceStr: this.item.nonceStr, // 必填，生成签名的随机串
+              signature: this.item.signature, // 必填，签名，见附录1
+              jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            })
+            wx.ready(function () {
+            // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+              request.get(this.$router, {
+                order_ids: this.item1,
+                pay_id: 4,
+                rootName: 'paying'
+              }, function (data) {
+                console.log(data)
+                this.item2 = data
+                console.log('支付1成功')
+                wx.chooseWXPay({
+                  timestamp: this.item2.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+                  nonceStr: this.item2.nonce_str, // 支付签名随机串，不长于 32 位
+                  package: 'prepay_id=' + this.item2.prepay_id, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                  signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                  paySign: this.item2.paySign, // 支付签名
+                  success: function (res) {
+                    if (res.errMsg === 'chooseWXPay:ok') {
+                      alert('支付成功')
+                    } else {
+                      alert('支付失败')
+                    }
+                  }
+                })
+              }.bind(this))
+             // utils.toToast('支付成功')
+             // this.$router.push({path: '/person/order/order?status=2'})
+            })
+              // wx.error(function(res){
+              // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+                // console.log(err)
+               //  this.$router.push({path: '/person/order/order?status=1'})
+             // })
+          }.bind(this))
         }.bind(this), function (err) {
           console.log(err)
           this.state = true
           utils.toToast('创建订单失败')
         }.bind(this))
       }
-    },
-    onBridgeReady: function () {
-      window.WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', {
-          'appId': this.item.appid,     // 公众号名称，由商户传入
-          'timeStamp': this.item.timestamp,         // 时间戳，自1970年以来的秒数
-          'nonceStr': this.item.nonce_str, // 随机串
-          'package': 'prepay_id=' + this.item.prepay_id,
-          'signType': 'MD5',         // 微信签名方式
-          'paySign': this.item.paySign // 微信签名
-        },
-        function (res) {
-          if (res.err_msg === 'get_brand_wcpay_request:ok') {
-            utils.toToast('支付成功')
-            this.$router.push({path: '/person/order/order?status=2'})
-          } else {
-            utils.toToast('支付失败')
-            this.$router.push({path: '/person/order/order?status=1'})
-          }    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠
-        }.bind(this))
     }
   }
 }
@@ -286,7 +295,7 @@ export default {
         text-align: left;
         font-size: .413333rem;
         margin-bottom: .28rem;
-    }
+    }    
     .discount .discount-title{
         text-align: left;
         font-size: .413333rem;
@@ -306,7 +315,7 @@ export default {
     }
     .discount img{
         position: absolute;
-        bottom: 0.6666rem;
+        bottom: .4rem;
         right: .573333rem;
         width: .2rem;
         height: .333333rem;
@@ -338,10 +347,6 @@ export default {
         visibility: hidden;
     }
     .order-list li .list-left{
-        width: 3.333333rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         text-align: left;
         float: left;
     }
@@ -364,7 +369,7 @@ export default {
         width: 100%;
         height: 1.533333rem;
         padding: 0 .573333rem;
-        border-top: .026667rem solid #ecedef;
+        border-top: .026667rem solid #ecedef; 
         box-sizing: border-box;
         font-size: 0;
         background-color: #fff;
@@ -379,12 +384,8 @@ export default {
         margin-top: .386666rem;
         width: 3.08rem;
         height: .746667rem;
-        background-size: 100% 100%;
-    }
-    #cbtn img
-    {
-      width: 3.08rem;
-      height: 0.746667rem;
+        background-image:url("../assets/cart/toCheck.png");
+        background-size: 100% 100%; 
     }
     .fade-enter-active, .fade-leave-active {
         transition: opacity .5s
@@ -403,73 +404,36 @@ export default {
     }
     .discount-toast{
         z-index: 2000;
-        width: 70%;
-        height: 3.106667rem;
+        width: 60%;
+        height: 2.666667rem;
         background-color: #fff;
         position: absolute;
-        top: 45%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
         border-radius: 3px;
         transition: 2s;
     }
     .discount-toast input{
-        width: 87.5%;
-        height: 0.786667rem;
+        width: 80%;
+        height: .64rem;
         outline: none;
         border: 1px solid #ecedef;
-        border-radius: 3px;
-        font-size: 0.5rem;
-        margin-top: 0.606667rem;
+        font-size: .373333rem;
+        line-height: .64rem;
     }
     .discount-toast .discount-toast-confirm{
         width: 100%;
         position: absolute;
         bottom: 0;
-        height: 1.093333rem;
-        border-top: solid #ADADAD 1px;
+        padding: .133333rem 0;
     }
     .discount-toast .discount-toast-confirm .btn{
-        display:inline-block;
         cursor: pointer;
         float: left;
-        width: 49%;
-        margin-top: 0.106667rem;
-        padding-top: 0.186667rem;
-        height: 0.693333rem;
+        width: 50%;
         font-size: .48rem;
         color: #31ab43;
         text-align: center;
-    }
-    .discount-toast .discount-toast-confirm #btn1
-    {
-      border-right: solid #ADADAD 1px;
-      color: black;
-    }
-    .fade1-enter-active, .fade1-leave-active {
-        transition: opacity .5s
-    }
-    .fade1-enter, .fade1-leave-to /* .fade-leave-active in <2.1.8 */ {
-        opacity: 0
-    }
-    #noaddt
-    {
-      position: absolute;
-      top: 23%;
-      left: 25.733%;
-    }
-    #noaddt img
-    {
-      width: 4.853333rem;
-      height: 3.12rem;
-    }
-    .coupontxt
-    {
-      color: black;
-      display: block;
-      height: 0.666667rem;
-      z-index: 999;
-      font-size: 0.346667rem;
-      text-align: left;
     }
 </style>

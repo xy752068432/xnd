@@ -2,31 +2,37 @@
   <div id="detail">
   <headerbar></headerbar>
     <div class="swiper-wrap">  
-    <swiper :options="swiperOption"  ref="mySwiper" class="swiper">  
-       <!-- 这部分放你要渲染的那些内容 -->  
-       <swiper-slide class="slide" v-for="(url,index) in goodsImg" :key="index"><div ><img :src="url"></div></swiper-slide>
-       <!-- 这是轮播的小圆点 -->  
-       <div class="swiper-pagination" slot="pagination"></div>
+      <swiper :options="swiperOption"  ref="mySwiper" class="swiper">  
+         <!-- 这部分放你要渲染的那些内容 -->  
+         <swiper-slide class="slide" v-for="(url,index) in goodsImg" :key="index"><div ><img :src="url"></div></swiper-slide>
+         <!-- 这是轮播的小圆点 -->  
+         <div class="swiper-pagination" slot="pagination"></div>
        
-    </swiper>
+      </swiper>
         <!--左上角tag-->
        <div class="tag" :class="{presale: state2,offsale:state3}" v-show="state1"></div>
        <div class="tag1" v-show="state1"><p>{{this.txt}}</p></div>
        <!--热卖倒计时-->
        <div class="timeout">
            <div class="time-title"><p>距结束仅剩</p></div>
-           <div class="time-remain"><p>{{goodsDetail.leave_end_time_text}}</p></div>    
+           <div class="time-remain"><p>{{this.cuttimestring}}</p></div>    
        </div>
+       <!--加入购物车弹出层!暂时不用-->
+       <!-- <transition name="fade">
+          <div class="addcart-ok"  v-show="this.toaststate">
+             <img src="../assets/detail/addcart-success.png" class="addcartsucc">
+          </div>
+       </transition>   -->  
     </div>   
     <div class="detail-text">
         <h2 class="name">{{goodsDetail.title}}</h2>
         <p class="desc">{{goodsDetail.description}}</p>
-        <p>
+        <p class="detailprice">
             <span class="attach">&yen;</span>
             <span class="price">{{goodsDetail.price}}</span>
             <span class="attach">/{{goodsDetail.unit}}</span>            
         </p>
-        <p class="start-time">{{goodsDetail.sendtime}}</p>
+        <p class="start-time">{{goodsDetail.send_time}}</p>
     </div>
     <div class="btn-arrow">
         <img src="../assets/detail/bottom-arrow.png">
@@ -39,10 +45,7 @@
     </div>
     <!--<router-view></router-view>-->
     <addcart :goodsId="goodsId"></addcart>
-    <!--加入购物车弹出层!暂时不用-->
-    <div class="addcart-ok" v-show="false">
-        <img src="../assets/detail/addcart-success.png" class="addcartsucc">
-    </div>    
+    
   </div>    
 </template>
 <script>
@@ -82,11 +85,18 @@
           txt: '',
           state1: false,
           state2: false,
-          state3: false
+          state3: false,
+          toaststate: false,
+          day1: '',
+          house1: '',
+          miu1: '',
+          miao1: '',
+          cuttimestring: ''
         }
       },
       // props: ['goodsId'],
       created: function () {
+        var that = this
         this.$router.name = this.$route.name
         this.goodsId = this.$route.query.goodsId
         request.get(this.$router, {goodsId: this.goodsId}, function (data) {
@@ -106,7 +116,45 @@
             this.state3 = true
             this.state2 = false
           }
+          // console.log(string.leave_end_time_text)
+          var day = this.goodsDetail.leave_end_time_text.split('天')
+          this.day1 = day[0]
+          var house = day[1].split('小时')
+          this.house1 = house[0]
+          var miu = house[1].split('分')
+          this.miu1 = miu[0]
+          var miao = miu[1].split('秒')
+          this.miao1 = miao[0]
+          setInterval(function () { that.cuttime() }, 1000)
         }.bind(this))
+      },
+      methods: {
+        cuttime: function () {
+          if (this.miao1 > 0) {
+            this.miao1--
+          } else {
+            if (this.miu1 > 0) {
+              this.miu1--
+              this.miao1 = 60
+            } else {
+              if (this.house1 > 0) {
+                this.house1--
+                this.miu1 = 60
+              } else {
+                if (this.day1 > 0) {
+                  this.day1--
+                  this.house1 = 24
+                } else {
+                  this.day1 = 0
+                  this.miu1 = 0
+                  this.house1 = 0
+                  this.miao1 = 0
+                }
+              }
+            }
+          }
+          this.cuttimestring = this.day1 + '天' + this.house1 + '小时' + this.miu1 + '分' + this.miao1 + '秒'
+        }
       }
     }
 </script>
@@ -118,14 +166,38 @@
     }
     .swiper{
         width: 88.53%;
-        height: 10rem;
+        height:9.0rem;
+    }
+    .addcart-ok{
+        position: absolute;
+        bottom: -8.7%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        z-index: 200;
+    }
+    .addcart-ok img{
+        width: 4.853333rem;
+        height: 3.12rem;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+        opacity: 0
     }
     .swiper img{
         width: 100%;
-        height:8.8rem;
+        height:8.093333rem;
     }
     .swiper-pagination-bullet-active{
+
         background-color: #32ab42 !important;
+    }
+    .swiper-pagination
+    {
+        position: absolute;
+        bottom: 0;
+        left: 0;
     }
     .swiper-wrap{
         position: relative;
@@ -164,9 +236,9 @@
         background-image: url("../assets/detail/offsale.png");
     }
     .swiper-wrap .timeout{
-        width: 5.1rem;
+        width: 6.1rem;
         position: absolute;
-        bottom: 1.2rem;
+        bottom: 0.90422rem;
         left: 50%;
         transform: translate(-50%,0);
         font-size: 0;
@@ -174,7 +246,8 @@
         z-index: 100;
     }
     .swiper-wrap .time-title{
-        display: inline-block;
+        float: left;
+        /*display: inline-block;*/
         /*width:1.8533rem*/
         width: 1.9533rem;
         height: 100%;
@@ -187,9 +260,10 @@
         font-size: .293333rem;
     }
     .swiper-wrap .time-remain{
-        display: inline-block;
+        float: left;
+        /*display: inline-block;*/
         /*width:2.8666rem*/
-        width: 3.0666rem;
+        width: 4.0666rem;
         height: 100%;
         background-image: url("../assets/detail/time-gray.png");
     }
@@ -207,13 +281,17 @@
         font-size: .666667rem;
         line-height: .693333rem;
         color: #000;
-        margin-top: .586667rem;
+        padding-top: 0.013333rem;
     }
     .detail-text .desc{
         font-size: .3866rem;
         color: rgba(0,0,0,0.6);
-        text-align: left;
-        margin: .133333rem 0 .426667rem 0;
+        text-align: center;
+        padding-top: 0.133333rem;
+    }
+    .detailprice
+    {
+        padding-top: 0.426667rem;
     }
     .detail-text .attach{
         font-size: .373333rem;
@@ -230,7 +308,7 @@
         color: rgba(0,0,0,0.6);
     }
     .detail-text .start-time{
-        margin-top: .2533rem;
+        padding-top: 0.253333rem;
         font-size: .3866rem;
         color: #000;
         margin-bottom: 0.466rem;
@@ -251,7 +329,7 @@
         z-index: 2000;
     }
     .btn-line img{
-        width: 88.53%;
+        width: 100%;
     }
     .btn-bar{
         background-color: #fff;
@@ -331,15 +409,5 @@
         /*商品下架样式*/
         background-image: url("../assets/detail/saleout.png");
     }
-    .addcart-ok{
-        position: absolute;
-        top: 43%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        z-index: 200;
-    }
-    .addcart-ok img{
-        width: 4.853333rem;
-        height: 3.12rem;
-    }
+    
 </style>

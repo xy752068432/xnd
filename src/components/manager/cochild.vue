@@ -177,29 +177,34 @@ export default {
       }
     },
     decrepage: function () {
-      this.page--
-      if (this.date1 !== '' && this.date2 !== '' && this.agent !== '') {
-        if (this.state1 === true) {
-          this.state1 = false
-          var reg = new RegExp('T', 'g')
-          var date1 = this.date1.replace(reg, ' ')
-          var date2 = this.date2.replace(reg, ' ')
-          mrequest.get(this.$router, {
-            rootName: 'c_time',
-            agent_id: this.agent,
-            start_time: date1,
-            end_time: date2,
-            page: this.page
-          }, function (data) {
-            this.count = this.page
-            this.state1 = true
-            this.data1 = data.items
-          }.bind(this), function (err) {
-            console.log(err)
-            utils.toToast('请求失败')
-            this.state1 = true
-          }.bind(this))
+      if (this.page > 1) {
+        this.page--
+        if (this.date1 !== '' && this.date2 !== '' && this.agent !== '') {
+          if (this.state1 === true) {
+            this.state1 = false
+            var reg = new RegExp('T', 'g')
+            var date1 = this.date1.replace(reg, ' ')
+            var date2 = this.date2.replace(reg, ' ')
+            mrequest.get(this.$router, {
+              rootName: 'c_time',
+              agent_id: this.agent,
+              start_time: date1,
+              end_time: date2,
+              page: this.page
+            }, function (data) {
+              this.count = this.page
+              this.state1 = true
+              this.data1 = data.items
+            }.bind(this), function (err) {
+              console.log(err)
+              utils.toToast('请求失败')
+              this.state1 = true
+            }.bind(this))
+          }
         }
+      } else {
+        this.page = 1
+        this.count = 1
       }
     },
     toapage: function () {
